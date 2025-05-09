@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: snail-gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 系统模块
+        - id: snail-sys
+          uri: lb://snail-sys
+          predicates:
+            - Path=/sys/**
+          filters:
+            - StripPrefix=1
+        # 流程模块
+        - id: snail-camunda
+          uri: lb://snail-camunda
+          predicates:
+            - Path=/camunda/**
+          filters:
+            - StripPrefix=1
+
+  # Redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: 
+    timeout: 10s
+
+# Sa-Token配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: snail-token
+  # token有效期，单位秒，默认30天
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就过期)
+  activity-timeout: 1800
+  # 是否允许同一账号并发登录
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+  # 是否从cookie中读取token
+  is-read-cookie: false
+  # 是否从请求体里读取token
+  is-read-body: false
+  # 是否从header中读取token
+  is-read-header: true
+  # 是否允许在URL参数中读取token
+  is-read-param: false
+  # 拦截路由
+  intercept-excluded-paths:
+    - /actuator/**
+    - /sys/auth/login
+    - /sys/auth/register
