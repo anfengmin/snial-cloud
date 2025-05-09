@@ -1,4 +1,4 @@
-package com.snail.common.core.constant;
+package com.snail.common.constant;
 
 /**
  * 返回状态码- Levi
