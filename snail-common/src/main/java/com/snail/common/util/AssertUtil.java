@@ -1,6 +1,7 @@
 package com.snail.common.util;
 
-import com.octopus.common.core.exception.ServiceInvokeException;
+
+import com.snail.common.exception.ServiceInvokeException;
 
 /**
  * No explanation is needed - Levi
