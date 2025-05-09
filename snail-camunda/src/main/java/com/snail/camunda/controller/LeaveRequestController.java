@@ -2,7 +2,7 @@ package com.snail.camunda.controller;
 
 import com.snail.camunda.domain.LeaveRequest;
 import com.snail.camunda.service.LeaveRequestService;
-import com.snail.common.core.domain.R;
+import com.snail.common.core.util.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

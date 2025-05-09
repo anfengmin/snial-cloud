@@ -1,7 +1,7 @@
 package com.snail.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.snail.common.core.domain.R;
+import com.snail.common.core.util.R;
 import com.snail.sys.domain.dto.LoginDTO;
 import com.snail.sys.domain.dto.RegisterDTO;
 import com.snail.sys.service.UserService;

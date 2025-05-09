@@ -66,5 +66,10 @@
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-dao-redis</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
     </dependencies>
 </project>
