@@ -8,9 +8,11 @@ import com.snail.gateway.config.properties.CaptchaProperties;
 import com.snail.gateway.enums.CaptchaType;
 import com.snail.gateway.service.ValidateCodeService;
 import common.core.constant.CacheConstants;
+import common.core.constant.Constants;
 import common.core.exception.CaptchaException;
 import common.core.exception.user.CaptchaExpireException;
 import common.core.utils.R;
+import common.core.utils.RedisUtils;
 import common.core.utils.SpringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.Expression;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,9 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
 
     @Resource
     private CaptchaProperties captchaProperties;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     /**
      * 生成验证码
@@ -69,7 +75,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             Expression exp = parser.parseExpression(StringUtils.remove(code, "="));
             code = exp.getValue(String.class);
         }
-//        RedisUtils.setCacheObject(verifyKey, code, Duration.ofMinutes(Constants.CAPTCHA_EXPIRATION));
+        redisUtils.setCacheObject(verifyKey, code, (int) Constants.CAPTCHA_EXPIRATION, java.util.concurrent.TimeUnit.MINUTES);
         ajax.put("uuid", uuid);
         ajax.put("img", captcha.getImageBase64());
         return R.ok(ajax);
@@ -91,11 +97,11 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             throw new CaptchaExpireException();
         }
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
-//        String captcha = RedisUtils.getCacheObject(verifyKey);
-//        RedisUtils.deleteObject(verifyKey);
+        String captcha = redisUtils.getCacheObject(verifyKey);
+        redisUtils.deleteObject(verifyKey);
 
-//        if (!code.equalsIgnoreCase(captcha)) {
-//            throw new CaptchaException();
-//        }
+        if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException();
+        }
     }
 }
