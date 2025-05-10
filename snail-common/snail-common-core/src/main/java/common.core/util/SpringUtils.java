@@ -1,4 +1,4 @@
-package com.snail.common.util;
+package common.core.util;
 
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

@@ -1,4 +1,4 @@
-package com.snail.common.exception;
+package common.core.exception;
 
 import cn.hutool.http.HttpStatus;
 import lombok.Getter;

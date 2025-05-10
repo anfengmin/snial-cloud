@@ -1,7 +1,7 @@
-package com.snail.common.util;
+package common.core.util;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.snail.common.constant.HttpStatus;
+import common.core.constant.HttpStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
