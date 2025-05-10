@@ -25,6 +25,8 @@ public class RouterFunctionConfiguration {
     @Bean
     public RouterFunction routerFunction() {
         return RouterFunctions.route(
+                //  请求头必须包含 Accept: text/plain
+               // RequestPredicates.GET("/code").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
                 RequestPredicates.GET("/code"),
                 validateCodeHandler);
     }
