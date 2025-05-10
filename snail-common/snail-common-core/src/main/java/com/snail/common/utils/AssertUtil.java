@@ -1,4 +1,4 @@
-package com.snail.common.util;
+package com.snail.common.utils;
 
 
 import com.snail.common.exception.ServiceInvokeException;
