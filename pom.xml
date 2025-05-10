@@ -17,6 +17,7 @@
         <module>snail-gateway</module>
         <module>snail-camunda</module>
         <module>snail-sys</module>
+        <module>snail-common/snail-common-core</module>
     </modules>
 
     <properties>
@@ -352,6 +353,13 @@
                 <version>${fastjson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.13</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
