@@ -11,7 +11,7 @@
 
     <artifactId>snail-common-core</artifactId>
     <description>通用模块</description>
-
+    <packaging>jar</packaging>
     <dependencies>
 
         <!-- Spring Context Support -->
