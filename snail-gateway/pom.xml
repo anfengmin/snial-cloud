@@ -20,12 +20,12 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
-        <!-- Sa-Token 权限认证（网关鉴权）-->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
-            <version>${satoken.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; Sa-Token 权限认证（网关鉴权）&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>cn.dev33</groupId>-->
+<!--            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>-->
+<!--            <version>${satoken.version}</version>-->
+<!--        </dependency>-->
 
         <!-- Redis -->
         <dependency>
@@ -42,8 +42,6 @@
             <groupId>com.snail</groupId>
             <artifactId>snail-common-core</artifactId>
         </dependency>
-
-
 
 
     </dependencies>
