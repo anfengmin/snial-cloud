@@ -28,7 +28,6 @@ spring:
           filters:
             - StripPrefix=1
 
-
   # Redis配置
   redis:
     host: 127.0.0.1
@@ -36,3 +35,17 @@ spring:
     database: 0
     password: 
     timeout: 10s
+
+# 验证码配置
+security:
+  captcha:
+    # 验证码类型 math 数组计算 char 字符验证
+    type: math
+    # 验证码类别 circle 圆圈干扰 line 线段干扰 shear 扭曲干扰
+    category: circle
+    # 数字验证码位数
+    numberLength: 2
+    # 字符验证码长度
+    charLength: 4
+    # 验证码开关
+    enabled: true
