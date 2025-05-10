@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>snail-common-core</artifactId>
-    <packaging>pom</packaging>
     <description>通用模块</description>
 
     <dependencies>

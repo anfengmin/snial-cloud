@@ -1,15 +1,20 @@
-package com.snail.camunda;
+package com.snail.sys;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 流程服务模块启动程序
+ * No explanation is needed
+ *
+ * @author Levi.
+ * Created time 2025/5/10
+ * @since 1.0
  */
-//@EnableDiscoveryClient
 @SpringBootApplication
-public class SnailCamundaApplication {
+public class SysApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(SnailCamundaApplication.class, args);
+        SpringApplication.run(SysApplication.class, args);
     }
+
 }
