@@ -1,4 +1,4 @@
-package common.core.util;
+package common.core.utils;
 
 
 import common.core.exception.ServiceInvokeException;

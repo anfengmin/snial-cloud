@@ -1,4 +1,4 @@
-package common.core.util;
+package common.core.utils;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import common.core.constant.HttpStatus;

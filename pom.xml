@@ -34,6 +34,7 @@
         <dynamic-ds.version>3.5.2</dynamic-ds.version>
         <velocity.version>2.3</velocity.version>
         <swagger.core.version>2.2.8</swagger.core.version>
+        <springfox.version>2.9.2</springfox.version>
         <springdoc.version>1.6.15</springdoc.version>
         <poi.version>5.2.3</poi.version>
         <easyexcel.version>3.3.2</easyexcel.version>
@@ -198,6 +199,12 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.version}</version>
             </dependency>
 
             <dependency>

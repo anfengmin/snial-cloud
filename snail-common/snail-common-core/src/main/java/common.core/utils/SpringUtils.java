@@ -1,4 +1,4 @@
-package common.core.util;
+package common.core.utils;
 
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
