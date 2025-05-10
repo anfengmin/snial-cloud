@@ -1,4 +1,4 @@
-package com.snail.common.utils;
+package com.snail.common.util;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.snail.common.constant.HttpStatus;

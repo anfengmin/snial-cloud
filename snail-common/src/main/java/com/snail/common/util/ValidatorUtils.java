@@ -1,4 +1,4 @@
-package com.snail.common.utils;
+package com.snail.common.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
