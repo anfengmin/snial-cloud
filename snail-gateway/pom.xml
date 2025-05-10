@@ -38,9 +38,22 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- 添加hutool-captcha依赖 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+            <version>${hutool.version}</version>
         </dependency>
 
 
