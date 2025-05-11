@@ -22,9 +22,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码实现处理
@@ -75,7 +75,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             Expression exp = parser.parseExpression(StringUtils.remove(code, "="));
             code = exp.getValue(String.class);
         }
-        redisUtils.setCacheObject(verifyKey, code, (int) Constants.CAPTCHA_EXPIRATION, java.util.concurrent.TimeUnit.MINUTES);
+        redisUtils.setCacheObject(verifyKey, code, (int) Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         ajax.put("uuid", uuid);
         ajax.put("img", captcha.getImageBase64());
         return R.ok(ajax);
