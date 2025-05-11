@@ -23,3 +23,20 @@ spring:
     database: 0
     password:
     timeout: 10s
+# 日志配置
+logging:
+  level:
+    org.springframework: info
+#    org.apache.dubbo: warn
+#    com.alibaba.nacos: warn
+#  config: classpath:logback-plus.xml
+# MyBatisPlus配置
+# https://baomidou.com/config/
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+user:
+  password:
+    lockTime: 10
+    maxRetryCount: 5
