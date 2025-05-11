@@ -58,6 +58,7 @@ public class SysLoginServiceImpl implements SysLoginService {
     private void checkLogin( String username, Supplier<Boolean> supplier) {
         String errorKey = CacheConstants.PWD_ERR_CNT_KEY + username;
         String loginFail = Constants.LOGIN_FAIL;
+        RedisUtils.setCacheObject("1111",1);
         RedisUtils.setCacheObject(errorKey, RedisUtils.getCacheObject(errorKey));
         Integer errorNumber = RedisUtils.getCacheObject(errorKey);
         System.out.println(errorNumber);
