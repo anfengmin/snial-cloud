@@ -59,6 +59,7 @@ public class BaseEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+
     /**
      * 请求参数
      */
