@@ -1,4 +1,4 @@
-package com.snail.sys;
+package com.snail.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
