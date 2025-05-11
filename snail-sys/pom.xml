@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-api-sys</artifactId>
-            <version>${project.version}</version>
+            <version>${snail.version}</version>
         </dependency>
 
     </dependencies>
