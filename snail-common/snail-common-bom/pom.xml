@@ -11,14 +11,13 @@
     <description>common依赖项</description>
 
     <dependencyManagement>
-
         <dependencies>
             <dependency>
                 <groupId>com.snail</groupId>
                 <artifactId>snail-common-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-        </dependencies>
 
+        </dependencies>
     </dependencyManagement>
 </project>
