@@ -6,7 +6,16 @@ spring:
     name: snail-sys
   profiles:
     active: dev
-
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/snail_sys?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8
+          username: root
+          password: 123456
   # Redis配置
   redis:
     host: 127.0.0.1
