@@ -8,9 +8,14 @@
         <artifactId>snail-api</artifactId>
         <version>1.0.0</version>
     </parent>
-
     <artifactId>snail-api-sys</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
