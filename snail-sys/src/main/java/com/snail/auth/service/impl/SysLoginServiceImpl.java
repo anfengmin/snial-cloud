@@ -2,6 +2,7 @@ package com.snail.auth.service.impl;
 
 import cn.hutool.crypto.digest.BCrypt;
 import com.snail.auth.service.SysLoginService;
+import com.snail.common.redis.utils.RedisUtils;
 import com.snail.sys.domain.User;
 import com.snail.sys.service.UserService;
 import common.core.constant.CacheConstants;
@@ -57,7 +58,9 @@ public class SysLoginServiceImpl implements SysLoginService {
     private void checkLogin( String username, Supplier<Boolean> supplier) {
         String errorKey = CacheConstants.PWD_ERR_CNT_KEY + username;
         String loginFail = Constants.LOGIN_FAIL;
-
+        RedisUtils.setCacheObject(errorKey, RedisUtils.getCacheObject(errorKey));
+        Integer errorNumber = RedisUtils.getCacheObject(errorKey);
+        System.out.println(errorNumber);
         // 获取用户登录错误次数(可自定义限制策略 例如: key + username + ip)
         if (!supplier.get()) {
             throw new RuntimeException(MessageUtils.message(loginFail));
