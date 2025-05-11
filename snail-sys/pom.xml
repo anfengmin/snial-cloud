@@ -29,6 +29,10 @@
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-core</artifactId>
+        </dependency>
 
         <!-- SpringBoot Actuator -->
         <dependency>
@@ -42,6 +46,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-api-sys</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
