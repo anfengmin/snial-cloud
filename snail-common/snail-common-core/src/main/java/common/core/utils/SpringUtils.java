@@ -3,6 +3,7 @@ package common.core.utils;
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,8 +60,5 @@ public class SpringUtils extends SpringUtil {
         return getApplicationContext();
     }
 
-//    public static boolean isVirtual() {
-//        return Threading.VIRTUAL.isActive(getBean(Environment.class));
-//    }
 
 }
