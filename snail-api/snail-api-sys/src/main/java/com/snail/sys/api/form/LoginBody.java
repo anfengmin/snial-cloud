@@ -25,15 +25,15 @@ public class LoginBody {
      * 用户名
      */
     @ApiModelProperty(value = "用户名")
-    @NotBlank(message = "{user.username.not.blank}")
-    @Length(min = UserConstants.USERNAME_MIN_LENGTH, max = UserConstants.USERNAME_MAX_LENGTH, message = "{user.username.length.valid}")
-    private String username;
+    @NotBlank(message = "用户名不能为空")
+    @Length(min = UserConstants.USERNAME_MIN_LENGTH, max = UserConstants.USERNAME_MAX_LENGTH, message = "用户名长度2-20个字符")
+    private String userCode;
 
     /**
      * 用户密码
      */
     @ApiModelProperty(value = "用户密码")
-    @NotBlank(message = "{user.password.not.blank}")
-    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH, message = "{user.password.length.valid}")
-    private String password;
+    @NotBlank(message = "密码不能为空")
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH, message = "密码长度5-20个字符")
+    private String passWord;
 }
