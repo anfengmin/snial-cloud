@@ -61,6 +61,8 @@
 
         <!-- SMS 配置 -->
         <sms4j.version>2.2.0</sms4j.version>
+        <mapstruct-plus.version>1.4.6</mapstruct-plus.version>
+        <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
     </properties>
 
     <profiles>
@@ -358,6 +360,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.linpeilie</groupId>
+                <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
+                <version>${mapstruct-plus.version}</version>
             </dependency>
 
         </dependencies>
