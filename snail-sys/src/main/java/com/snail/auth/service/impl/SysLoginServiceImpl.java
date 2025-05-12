@@ -1,5 +1,6 @@
 package com.snail.auth.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.redis.utils.RedisUtils;
@@ -7,6 +8,8 @@ import com.snail.sys.domain.User;
 import com.snail.sys.service.UserService;
 import common.core.constant.CacheConstants;
 import common.core.constant.Constants;
+import common.core.constant.UserConstants;
+import common.core.exception.user.UserException;
 import common.core.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,26 +40,33 @@ public class SysLoginServiceImpl implements SysLoginService {
      */
     @Value("${user.password.lockTime:10}")
     private Integer lockTime;
+
     /**
      * login
      *
-     * @param username username
+     * @param userCode userCode
      * @param password password
      * @return java.lang.String
      * @since 1.0
      */
     @Override
-    public String login(String username, String password) {
-        User userInfo = userService.lambdaQuery().eq(User::getUserName, username).one();
-        checkLogin(username, () -> !BCrypt.checkpw(password, userInfo.getPassword()));
+    public String login(String userCode, String password) {
+        User userInfo = userService.lambdaQuery().eq(User::getUserCode, userCode).one();
+        if (ObjectUtil.isEmpty(userInfo)) {
+            throw new UserException("用户不存在", userCode);
+        }
+        if (UserConstants.USER_DISABLE.equals(userInfo.getStatus())) {
+            throw new UserException("账号已禁用", userCode);
+        }
+        checkLogin(userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
         return "assas";
     }
 
     /**
      * 登录校验
      */
-    private void checkLogin( String username, Supplier<Boolean> supplier) {
-        String errorKey = CacheConstants.PWD_ERR_CNT_KEY + username;
+    private void checkLogin( String userCode, Supplier<Boolean> supplier) {
+        String errorKey = CacheConstants.PWD_ERR_CNT_KEY + userCode;
         String loginFail = Constants.LOGIN_FAIL;
         RedisUtils.setCacheObject("1111",1);
         RedisUtils.setCacheObject(errorKey, RedisUtils.getCacheObject(errorKey));
