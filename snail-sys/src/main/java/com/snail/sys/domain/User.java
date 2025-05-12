@@ -2,6 +2,7 @@ package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -58,12 +59,13 @@ public class User extends BaseEntity {
     private String avatar;
 
     @ApiModelProperty(value = "密码")
-    private String password;
+    private String passWord;
 
     @ApiModelProperty(value = "帐号状态（0正常 1停用）")
     private String status;
 
-    @ApiModelProperty(value = "删除标志（0代表存在 2代表删除）")
+    @TableLogic
+    @ApiModelProperty(value = "删除标志（0代表存在 1代表删除）")
     private String deleted;
 
     @ApiModelProperty(value = "最后登录IP")
