@@ -24,7 +24,7 @@ public class R<T> implements Serializable {
      * 消息状态码
      */
     @ApiModelProperty(value = "消息状态码", example = "200:成功 500:失败")
-    private int code;
+    private Integer code;
 
     /**
      * 消息内容
@@ -32,8 +32,6 @@ public class R<T> implements Serializable {
     @ApiModelProperty(value = "消息内容")
     @JsonAlias("message")
     private String msg;
-
-    private String extendMsg;
 
     /**
      * 数据对象
@@ -152,7 +150,7 @@ public class R<T> implements Serializable {
      * @since <span style="color:#FFD306;"> 1.0 </span>
      * <p> 1.0 Initialization method </p>
      */
-    public static <T> R<T> fail(int code, String msg) {
+    public static <T> R<T> fail(Integer code, String msg) {
         return restResult(null, code, msg);
     }
 
@@ -205,7 +203,7 @@ public class R<T> implements Serializable {
      * @since <span style="color:#FFD306;"> 1.0 </span>
      * <p> 1.0 Initialization method </p>
      */
-    private static <T> R<T> restResult(T data, int code, String msg) {
+    private static <T> R<T> restResult(T data, Integer code, String msg) {
         R<T> r = new R<>();
         r.setCode(code);
         r.setData(data);
