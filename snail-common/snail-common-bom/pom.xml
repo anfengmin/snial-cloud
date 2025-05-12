@@ -12,12 +12,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 核心模块 -->
             <dependency>
                 <groupId>com.snail</groupId>
                 <artifactId>snail-common-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- 缓存服务 -->
             <dependency>
                 <groupId>com.snail</groupId>
                 <artifactId>snail-common-redis</artifactId>
