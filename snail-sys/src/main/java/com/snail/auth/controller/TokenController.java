@@ -35,7 +35,7 @@ public class TokenController {
     @PostMapping("login")
     public R<Map<String, Object>> login(@Validated @RequestBody LoginBody form) {
         // 用户登录
-        String accessToken = sysLoginService.login(form.getUsername(), form.getPassword());
+        String accessToken = sysLoginService.login(form.getUserCode(), form.getPassWord());
 
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<>();
