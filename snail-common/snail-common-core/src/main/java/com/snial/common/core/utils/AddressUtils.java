@@ -1,4 +1,4 @@
-package common.core.utils;
+package com.snial.common.core.utils;
 
 /**
  * No explanation is needed
