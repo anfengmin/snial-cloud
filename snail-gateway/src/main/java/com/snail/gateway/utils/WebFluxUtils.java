@@ -4,8 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 
 import cn.hutool.json.JSONUtil;
 import com.snail.gateway.filter.GlobalCacheRequestFilter;
-import common.core.constant.Constants;
-import common.core.utils.R;
+import com.snial.common.core.constant.Constants;
+import com.snial.common.core.utils.R;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
