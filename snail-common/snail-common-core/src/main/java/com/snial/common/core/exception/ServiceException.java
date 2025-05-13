@@ -1,4 +1,4 @@
-package common.core.exception;
+package com.snial.common.core.exception;
 
 /**
  * 业务异常
