@@ -1,4 +1,4 @@
-package common.core.utils;
+package com.snial.common.core.utils;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
