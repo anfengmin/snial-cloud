@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.snail.sys.api.domain.User;
+import io.github.linpeilie.annotations.AutoMapMapper;
+import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,6 +24,7 @@ import java.util.Date;
  */
 @Data
 @NoArgsConstructor
+@AutoMapper(target = User.class)
 @ApiModel(value = "用户")
 public class UserVo  implements Serializable {
 
