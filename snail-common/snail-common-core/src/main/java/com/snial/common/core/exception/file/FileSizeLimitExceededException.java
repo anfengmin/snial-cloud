@@ -1,4 +1,4 @@
-package common.core.exception.file;
+package com.snial.common.core.exception.file;
 
 /**
  * 文件名大小限制异常类
