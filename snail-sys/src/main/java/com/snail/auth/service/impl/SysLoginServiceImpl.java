@@ -1,18 +1,13 @@
 package com.snail.auth.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.sys.api.vo.UserVo;
-import com.snail.sys.domain.User;
 import com.snail.sys.service.UserService;
-import common.core.constant.CacheConstants;
-import common.core.constant.Constants;
-import common.core.constant.UserConstants;
-import common.core.exception.user.UserException;
-import common.core.utils.MapstructUtils;
-import common.core.utils.MessageUtils;
+import com.snial.common.core.constant.CacheConstants;
+import com.snial.common.core.constant.Constants;
+import com.snial.common.core.utils.MessageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
