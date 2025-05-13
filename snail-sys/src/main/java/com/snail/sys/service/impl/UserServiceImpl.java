@@ -1,15 +1,18 @@
 package com.snail.sys.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.api.vo.UserVo;
-import com.snail.sys.domain.User;
+import com.snail.sys.api.domain.User;
 import com.snail.sys.service.UserService;
 import com.snail.sys.dao.UserDao;
 import com.snial.common.core.constant.UserConstants;
 import com.snial.common.core.exception.user.UserException;
 import com.snial.common.core.utils.MapstructUtils;
+import com.snial.common.core.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 
@@ -43,9 +46,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (UserConstants.USER_DISABLE.equals(userInfo.getStatus())) {
             throw new UserException("账号已禁用", userCode);
         }
-        UserVo userVo1 = new UserVo();
-        System.out.println(userVo1);
-        UserVo userVo = MapstructUtils.convert(userInfo, UserVo.class);
+        UserVo userVo = BeanUtil.copyProperties(userInfo, UserVo.class);
+
         log.info("userInfo:{}", userInfo);
         return userVo;
     }
