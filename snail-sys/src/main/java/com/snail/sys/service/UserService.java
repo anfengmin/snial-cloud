@@ -1,7 +1,7 @@
 package com.snail.sys.service;
 
 import com.snail.sys.api.vo.UserVo;
-import com.snail.sys.domain.User;
+import com.snail.sys.api.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
