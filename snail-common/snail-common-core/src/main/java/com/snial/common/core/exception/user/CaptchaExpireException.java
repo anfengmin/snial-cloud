@@ -1,4 +1,4 @@
-package common.core.exception.user;
+package com.snial.common.core.exception.user;
 
 /**
  * 验证码失效异常类
