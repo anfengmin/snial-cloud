@@ -2,7 +2,7 @@ package com.snail.sys.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.snail.sys.domain.User;
+import com.snail.sys.api.domain.User;
 import com.snail.sys.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import com.snial.common.core.utils.R;
