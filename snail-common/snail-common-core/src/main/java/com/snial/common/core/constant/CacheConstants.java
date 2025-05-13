@@ -1,4 +1,4 @@
-package common.core.constant;
+package com.snial.common.core.constant;
 
 
 /**
