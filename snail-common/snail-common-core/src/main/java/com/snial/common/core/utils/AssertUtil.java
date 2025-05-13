@@ -1,7 +1,7 @@
-package common.core.utils;
+package com.snial.common.core.utils;
 
 
-import common.core.exception.ServiceInvokeException;
+import com.snial.common.core.exception.ServiceInvokeException;
 
 /**
  * No explanation is needed - Levi
