@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.User;
 import com.snail.sys.service.UserService;
 import org.springframework.web.bind.annotation.*;
-import common.core.utils.R;
+import com.snial.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;
