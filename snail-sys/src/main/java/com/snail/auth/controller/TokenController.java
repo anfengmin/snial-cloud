@@ -3,8 +3,8 @@ package com.snail.auth.controller;
 import com.snail.auth.service.SysLoginService;
 import com.snail.sys.api.form.LoginBody;
 
-import common.core.constant.Constants;
-import common.core.utils.R;
+import com.snial.common.core.constant.Constants;
+import com.snial.common.core.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
