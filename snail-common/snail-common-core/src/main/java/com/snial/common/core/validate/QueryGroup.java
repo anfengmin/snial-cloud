@@ -1,4 +1,4 @@
-package common.core.validate;
+package com.snial.common.core.validate;
 
 /**
  * 校验分组 query
