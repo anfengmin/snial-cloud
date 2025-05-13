@@ -1,7 +1,7 @@
-package common.core.exception.user;
+package com.snial.common.core.exception.user;
 
 
-import common.core.exception.base.BaseException;
+import com.snial.common.core.exception.base.BaseException;
 
 /**
  * 用户信息异常类
