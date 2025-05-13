@@ -1,4 +1,4 @@
-package common.core.utils;
+package com.snial.common.core.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
