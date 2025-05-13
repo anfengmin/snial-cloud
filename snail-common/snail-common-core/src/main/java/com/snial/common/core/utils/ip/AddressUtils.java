@@ -1,4 +1,4 @@
-package common.core.utils.ip;
+package com.snial.common.core.utils.ip;
 
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.http.HtmlUtil;
