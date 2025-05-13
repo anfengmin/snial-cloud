@@ -1,6 +1,6 @@
 package com.snail.common.redis.utils;
 
-import common.core.utils.SpringUtils;
+import com.snial.common.core.utils.SpringUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.redisson.api.*;
