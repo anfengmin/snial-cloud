@@ -1,4 +1,4 @@
-package common.core.xss;
+package com.snial.common.core.xss;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
