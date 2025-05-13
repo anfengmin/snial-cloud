@@ -1,4 +1,4 @@
-package common.core.utils;
+package com.snial.common.core.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
