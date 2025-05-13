@@ -1,6 +1,6 @@
 package com.snail.sys.api.form;
 
-import common.core.constant.UserConstants;
+import com.snial.common.core.constant.UserConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
