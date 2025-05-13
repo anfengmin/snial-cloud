@@ -1,4 +1,4 @@
-package common.core.exception.user;
+package com.snial.common.core.exception.user;
 
 /**
  * 用户密码不正确或不符合规范异常类
