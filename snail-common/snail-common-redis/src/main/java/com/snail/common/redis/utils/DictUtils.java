@@ -1,8 +1,6 @@
 package com.snail.common.redis.utils;
 
-import common.core.constant.CacheConstants;
-
-import java.util.List;
+import com.snial.common.core.constant.CacheConstants;
 
 /**
  * 字典工具类
