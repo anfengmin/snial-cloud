@@ -1,4 +1,4 @@
-package common.core.domain;
+package com.snial.common.core.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
