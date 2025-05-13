@@ -1,4 +1,4 @@
-package common.core.xss;
+package com.snial.common.core.xss;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HtmlUtil;
