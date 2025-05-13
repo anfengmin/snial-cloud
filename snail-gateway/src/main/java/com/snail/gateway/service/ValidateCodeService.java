@@ -1,8 +1,8 @@
 package com.snail.gateway.service;
 
 
-import common.core.exception.CaptchaException;
-import common.core.utils.R;
+import com.snial.common.core.exception.CaptchaException;
+import com.snial.common.core.utils.R;
 
 import java.io.IOException;
 import java.util.Map;
