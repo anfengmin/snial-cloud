@@ -1,4 +1,4 @@
-package com.snail.sys.domain;
+package com.snail.sys.api.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
