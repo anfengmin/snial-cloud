@@ -1,4 +1,4 @@
-package common.core.constant;
+package com.snial.common.core.constant;
 
 /**
  * 返回状态码- Levi
