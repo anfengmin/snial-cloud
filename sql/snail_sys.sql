@@ -11,7 +11,7 @@ create table sys_user
     phone_no    varchar(11)  default '' comment '手机号码',
     sex         char(1)      default '0' comment '用户性别（0男 1女 2未知）',
     avatar      varchar(100) default '' comment '头像地址',
-    password    varchar(100) default '' comment '密码',
+    pass_word    varchar(100) default '' comment '密码',
     status      char(1)      default '0' comment '帐号状态（0正常 1停用）',
     deleted     char(1)      default '0' comment '删除标志（0代表存在 2代表删除）',
     login_ip    varchar(128) default '' comment '最后登录IP',
