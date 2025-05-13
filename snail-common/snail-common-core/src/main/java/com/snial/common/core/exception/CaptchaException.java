@@ -1,4 +1,4 @@
-package common.core.exception;
+package com.snial.common.core.exception;
 
 import org.omg.CORBA.UserException;
 
