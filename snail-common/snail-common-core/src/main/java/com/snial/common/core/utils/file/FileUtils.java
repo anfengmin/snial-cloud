@@ -1,4 +1,4 @@
-package common.core.utils.file;
+package com.snial.common.core.utils.file;
 
 import cn.hutool.core.io.FileUtil;
 import lombok.AccessLevel;
