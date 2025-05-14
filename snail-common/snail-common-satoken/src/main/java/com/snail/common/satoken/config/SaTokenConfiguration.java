@@ -39,4 +39,5 @@ public class SaTokenConfiguration {
     public SaTokenDao saTokenDao() {
         return new PlusSaTokenDao();
     }
+
 }
