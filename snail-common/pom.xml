@@ -12,6 +12,7 @@
         <module>snail-common-core</module>
         <module>snail-common-bom</module>
         <module>snail-common-redis</module>
+        <module>snail-common-satoken</module>
     </modules>
 
     <artifactId>snail-common</artifactId>
