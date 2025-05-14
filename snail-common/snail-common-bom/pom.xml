@@ -26,6 +26,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- 权限认证 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-satoken</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
