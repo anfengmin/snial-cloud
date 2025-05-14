@@ -39,6 +39,11 @@
             <artifactId>snail-common-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-satoken</artifactId>
+        </dependency>
+
         <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
