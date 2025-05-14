@@ -4,6 +4,7 @@ import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.generator.CodeGenerator;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.snail.common.redis.utils.RedisUtils;
 import com.snail.gateway.config.properties.CaptchaProperties;
 import com.snail.gateway.enums.CaptchaType;
 import com.snail.gateway.service.ValidateCodeService;
@@ -12,7 +13,6 @@ import com.snial.common.core.constant.Constants;
 import com.snial.common.core.exception.CaptchaException;
 import com.snial.common.core.exception.user.CaptchaExpireException;
 import com.snial.common.core.utils.R;
-import com.snial.common.core.utils.RedisUtils;
 import com.snial.common.core.utils.SpringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.Expression;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -37,8 +38,6 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
     @Resource
     private CaptchaProperties captchaProperties;
 
-    @Resource
-    private RedisUtils redisUtils;
 
     /**
      * 生成验证码
@@ -75,7 +74,8 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             Expression exp = parser.parseExpression(StringUtils.remove(code, "="));
             code = exp.getValue(String.class);
         }
-        redisUtils.setCacheObject(verifyKey, code, (int) Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        RedisUtils.setCacheObject(verifyKey, code, Duration.ofMinutes(Constants.CAPTCHA_EXPIRATION));
+
         ajax.put("uuid", uuid);
         ajax.put("img", captcha.getImageBase64());
         return R.ok(ajax);
@@ -97,8 +97,8 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             throw new CaptchaExpireException();
         }
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisUtils.getCacheObject(verifyKey);
-        redisUtils.deleteObject(verifyKey);
+        String captcha = RedisUtils.getCacheObject(verifyKey);
+        RedisUtils.deleteObject(verifyKey);
 
         if (!code.equalsIgnoreCase(captcha)) {
             throw new CaptchaException();
