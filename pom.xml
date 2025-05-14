@@ -17,6 +17,7 @@
         <module>snail-gateway</module>
         <module>snail-api</module>
         <module>snail-sys</module>
+        <module>snail-common/snail-common-satoken</module>
     </modules>
 
     <properties>
@@ -40,10 +41,10 @@
         <poi.version>5.2.3</poi.version>
         <easyexcel.version>3.3.2</easyexcel.version>
         <hutool.version>5.8.37</hutool.version>
-        <redisson.version>3.20.1</redisson.version>
+        <redisson.version>3.46.0</redisson.version>
         <lock4j.version>2.2.3</lock4j.version>
         <xxl-job.version>2.4.0</xxl-job.version>
-        <satoken.version>1.37.0</satoken.version>
+        <satoken.version>1.42.0</satoken.version>
         <lombok.version>1.18.30</lombok.version>
         <logstash.version>7.2</logstash.version>
         <easy-es.version>1.1.1</easy-es.version>
@@ -63,6 +64,7 @@
         <sms4j.version>2.2.0</sms4j.version>
         <mapstruct-plus.version>1.4.6</mapstruct-plus.version>
         <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
+        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
     </properties>
 
     <profiles>
@@ -368,6 +370,12 @@
                 <version>${mapstruct-plus.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql-connector-j.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -385,32 +393,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <annotationProcessorPaths>
-
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>${spring-boot.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.github.linpeilie</groupId>
-                            <artifactId>mapstruct-plus-processor</artifactId>
-                            <version>${mapstruct-plus.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>${mapstruct-plus.lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
