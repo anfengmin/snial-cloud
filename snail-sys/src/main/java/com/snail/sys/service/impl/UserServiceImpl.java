@@ -3,20 +3,14 @@ package com.snail.sys.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.sys.api.vo.UserVo;
 import com.snail.sys.api.domain.User;
-import com.snail.sys.service.UserService;
+import com.snail.sys.api.vo.UserVo;
 import com.snail.sys.dao.UserDao;
+import com.snail.sys.service.UserService;
 import com.snial.common.core.constant.UserConstants;
 import com.snial.common.core.exception.user.UserException;
-import com.snial.common.core.utils.MapstructUtils;
-import com.snial.common.core.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
-
-
-import javax.annotation.Resource;
 
 /**
  * 用户信息表(User)表服务实现类
@@ -27,9 +21,6 @@ import javax.annotation.Resource;
 @Slf4j
 @Service("userService")
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
-
-    @Resource
-    private UserDao userDao;
 
     /**
      * 根据用户账号获取用户信息
