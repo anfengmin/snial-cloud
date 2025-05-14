@@ -106,7 +106,7 @@ public class PlusSaTokenDao implements SaTokenDao {
     public <T> T getObject(String key, Class<T> clazz) {
         Object cacheObject = RedisUtils.getCacheObject(key);
         if (cacheObject == null) {
-            return null;
+        return null;
         }
         return clazz.cast(cacheObject);
     }
