@@ -1,8 +1,10 @@
 package com.snail.auth.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.redis.utils.RedisUtils;
+import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.vo.UserVo;
 import com.snail.sys.service.UserService;
 import com.snial.common.core.constant.CacheConstants;
@@ -52,7 +54,8 @@ public class SysLoginServiceImpl implements SysLoginService {
     public String login(String userCode, String password) {
         UserVo userInfo = userService.getUserInfo(userCode);
         checkLogin(userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
-        return "assas";
+        LoginUtils.login(userInfo);
+        return StpUtil.getTokenValue();
     }
 
 
