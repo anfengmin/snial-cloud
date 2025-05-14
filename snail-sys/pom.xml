@@ -29,6 +29,12 @@
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
+        <!-- Sa-Token 权限认证 -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-common-core</artifactId>
