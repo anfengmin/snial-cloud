@@ -15,6 +15,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+import javax.annotation.Resource;
+
 /**
  * redis配置
  *
@@ -28,10 +30,10 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(RedissonProperties.class)
 public class RedisConfiguration {
 
-    @Autowired
+    @Resource
     private RedissonProperties redissonProperties;
 
-    @Autowired
+    @Resource
     private ObjectMapper objectMapper;
 
     @Bean
