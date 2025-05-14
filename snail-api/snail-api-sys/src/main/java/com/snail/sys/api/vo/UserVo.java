@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * No explanation is needed - Levi
@@ -74,6 +75,12 @@ public class UserVo  implements Serializable {
 
     @ApiModelProperty(value = "操作系统")
     private String os;
+
+    @ApiModelProperty(value = "菜单权限")
+    private Set<String> menuPermission;
+
+    @ApiModelProperty(value = "角色权限")
+    private Set<String> rolePermission;
 
 
 }
