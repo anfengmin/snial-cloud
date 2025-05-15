@@ -17,7 +17,6 @@
         <module>snail-gateway</module>
         <module>snail-api</module>
         <module>snail-sys</module>
-        <module>snail-common/snail-common-satoken</module>
     </modules>
 
     <properties>
