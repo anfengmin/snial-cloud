@@ -14,6 +14,14 @@ import java.util.Locale;
  * @since 1.0
  */
 public class I18nLocaleResolver implements LocaleResolver {
+    
+    /**
+     * 国际化配置，读取请求头参数，可更改为content-language
+     *
+     * @param httpServletRequest httpServletRequest
+     * @return java.util.Locale
+     * @since 1.0
+     */
     @Override
     public Locale resolveLocale(HttpServletRequest httpServletRequest) {
         String language = httpServletRequest.getHeader("accept-language");
