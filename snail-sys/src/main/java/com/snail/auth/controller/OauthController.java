@@ -1,5 +1,9 @@
 package com.snail.auth.controller;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.snail.sys.api.form.LoginBody;
 import com.snial.common.core.utils.R;
 import io.swagger.annotations.Api;
@@ -32,6 +36,16 @@ public class OauthController {
     @PostMapping("token")
     public R<Map<String, Object>> token(@ModelAttribute LoginBody form) {
         log.info("登录信息：{}", form);
+        HttpResponse response = HttpRequest.post("").form("", "").execute();
+        int status = response.getStatus();
+        if (status != 200) {
+            return R.fail("登录失败");
+        }
+        String body = response.body();
+        JSONObject entries = JSONUtil.parseObj(body);
+        log.info("登录信息：{}", entries);
+        // body转换成json
+
         return R.ok();
     }
 }
