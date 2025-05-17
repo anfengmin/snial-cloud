@@ -45,6 +45,13 @@ public class TokenController {
         return R.ok(rspMap);
     }
 
+    @ApiModelProperty(value = "登录")
+    @PostMapping("logout")
+    public R<Void> logout() {
+        sysLoginService.logout();
+        return R.ok();
+    }
+
     @GetMapping("/isLogin")
     public R<Object> isLogin(@RequestParam("userCode") String userCode) {
         UserVo loginUser1 = LoginUtils.getLoginUser();
