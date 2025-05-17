@@ -1,7 +1,10 @@
 package com.snail.auth.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
@@ -10,11 +13,16 @@ import com.snail.sys.service.UserService;
 import com.snial.common.core.constant.CacheConstants;
 import com.snial.common.core.constant.Constants;
 import com.snial.common.core.utils.MessageUtils;
+import com.snial.common.core.utils.ServletUtils;
+import com.snial.common.core.utils.SpringUtils;
+import com.snial.common.core.utils.ip.AddressUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.function.Supplier;
 
 /**
@@ -58,15 +66,62 @@ public class SysLoginServiceImpl implements SysLoginService {
         return StpUtil.getTokenValue();
     }
 
+    /**
+     * logout
+     *
+     * @since 1.0
+     */
+    @Override
+    public void logout() {
+        try {
+            UserVo loginUser = LoginUtils.getLoginUser();
+            HttpServletRequest request = ServletUtils.getRequest();
+            final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
+            final String ip = ServletUtils.getClientIP(request);
+
+            String address = AddressUtils.getRealAddressByIP(ip);
+            // 获取客户端操作系统
+            String os = userAgent.getOs().getName();
+            // 获取客户端浏览器
+            String browser = userAgent.getBrowser().getName();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                StpUtil.logout();
+            } catch (NotLoginException ignored) {
+                log.error("用户退出异常");
+            }
+        }
+        // 封装对象
+//        LogininforEvent logininfor = new LogininforEvent();
+//        logininfor.setUserName(username);
+//        logininfor.setIpaddr(ip);
+//        logininfor.setLoginLocation(address);
+//        logininfor.setBrowser(browser);
+//        logininfor.setOs(os);
+//        logininfor.setMsg(message);
+//        // 日志状态
+//        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
+//            logininfor.setStatus(Constants.LOGIN_SUCCESS_STATUS);
+//        } else if (Constants.LOGIN_FAIL.equals(status)) {
+//            logininfor.setStatus(Constants.LOGIN_FAIL_STATUS);
+//        }
+//        SpringUtils.context().publishEvent(logininfor);
+    }
 
 
     /**
-     * 登录校验
+     * checkLogin
+     *
+     * @param userCode userCode
+     * @param supplier supplier
+     * @since 1.0
      */
-    private void checkLogin( String userCode, Supplier<Boolean> supplier) {
+    private void checkLogin(String userCode, Supplier<Boolean> supplier) {
         String errorKey = CacheConstants.PWD_ERR_CNT_KEY + userCode;
         String loginFail = Constants.LOGIN_FAIL;
-        RedisUtils.setCacheObject("user",1);
+        RedisUtils.setCacheObject("user", 1);
         RedisUtils.setCacheObject(errorKey, RedisUtils.getCacheObject(errorKey));
         Integer errorNumber = RedisUtils.getCacheObject(errorKey);
         System.out.println(errorNumber);
