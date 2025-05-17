@@ -16,7 +16,7 @@ import java.util.Locale;
 public class I18nLocaleResolver implements LocaleResolver {
     @Override
     public Locale resolveLocale(HttpServletRequest httpServletRequest) {
-        String language = httpServletRequest.getHeader("content-language");
+        String language = httpServletRequest.getHeader("accept-language");
         Locale locale = Locale.getDefault();
         if (language != null && language.length() > 0) {
             String[] split = language.split("_");
