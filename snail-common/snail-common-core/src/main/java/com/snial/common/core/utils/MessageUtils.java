@@ -7,7 +7,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
- * No explanation is needed
+ * 获取i18n资源文件
  *
  * @author Levi.
  * Created time 2025/5/10
