@@ -5,16 +5,15 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.snail.sys.api.form.LoginBody;
+import com.snial.common.core.utils.MessageUtils;
 import com.snial.common.core.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 /**
@@ -47,5 +46,9 @@ public class OauthController {
         // body转换成json
 
         return R.ok();
+    }
+    @GetMapping("/test1")
+    public R<Void> test1(String code) {
+        return R.ok(MessageUtils.message(code));
     }
 }
