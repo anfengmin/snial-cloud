@@ -18,4 +18,11 @@ public interface SysLoginService {
      * @since 1.0
      */
     String login(String userCode, String password);
+
+    /**
+     * logout
+     *
+     * @since 1.0
+     */
+    void logout();
 }
