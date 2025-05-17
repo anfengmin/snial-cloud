@@ -2,6 +2,8 @@ package com.snail.auth.service.impl;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
@@ -12,6 +14,8 @@ import com.snail.sys.api.vo.UserVo;
 import com.snail.sys.service.UserService;
 import com.snial.common.core.constant.CacheConstants;
 import com.snial.common.core.constant.Constants;
+import com.snial.common.core.enums.LoginType;
+import com.snial.common.core.exception.user.UserException;
 import com.snial.common.core.utils.MessageUtils;
 import com.snial.common.core.utils.ServletUtils;
 import com.snial.common.core.utils.SpringUtils;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.function.Supplier;
 
 /**
@@ -61,7 +66,7 @@ public class SysLoginServiceImpl implements SysLoginService {
     @Override
     public String login(String userCode, String password) {
         UserVo userInfo = userService.getUserInfo(userCode);
-        checkLogin(userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
+        checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
         return StpUtil.getTokenValue();
     }
@@ -118,7 +123,7 @@ public class SysLoginServiceImpl implements SysLoginService {
      * @param supplier supplier
      * @since 1.0
      */
-    private void checkLogin(String userCode, Supplier<Boolean> supplier) {
+    private void checkLogin(LoginType loginType,String userCode, Supplier<Boolean> supplier) {
         String errorKey = CacheConstants.PWD_ERR_CNT_KEY + userCode;
         String loginFail = Constants.LOGIN_FAIL;
         RedisUtils.setCacheObject("user", 1);
@@ -126,8 +131,35 @@ public class SysLoginServiceImpl implements SysLoginService {
         Integer errorNumber = RedisUtils.getCacheObject(errorKey);
         System.out.println(errorNumber);
         // 获取用户登录错误次数(可自定义限制策略 例如: key + username + ip)
-        if (!supplier.get()) {
-            throw new RuntimeException(MessageUtils.message(loginFail));
+        // 锁定时间内登录 则踢出
+        if (ObjectUtil.isNotNull(errorNumber) && errorNumber.equals(maxRetryCount)) {
+//            recordLogininfor(username, loginFail, MessageUtils.message(loginType.getRetryLimitExceed(), maxRetryCount, lockTime));
+            throw new UserException(loginType.getRetryLimitExceed(), maxRetryCount, lockTime);
         }
+
+        if (supplier.get()) {
+            // 是否第一次
+            errorNumber = ObjectUtil.isNull(errorNumber) ? 1 : errorNumber + 1;
+            // 达到规定错误次数 则锁定登录
+            if (errorNumber.equals(maxRetryCount)) {
+                RedisUtils.setCacheObject(errorKey, errorNumber, Duration.ofMinutes(lockTime));
+                throw new UserException(loginType.getRetryLimitExceed(), maxRetryCount, lockTime);
+            } else {
+                // 未达到规定错误次数 则递增
+                RedisUtils.setCacheObject(errorKey, errorNumber);
+                throw new UserException(loginType.getRetryLimitCount(), errorNumber);
+            }
+        }
+        // 登录成功 清空错误次数
+        RedisUtils.deleteObject(errorKey);
+    }
+
+
+    public static void main(String[] args) {
+        String msg = StrUtil.format("密码输入错误{}次，帐户锁定{}分钟", 3,2);
+        System.out.println(msg);
+
     }
 }
+
+
