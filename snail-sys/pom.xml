@@ -45,6 +45,7 @@
             <artifactId>snail-common-redis</artifactId>
         </dependency>
 
+        <!-- Sa-Token 认证 -->
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-common-satoken</artifactId>
