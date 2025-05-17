@@ -51,6 +51,11 @@
             <artifactId>snail-common-satoken</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snial-common-web</artifactId>
+        </dependency>
+
         <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
