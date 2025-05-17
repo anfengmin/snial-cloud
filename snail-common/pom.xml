@@ -13,6 +13,7 @@
         <module>snail-common-bom</module>
         <module>snail-common-redis</module>
         <module>snail-common-satoken</module>
+        <module>snial-common-web</module>
     </modules>
 
     <artifactId>snail-common</artifactId>
