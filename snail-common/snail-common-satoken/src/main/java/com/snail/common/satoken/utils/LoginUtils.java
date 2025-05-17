@@ -62,7 +62,7 @@ public class LoginUtils {
 //        }
 //        userType + CacheConstants.LOGINID_JOIN_CODE + userId
         String loginId = userVo.getUserType() + CacheConstants.LOGINID_JOIN_CODE + userVo.getId();
-        StpUtil.login(loginId, model.setExtra(USER_KEY, userVo.getId()));
+        StpUtil.login(userVo.getUserCode(), model.setExtra(USER_KEY, userVo.getUserCode()));
         StpUtil.getTokenSession().set(LOGIN_USER_KEY, userVo);
     }
 
