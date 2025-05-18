@@ -1,9 +1,9 @@
 package com.snail.sys.controller;
 
+import com.snail.sys.api.domain.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.snail.sys.api.domain.User;
-import com.snail.sys.service.UserService;
+import com.snail.sys.service.SysUserService;
 import org.springframework.web.bind.annotation.*;
 import com.snial.common.core.utils.R;
 
@@ -19,33 +19,33 @@ import java.util.List;
 @Api(tags = "用户信息表")
 @RestController
 @RequestMapping("/v1/user")
-public class UserController {
+public class SysUserController {
 
     @Resource
-    private UserService userService;
+    private SysUserService sysUserService;
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
-    public R<User> queryById(@PathVariable("id") Long id) {
-        return R.ok(userService.getById(id));
+    public R<SysUser> queryById(@PathVariable("id") Long id) {
+        return R.ok(sysUserService.getById(id));
     }
 
     @PostMapping
     @ApiOperation(value = "新增数据")
-    public R<Boolean> add(User user) {
-        return R.ok(userService.save(user));
+    public R<Boolean> add(SysUser sysUser) {
+        return R.ok(sysUserService.save(sysUser));
     }
 
     @PutMapping
     @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(User user) {
-        return R.ok(userService.updateById(user));
+    public R<Boolean> edit(SysUser sysUser) {
+        return R.ok(sysUserService.updateById(sysUser));
     }
 
     @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
-        return R.ok(userService.removeByIds(ids));
+        return R.ok(sysUserService.removeByIds(ids));
     }
 
 }
