@@ -3,13 +3,12 @@ package com.snail.auth.service;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.vo.SysUserVo;
+import com.snail.sys.api.vo.LoginUser;
 import com.snail.sys.service.SysUserService;
 import com.snial.common.core.constant.CacheConstants;
 import com.snial.common.core.constant.Constants;
@@ -60,7 +59,7 @@ public class SysLoginService {
      * @since 1.0
      */
     public String login(String userCode, String password) {
-        SysUserVo userInfo = sysUserService.getUserInfo(userCode);
+        LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
         return StpUtil.getTokenValue();
@@ -73,7 +72,7 @@ public class SysLoginService {
      */
     public void logout() {
         try {
-            SysUserVo loginUser = LoginUtils.getLoginUser();
+            LoginUser loginUser = LoginUtils.getLoginUser();
             HttpServletRequest request = ServletUtils.getRequest();
             assert request != null;
             final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
