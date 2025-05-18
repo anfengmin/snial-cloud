@@ -8,6 +8,7 @@ import com.snail.common.redis.utils.RedisUtils;
 import com.snail.gateway.config.properties.CaptchaProperties;
 import com.snail.gateway.enums.CaptchaType;
 import com.snail.gateway.service.ValidateCodeService;
+import com.snail.gateway.vo.CaptchaVo;
 import com.snial.common.core.constant.CacheConstants;
 import com.snial.common.core.constant.Constants;
 import com.snial.common.core.exception.CaptchaException;
@@ -21,10 +22,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 验证码实现处理
@@ -45,12 +43,12 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
      * @since 1.0
      */
     @Override
-    public R<Map<String, Object>> createCaptcha() throws IOException, CaptchaException {
-        Map<String, Object> ajax = new HashMap<>();
+    public R<CaptchaVo> createCaptcha() {
+        CaptchaVo captchaVo = new CaptchaVo();
         boolean captchaEnabled = captchaProperties.getEnabled();
-        ajax.put("captchaEnabled", captchaEnabled);
+        captchaVo.setCaptchaEnabled(captchaEnabled);
         if (!captchaEnabled) {
-            return R.ok(ajax);
+            return R.ok(captchaVo);
         }
 
         // 保存验证码信息
@@ -75,9 +73,10 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         }
         RedisUtils.setCacheObject(verifyKey, code, Duration.ofMinutes(Constants.CAPTCHA_EXPIRATION));
 
-        ajax.put("uuid", uuid);
-        ajax.put("img", captcha.getImageBase64());
-        return R.ok(ajax);
+
+        captchaVo.setUuid(uuid);
+        captchaVo.setImg(captcha.getImageBase64());
+        return R.ok(captchaVo);
     }
 
     /**
