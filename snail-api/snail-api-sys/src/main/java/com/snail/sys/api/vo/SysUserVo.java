@@ -2,10 +2,8 @@ package com.snail.sys.api.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.snail.sys.api.domain.User;
-import io.github.linpeilie.annotations.AutoMapMapper;
+import com.snail.sys.api.domain.SysUser;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,9 +23,9 @@ import java.util.Set;
  */
 @Data
 @NoArgsConstructor
-@AutoMapper(target = User.class)
+@AutoMapper(target = SysUser.class)
 @ApiModel(value = "用户")
-public class UserVo  implements Serializable {
+public class SysUserVo implements Serializable {
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "用户ID")
