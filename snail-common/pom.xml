@@ -14,6 +14,7 @@
         <module>snail-common-redis</module>
         <module>snail-common-satoken</module>
         <module>snial-common-web</module>
+        <module>snial-common-log</module>
     </modules>
 
     <artifactId>snail-common</artifactId>
