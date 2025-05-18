@@ -260,3 +260,181 @@ INSERT INTO sys_menu VALUES (1602, '文件下载', 118, 3, '#', '', '', 1, 0, 'F
 INSERT INTO sys_menu VALUES (1603, '文件删除', 118, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
 INSERT INTO sys_menu VALUES (1604, '配置添加', 118, 5, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:add', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
 INSERT INTO sys_menu VALUES (1605, '配置编辑', 118, 6, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:edit', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+
+
+-- ----------------------------
+-- 6、用户和角色关联表  用户N-1角色
+-- ----------------------------
+drop table if exists sys_user_role;
+create table sys_user_role (
+                               user_id   bigint(20) not null comment '用户ID',
+                               role_id   bigint(20) not null comment '角色ID',
+                               primary key(user_id, role_id)
+) engine=innodb comment = '用户和角色关联表';
+
+-- ----------------------------
+-- 初始化-用户和角色关联表数据
+-- ----------------------------
+insert into sys_user_role values ('1', '1');
+insert into sys_user_role values ('2', '2');
+
+
+-- ----------------------------
+-- 7、角色和菜单关联表  角色1-N菜单
+-- ----------------------------
+drop table if exists sys_role_menu;
+create table sys_role_menu (
+                               role_id   bigint(20) not null comment '角色ID',
+                               menu_id   bigint(20) not null comment '菜单ID',
+                               primary key(role_id, menu_id)
+) engine=innodb comment = '角色和菜单关联';
+
+-- ----------------------------
+-- 初始化-角色和菜单关联表数据
+-- ----------------------------
+insert into sys_role_menu values ('2', '1');
+insert into sys_role_menu values ('2', '2');
+insert into sys_role_menu values ('2', '3');
+insert into sys_role_menu values ('2', '4');
+insert into sys_role_menu values ('2', '100');
+insert into sys_role_menu values ('2', '101');
+insert into sys_role_menu values ('2', '102');
+insert into sys_role_menu values ('2', '103');
+insert into sys_role_menu values ('2', '104');
+insert into sys_role_menu values ('2', '105');
+insert into sys_role_menu values ('2', '106');
+insert into sys_role_menu values ('2', '107');
+insert into sys_role_menu values ('2', '108');
+insert into sys_role_menu values ('2', '109');
+insert into sys_role_menu values ('2', '110');
+insert into sys_role_menu values ('2', '111');
+insert into sys_role_menu values ('2', '112');
+insert into sys_role_menu values ('2', '113');
+insert into sys_role_menu values ('2', '114');
+insert into sys_role_menu values ('2', '115');
+insert into sys_role_menu values ('2', '116');
+insert into sys_role_menu values ('2', '500');
+insert into sys_role_menu values ('2', '501');
+insert into sys_role_menu values ('2', '1000');
+insert into sys_role_menu values ('2', '1001');
+insert into sys_role_menu values ('2', '1002');
+insert into sys_role_menu values ('2', '1003');
+insert into sys_role_menu values ('2', '1004');
+insert into sys_role_menu values ('2', '1005');
+insert into sys_role_menu values ('2', '1006');
+insert into sys_role_menu values ('2', '1007');
+insert into sys_role_menu values ('2', '1008');
+insert into sys_role_menu values ('2', '1009');
+insert into sys_role_menu values ('2', '1010');
+insert into sys_role_menu values ('2', '1011');
+insert into sys_role_menu values ('2', '1012');
+insert into sys_role_menu values ('2', '1013');
+insert into sys_role_menu values ('2', '1014');
+insert into sys_role_menu values ('2', '1015');
+insert into sys_role_menu values ('2', '1016');
+insert into sys_role_menu values ('2', '1017');
+insert into sys_role_menu values ('2', '1018');
+insert into sys_role_menu values ('2', '1019');
+insert into sys_role_menu values ('2', '1020');
+insert into sys_role_menu values ('2', '1021');
+insert into sys_role_menu values ('2', '1022');
+insert into sys_role_menu values ('2', '1023');
+insert into sys_role_menu values ('2', '1024');
+insert into sys_role_menu values ('2', '1025');
+insert into sys_role_menu values ('2', '1026');
+insert into sys_role_menu values ('2', '1027');
+insert into sys_role_menu values ('2', '1028');
+insert into sys_role_menu values ('2', '1029');
+insert into sys_role_menu values ('2', '1030');
+insert into sys_role_menu values ('2', '1031');
+insert into sys_role_menu values ('2', '1032');
+insert into sys_role_menu values ('2', '1033');
+insert into sys_role_menu values ('2', '1034');
+insert into sys_role_menu values ('2', '1035');
+insert into sys_role_menu values ('2', '1036');
+insert into sys_role_menu values ('2', '1037');
+insert into sys_role_menu values ('2', '1038');
+insert into sys_role_menu values ('2', '1039');
+insert into sys_role_menu values ('2', '1040');
+insert into sys_role_menu values ('2', '1041');
+insert into sys_role_menu values ('2', '1042');
+insert into sys_role_menu values ('2', '1043');
+insert into sys_role_menu values ('2', '1044');
+insert into sys_role_menu values ('2', '1045');
+insert into sys_role_menu values ('2', '1046');
+insert into sys_role_menu values ('2', '1047');
+insert into sys_role_menu values ('2', '1048');
+insert into sys_role_menu values ('2', '1049');
+insert into sys_role_menu values ('2', '1050');
+insert into sys_role_menu values ('2', '1051');
+insert into sys_role_menu values ('2', '1052');
+insert into sys_role_menu values ('2', '1053');
+insert into sys_role_menu values ('2', '1054');
+insert into sys_role_menu values ('2', '1055');
+insert into sys_role_menu values ('2', '1056');
+insert into sys_role_menu values ('2', '1057');
+insert into sys_role_menu values ('2', '1058');
+insert into sys_role_menu values ('2', '1059');
+insert into sys_role_menu values ('2', '1060');
+
+
+-- ----------------------------
+-- 8、角色和部门关联表  角色1-N部门
+-- ----------------------------
+drop table if exists sys_role_dept;
+create table sys_role_dept (
+                               role_id   bigint(20) not null comment '角色ID',
+                               dept_id   bigint(20) not null comment '部门ID',
+                               primary key(role_id, dept_id)
+) engine=innodb comment = '角色和部门关联';
+
+-- ----------------------------
+-- 初始化-角色和部门关联表数据
+-- ----------------------------
+insert into sys_role_dept values ('2', '100');
+insert into sys_role_dept values ('2', '101');
+insert into sys_role_dept values ('2', '105');
+
+-- ----------------------------
+-- 9、用户与岗位关联表  用户1-N岗位
+-- ----------------------------
+drop table if exists sys_user_post;
+create table sys_user_post
+(
+    user_id   bigint(20) not null comment '用户ID',
+    post_id   bigint(20) not null comment '岗位ID',
+    primary key (user_id, post_id)
+) engine=innodb comment = '用户与岗位关联表';
+
+-- ----------------------------
+-- 初始化-用户与岗位关联表数据
+-- ----------------------------
+insert into sys_user_post values ('1', '1');
+insert into sys_user_post values ('2', '2');
+
+-- ----------------------------
+-- 10、操作日志记录
+-- ----------------------------
+drop table if exists sys_operate_log;
+create table sys_operate_log (
+                                 id           bigint(20)      not null                   comment '日志主键',
+                                 title             varchar(50)     default ''                 comment '模块标题',
+                                 business_type     int(2)          default 0                  comment '业务类型（0其它 1新增 2修改 3删除）',
+                                 method            varchar(100)    default ''                 comment '方法名称',
+                                 request_method    varchar(10)     default ''                 comment '请求方式',
+                                 operator_type     int(1)          default 0                  comment '操作类别（0其它 1后台用户 2手机端用户）',
+                                 operate_name         varchar(50)     default ''                 comment '操作人员',
+                                 dept_name         varchar(50)     default ''                 comment '部门名称',
+                                 operate_url          varchar(255)    default ''                 comment '请求URL',
+                                 operate_ip           varchar(128)    default ''                 comment '主机地址',
+                                 operate_location     varchar(255)    default ''                 comment '操作地点',
+                                 operate_param        varchar(2000)   default ''                 comment '请求参数',
+                                 json_result       varchar(2000)   default ''                 comment '返回参数',
+                                 status            int(1)          default 0                  comment '操作状态（0正常 1异常）',
+                                 error_msg         varchar(2000)   default ''                 comment '错误消息',
+                                 oper_time         datetime                                   comment '操作时间',
+                                 primary key (id),
+                                 key idx_sys_oper_log_bt (business_type),
+                                 key idx_sys_oper_log_s  (status),
+                                 key idx_sys_oper_log_ot (oper_time)
+) engine=innodb comment = '操作日志记录';
