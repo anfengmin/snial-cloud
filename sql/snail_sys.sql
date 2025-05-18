@@ -125,3 +125,138 @@ create table sys_role
 -- ----------------------------
 insert into sys_role values('1', '超级管理员',  'admin',  1, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '超级管理员');
 insert into sys_role values('2', '普通角色',    'common', 2, 2, 1, 1, '0', '0', 'admin', sysdate(), '', null, '普通角色');
+
+-- ----------------------------
+-- 5、菜单权限表
+-- ----------------------------
+drop table if exists sys_menu;
+create table sys_menu
+(
+    id     bigint(20)  not null comment '菜单ID',
+    menu_name   varchar(50) not null comment '菜单名称',
+    parent_id   bigint(20)   default 0 comment '父菜单ID',
+    order_num   int(4)       default 0 comment '显示顺序',
+    path        varchar(200) default '' comment '路由地址',
+    component   varchar(255) default null comment '组件路径',
+    query_param varchar(255) default null comment '路由参数',
+    is_frame    int(1)       default 1 comment '是否为外链（0是 1否）',
+    is_cache    int(1)       default 0 comment '是否缓存（0缓存 1不缓存）',
+    menu_type   char(1)      default '' comment '菜单类型（M目录 C菜单 F按钮）',
+    visible     char(1)      default 0 comment '显示状态（0显示 1隐藏）',
+    status      tinyint(1)  not null comment '状态（0正常 1停用）',
+    deleted     tinyint(1)   default 0 comment '删除标志（0:存在 1:删除）',
+    perms       varchar(100) default null comment '权限标识',
+    icon        varchar(100) default '#' comment '菜单图标',
+    create_by   varchar(64)  default '' comment '创建者',
+    create_time datetime comment '创建时间',
+    update_by   varchar(64)  default '' comment '更新者',
+    update_time datetime comment '更新时间',
+    remark      varchar(500) default '' comment '备注',
+    primary key (id)
+) engine = innodb comment = '菜单权限';
+#     deleted     tinyint(1)   default 0 comment '删除标志（0:存在 1:删除）',
+
+-- ----------------------------
+-- 初始化-菜单信息表数据
+-- ----------------------------
+-- 一级菜单
+INSERT INTO sys_menu VALUES (1, '系统管理', 0, 1, 'system', null, '', 1, 0, 'M', '0', 0, 0, '', 'system', 'admin', sysdate(), '', null, '系统管理目录');
+INSERT INTO sys_menu VALUES (2, '系统监控', 0, 2, 'monitor', null, '', 1, 0, 'M', '0', 0, 0, '', 'monitor', 'admin', sysdate(), '', null, '系统监控目录');
+INSERT INTO sys_menu VALUES (3, '系统工具', 0, 3, 'tool', null, '', 1, 0, 'M', '0', 0, 0, '', 'tool', 'admin', sysdate(), '', null, '系统工具目录');
+INSERT INTO sys_menu VALUES (4, 'PLUS官网', 0, 4, 'https://gitee.com/dromara/RuoYi-Cloud-Plus', null, '', 0, 0, 'M', '0', 0, 0, '', 'guide', 'admin', sysdate(), '', null, 'RuoYi-Cloud-Plus官网地址');
+-- 二级菜单
+INSERT INTO sys_menu VALUES (100, '用户管理', 1, 1, 'user', 'system/user/index', '', 1, 0, 'C', '0', 0, 0, 'system:user:list', 'user', 'admin', sysdate(), '', null, '用户管理菜单');
+INSERT INTO sys_menu VALUES (101, '角色管理', 1, 2, 'role', 'system/role/index', '', 1, 0, 'C', '0', 0, 0, 'system:role:list', 'peoples', 'admin', sysdate(), '', null, '角色管理菜单');
+INSERT INTO sys_menu VALUES (102, '菜单管理', 1, 3, 'menu', 'system/menu/index', '', 1, 0, 'C', '0', 0, 0, 'system:menu:list', 'tree-table', 'admin', sysdate(), '', null, '菜单管理菜单');
+INSERT INTO sys_menu VALUES (103, '部门管理', 1, 4, 'dept', 'system/dept/index', '', 1, 0, 'C', '0', 0, 0, 'system:dept:list', 'tree', 'admin', sysdate(), '', null, '部门管理菜单');
+INSERT INTO sys_menu VALUES (104, '岗位管理', 1, 5, 'post', 'system/post/index', '', 1, 0, 'C', '0', 0, 0, 'system:post:list', 'post', 'admin', sysdate(), '', null, '岗位管理菜单');
+INSERT INTO sys_menu VALUES (105, '字典管理', 1, 6, 'dict', 'system/dict/index', '', 1, 0, 'C', '0', 0, 0, 'system:dict:list', 'dict', 'admin', sysdate(), '', null, '字典管理菜单');
+INSERT INTO sys_menu VALUES (106, '参数设置', 1, 7, 'config', 'system/config/index', '', 1, 0, 'C', '0', 0, 0, 'system:config:list', 'edit', 'admin', sysdate(), '', null, '参数设置菜单');
+INSERT INTO sys_menu VALUES (107, '通知公告', 1, 8, 'notice', 'system/notice/index', '', 1, 0, 'C', '0', 0, 0, 'system:notice:list', 'message', 'admin', sysdate(), '', null, '通知公告菜单');
+INSERT INTO sys_menu VALUES (108, '日志管理', 1, 9, 'log', '', '', 1, 0, 'M', '0', 0, 0, '', 'log', 'admin', sysdate(), '', null, '日志管理菜单');
+INSERT INTO sys_menu VALUES (109, '在线用户', 2, 1, 'online', 'monitor/online/index', '', 1, 0, 'C', '0', 0, 0, 'monitor:online:list', 'online', 'admin', sysdate(), '', null, '在线用户菜单');
+INSERT INTO sys_menu VALUES (110, 'XxlJob控制台', 2, 2, 'http://localhost:9900', '', '', 0, 0, 'C', '0', 0, 0, 'monitor:job:list', 'job', 'admin', sysdate(), '', null, '定时任务菜单');
+INSERT INTO sys_menu VALUES (111, 'Sentinel控制台', 2, 3, 'http://localhost:8718', '', '', 0, 0, 'C', '0', 0, 0, 'monitor:sentinel:list', 'sentinel', 'admin', sysdate(), '', null, '流量控制菜单');
+INSERT INTO sys_menu VALUES (112, 'Nacos控制台', 2, 4, 'http://localhost:8848/nacos', '', '', 0, 0, 'C', '0', 0, 0, 'monitor:nacos:list', 'nacos', 'admin', sysdate(), '', null, '服务治理菜单');
+INSERT INTO sys_menu VALUES (113, 'Admin控制台', 2, 5, 'http://localhost:9100/login', '', '', 0, 0, 'C', '0', 0, 0, 'monitor:server:list', 'server', 'admin', sysdate(), '', null, '服务监控菜单');
+INSERT INTO sys_menu VALUES (114, '表单构建', 3, 1, 'build', 'tool/build/index', '', 1, 0, 'C', '0', 0, 0, 'tool:build:list', 'build', 'admin', sysdate(), '', null, '表单构建菜单');
+INSERT INTO sys_menu VALUES (115, '代码生成', 3, 2, 'gen', 'tool/gen/index', '', 1, 0, 'C', '0', 0, 0, 'tool:gen:list', 'code', 'admin', sysdate(), '', null, '代码生成菜单');
+-- oss菜单
+INSERT INTO sys_menu VALUES (118, '文件管理', 1, 10, 'oss', 'system/oss/index', '', 1, 0, 'C', '0', 0, 0, 'system:oss:list', 'upload', 'admin', sysdate(), '', null, '文件管理菜单');
+-- 三级菜单
+INSERT INTO sys_menu VALUES (500, '操作日志', 108, 1, 'operlog', 'system/operlog/index', '', 1, 0, 'C', '0', 0, 0, 'system:operlog:list', 'form', 'admin', sysdate(), '', null, '操作日志菜单');
+INSERT INTO sys_menu VALUES (501, '登录日志', 108, 2, 'logininfor', 'system/logininfor/index', '', 1, 0, 'C', '0', 0, 0, 'system:logininfor:list', 'logininfor', 'admin', sysdate(), '', null, '登录日志菜单');
+-- 用户管理按钮
+INSERT INTO sys_menu VALUES (1001, '用户查询', 100, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1002, '用户新增', 100, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1003, '用户修改', 100, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1004, '用户删除', 100, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:remove', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1005, '用户导出', 100, 5, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:export', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1006, '用户导入', 100, 6, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:import', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1007, '重置密码', 100, 7, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:resetPwd', '#', 'admin', sysdate(), '', null, '');
+-- 角色管理按钮
+INSERT INTO sys_menu VALUES (1008, '角色查询', 101, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1009, '角色新增', 101, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1010, '角色修改', 101, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1011, '角色删除', 101, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:remove', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1012, '角色导出', 101, 5, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:export', '#', 'admin', sysdate(), '', null, '');
+-- 菜单管理按钮
+INSERT INTO sys_menu VALUES (1013, '菜单查询', 102, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:menu:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1014, '菜单新增', 102, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:menu:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1015, '菜单修改', 102, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:menu:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1016, '菜单删除', 102, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:menu:remove', '#', 'admin', sysdate(), '', null, '');
+-- 部门管理按钮
+INSERT INTO sys_menu VALUES (1017, '部门查询', 103, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:dept:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1018, '部门新增', 103, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:dept:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1019, '部门修改', 103, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:dept:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1020, '部门删除', 103, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:dept:remove', '#', 'admin', sysdate(), '', null, '');
+-- 岗位管理按钮
+INSERT INTO sys_menu VALUES (1021, '岗位查询', 104, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:post:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1022, '岗位新增', 104, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:post:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1023, '岗位修改', 104, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:post:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1024, '岗位删除', 104, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:post:remove', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1025, '岗位导出', 104, 5, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:post:export', '#', 'admin', sysdate(), '', null, '');
+-- 字典管理按钮
+INSERT INTO sys_menu VALUES (1026, '字典查询', 105, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:dict:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1027, '字典新增', 105, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:dict:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1028, '字典修改', 105, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:dict:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1029, '字典删除', 105, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:dict:remove', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1030, '字典导出', 105, 5, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:dict:export', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 参数设置按钮
+INSERT INTO sys_menu VALUES (1031, '参数查询', 106, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:config:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1032, '参数新增', 106, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:config:add', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1033, '参数修改', 106, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:config:edit', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1034, '参数删除', 106, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:config:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1035, '参数导出', 106, 5, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:config:export', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 通知公告按钮
+INSERT INTO sys_menu VALUES (1036, '公告查询', 107, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:notice:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1037, '公告新增', 107, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:notice:add', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1038, '公告修改', 107, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:notice:edit', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1039, '公告删除', 107, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:notice:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 操作日志按钮
+INSERT INTO sys_menu VALUES (1040, '操作查询', 500, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:operlog:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1041, '操作删除', 500, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:operlog:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1042, '日志导出', 500, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:operlog:export', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 登录日志按钮
+INSERT INTO sys_menu VALUES (1043, '登录查询', 501, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:logininfor:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1044, '登录删除', 501, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:logininfor:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1045, '日志导出', 501, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:logininfor:export', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 在线用户按钮
+INSERT INTO sys_menu VALUES (1046, '在线查询', 109, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'monitor:online:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1047, '批量强退', 109, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'monitor:online:batchLogout', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1048, '单条强退', 109, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'monitor:online:forceLogout', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1050, '账户解锁', 501, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:logininfor:unlock', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- 代码生成按钮
+INSERT INTO sys_menu VALUES (1055, '生成查询', 115, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1056, '生成修改', 115, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:edit', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1057, '生成删除', 115, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1058, '导入代码', 115, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:import', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1059, '预览代码', 115, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:preview', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1060, '生成代码', 115, 5, '#', '', '', 1, 0, 'F', '0', 0, 0, 'tool:gen:code', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+-- oss相关按钮
+INSERT INTO sys_menu VALUES (1600, '文件查询', 118, 1, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:query', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1601, '文件上传', 118, 2, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:upload', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1602, '文件下载', 118, 3, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:download', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1603, '文件删除', 118, 4, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:remove', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1604, '配置添加', 118, 5, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:add', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
+INSERT INTO sys_menu VALUES (1605, '配置编辑', 118, 6, '#', '', '', 1, 0, 'F', '0', 0, 0, 'system:oss:edit', '#', 'admin', '2025-05-18 20:48:08', '', null, '');
