@@ -586,4 +586,36 @@ create table sys_notice
 -- 初始化-公告信息表数据
 -- ----------------------------
 insert into sys_notice values('1', '温馨提醒：2018-07-01 版本发布啦', '2', '新版本内容', '0', 'admin', sysdate(), '', null, '管理员');
-insert into sys_notice values('2', '维护通知：2018-07-01系统凌晨维护', '1', '维护内容',   '0', 'admin', sysdate(), '', null, '管理员');
+insert into sys_notice values('2', '维护通知：2018-07-01 系统凌晨维护', '1', '维护内容',   '0', 'admin', sysdate(), '', null, '管理员');
+
+-- ----------------------------
+-- 18、OSS对象存储表
+-- ----------------------------
+drop table if exists sys_oss;
+create table sys_oss
+(
+    id            bigint(20)   not null comment '对象存储主键',
+    file_name     varchar(255) not null default '' comment '文件名',
+    original_name varchar(255) not null default '' comment '原名',
+    file_suffix   varchar(10)  not null default '' comment '文件后缀名',
+    url           varchar(500) not null comment 'URL地址',
+    create_time   datetime              default null comment '创建时间',
+    create_by     varchar(64)           default '' comment '上传人',
+    update_time   datetime              default null comment '更新时间',
+    update_by     varchar(64)           default '' comment '更新人',
+    service       varchar(20)  not null default 'minio' comment '服务商',
+    primary key (id)
+) engine = innodb comment ='OSS对象存储';
+
+-- for AT mode you must to init this sql for you business database. the seata server not need it.
+CREATE TABLE IF NOT EXISTS undo_log
+(
+    id            BIGINT(20)   NOT NULL COMMENT 'branch transaction id',
+    xid           VARCHAR(100) NOT NULL COMMENT 'global transaction id',
+    context       VARCHAR(128) NOT NULL COMMENT 'undo_log context,such as serialization',
+    rollback_info LONGBLOB     NOT NULL COMMENT 'rollback info',
+    log_status    INT(11)      NOT NULL COMMENT '0:normal status,1:defense status',
+    log_created   DATETIME(6)  NOT NULL COMMENT 'create datetime',
+    log_modified  DATETIME(6)  NOT NULL COMMENT 'modify datetime',
+    UNIQUE KEY ux_undo_log (xid, id)
+) ENGINE = InnoDB COMMENT ='AT transaction mode undo table';
