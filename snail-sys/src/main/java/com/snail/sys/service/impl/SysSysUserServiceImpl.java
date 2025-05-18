@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.SysUserVo;
+import com.snail.sys.api.vo.LoginUser;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.service.SysUserService;
 import com.snial.common.core.constant.UserConstants;
@@ -29,7 +29,7 @@ public class SysSysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impl
      * @return 用户信息
      */
     @Override
-    public SysUserVo getUserInfo(String userCode) {
+    public LoginUser getUserInfo(String userCode) {
         SysUser sysUserInfo = this.lambdaQuery().eq(SysUser::getUserCode, userCode).one();
         if (ObjectUtil.isEmpty(sysUserInfo)) {
             throw new UserException("user.not.exists", userCode);
@@ -37,9 +37,9 @@ public class SysSysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impl
         if (UserConstants.USER_DISABLE.equals(sysUserInfo.getStatus())) {
             throw new UserException("user.blocked", userCode);
         }
-        SysUserVo sysUserVo = BeanUtil.copyProperties(sysUserInfo, SysUserVo.class);
+        LoginUser loginUser = BeanUtil.copyProperties(sysUserInfo, LoginUser.class);
 
         log.info("userInfo:{}", sysUserInfo);
-        return sysUserVo;
+        return loginUser;
     }
 }
