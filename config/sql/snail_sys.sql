@@ -15,8 +15,8 @@ create table sys_user
     sex         char(1)      default '0' comment '用户性别（0男 1女 2未知）',
     avatar      varchar(100) default '' comment '头像地址',
     pass_word   varchar(100) default '' comment '密码',
-    status      char(1)      default '0' comment '帐号状态（0:正常 1:停用）',
-    deleted     char(1)      default '0' comment '删除标志（0:存在 1:删除）',
+    status      tinyint(1)   default '0' comment '帐号状态（0:正常 1:停用）',
+    deleted     tinyint(1)   default '0' comment '删除标志（0:存在 1:删除）',
     login_ip    varchar(128) default '' comment '最后登录IP',
     login_date  datetime comment '最后登录时间',
     create_by   varchar(64)  default '' comment '创建者',
@@ -103,14 +103,14 @@ insert into sys_post values(4, 'sysUser', '普通员工',  4, 0,  0, 'admin', sy
 drop table if exists sys_role;
 create table sys_role
 (
-    id             bigint(20)   not null comment '角色ID',
+    id                  bigint(20)   not null comment '角色ID',
     role_name           varchar(30)  not null comment '角色名称',
     role_key            varchar(100) not null comment '角色权限字符串',
     role_sort           int(4)       not null comment '显示顺序',
     data_scope          char(1)      default '1' comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）',
     menu_check_strictly tinyint(1)   default 1 comment '菜单树选择项是否关联显示',
     dept_check_strictly tinyint(1)   default 1 comment '部门树选择项是否关联显示',
-    status              tinyint(1)   not null comment '状态（0正常 1停用）',
+    status              tinyint(1)   default 0 comment '状态（0正常 1停用）',
     deleted             tinyint(1)   default 0 comment '删除标志（0:存在 1:删除）',
     create_by           varchar(64)  default '' comment '创建者',
     create_time         datetime comment '创建时间',
@@ -118,7 +118,7 @@ create table sys_role
     update_time         datetime comment '更新时间',
     remark              varchar(500) default null comment '备注',
     primary key (id)
-) engine = innodb comment = '角色信息表';
+) engine = innodb comment = '角色信息';
 
 -- ----------------------------
 -- 初始化-角色信息表数据
@@ -132,18 +132,18 @@ insert into sys_role values('2', '普通角色',    'common', 2, 2, 1, 1, '0', '
 drop table if exists sys_menu;
 create table sys_menu
 (
-    id     bigint(20)  not null comment '菜单ID',
+    id          bigint(20)  not null comment '菜单ID',
     menu_name   varchar(50) not null comment '菜单名称',
     parent_id   bigint(20)   default 0 comment '父菜单ID',
     order_num   int(4)       default 0 comment '显示顺序',
     path        varchar(200) default '' comment '路由地址',
     component   varchar(255) default null comment '组件路径',
     query_param varchar(255) default null comment '路由参数',
-    is_frame    int(1)       default 1 comment '是否为外链（0是 1否）',
-    is_cache    int(1)       default 0 comment '是否缓存（0缓存 1不缓存）',
+    is_frame    tinyint(1)   default 1 comment '是否为外链（0是 1否）',
+    is_cache    tinyint(1)   default 0 comment '是否缓存（0缓存 1不缓存）',
     menu_type   char(1)      default '' comment '菜单类型（M目录 C菜单 F按钮）',
-    visible     char(1)      default 0 comment '显示状态（0显示 1隐藏）',
-    status      tinyint(1)  not null comment '状态（0正常 1停用）',
+    visible     tinyint(1)   default 0 comment '显示状态（0显示 1隐藏）',
+    status      tinyint(1)   default 0 comment '状态（0正常 1停用）',
     deleted     tinyint(1)   default 0 comment '删除标志（0:存在 1:删除）',
     perms       varchar(100) default null comment '权限标识',
     icon        varchar(100) default '#' comment '菜单图标',
@@ -416,28 +416,29 @@ insert into sys_user_post values ('2', '2');
 -- 10、操作日志记录
 -- ----------------------------
 drop table if exists sys_operate_log;
-create table sys_operate_log (
-                                 id           bigint(20)      not null                   comment '日志主键',
-                                 title             varchar(50)     default ''                 comment '模块标题',
-                                 business_type     int(2)          default 0                  comment '业务类型（0其它 1新增 2修改 3删除）',
-                                 method            varchar(100)    default ''                 comment '方法名称',
-                                 request_method    varchar(10)     default ''                 comment '请求方式',
-                                 operator_type     int(1)          default 0                  comment '操作类别（0其它 1后台用户 2手机端用户）',
-                                 operate_name         varchar(50)     default ''                 comment '操作人员',
-                                 dept_name         varchar(50)     default ''                 comment '部门名称',
-                                 operate_url          varchar(255)    default ''                 comment '请求URL',
-                                 operate_ip           varchar(128)    default ''                 comment '主机地址',
-                                 operate_location     varchar(255)    default ''                 comment '操作地点',
-                                 operate_param        varchar(2000)   default ''                 comment '请求参数',
-                                 json_result       varchar(2000)   default ''                 comment '返回参数',
-                                 status            int(1)          default 0                  comment '操作状态（0正常 1异常）',
-                                 error_msg         varchar(2000)   default ''                 comment '错误消息',
-                                 oper_time         datetime                                   comment '操作时间',
-                                 primary key (id),
-                                 key idx_sys_oper_log_bt (business_type),
-                                 key idx_sys_oper_log_s  (status),
-                                 key idx_sys_oper_log_ot (oper_time)
-) engine=innodb comment = '操作日志记录';
+create table sys_operate_log
+(
+    id               bigint(20) not null comment '日志主键',
+    title            varchar(50)   default '' comment '模块标题',
+    business_type    tinyint(2)    default 0 comment '业务类型（0其它 1新增 2修改 3删除）',
+    method           varchar(100)  default '' comment '方法名称',
+    request_method   varchar(10)   default '' comment '请求方式',
+    operator_type    tinyint(1)    default 0 comment '操作类别（0其它 1后台用户 2手机端用户）',
+    operate_name     varchar(50)   default '' comment '操作人员',
+    dept_name        varchar(50)   default '' comment '部门名称',
+    operate_url      varchar(255)  default '' comment '请求URL',
+    operate_ip       varchar(128)  default '' comment '主机地址',
+    operate_location varchar(255)  default '' comment '操作地点',
+    operate_param    varchar(2000) default '' comment '请求参数',
+    json_result      varchar(2000) default '' comment '返回参数',
+    status           tinyint(1)    default 0 comment '操作状态（0正常 1异常）',
+    error_msg        varchar(2000) default '' comment '错误消息',
+    oper_time        datetime comment '操作时间',
+    primary key (id),
+    key idx_sys_oper_log_bt (business_type),
+    key idx_sys_oper_log_s (status),
+    key idx_sys_oper_log_ot (oper_time)
+) engine = innodb comment = '操作日志记录';
 
 
 
@@ -450,7 +451,7 @@ create table sys_dict_type
     id          bigint(20) not null comment '字典主键',
     dict_name   varchar(100) default '' comment '字典名称',
     dict_type   varchar(100) default '' comment '字典类型',
-    status      char(1)      default '0' comment '状态（0正常 1停用）',
+    status      tinyint(1)   default 0 comment '状态（0:正常 1:停用）',
     create_by   varchar(64)  default '' comment '创建者',
     create_time datetime comment '创建时间',
     update_by   varchar(64)  default '' comment '更新者',
@@ -483,7 +484,7 @@ create table sys_dict_data
     css_class   varchar(100) default null comment '样式属性（其他样式扩展）',
     list_class  varchar(100) default null comment '表格回显样式',
     is_default  char(1)      default 'N' comment '是否默认（Y是 N否）',
-    status      char(1)      default '0' comment '状态（0正常 1停用）',
+    status      tinyint(1)   default 0 comment '状态（0:正常 1:停用）',
     create_by   varchar(64)  default '' comment '创建者',
     create_time datetime comment '创建时间',
     update_by   varchar(64)  default '' comment '更新者',
@@ -547,20 +548,21 @@ insert into sys_config values(11, 'OSS预览列表资源开关',        'sys.oss
 -- 14、系统访问记录
 -- ----------------------------
 drop table if exists sys_login_info;
-create table sys_login_info (
-                                id        bigint(20)     not null                  comment '访问ID',
-                                user_name      varchar(50)    default ''                comment '用户账号',
-                                ipaddr         varchar(128)   default ''                comment '登录IP地址',
-                                login_location varchar(255)   default ''                comment '登录地点',
-                                browser        varchar(50)    default ''                comment '浏览器类型',
-                                os             varchar(50)    default ''                comment '操作系统',
-                                status         char(1)        default '0'               comment '登录状态（0成功 1失败）',
-                                msg            varchar(255)   default ''                comment '提示消息',
-                                login_time     datetime                                 comment '访问时间',
-                                primary key (id),
-                                key idx_sys_logininfor_s  (status),
-                                key idx_sys_logininfor_lt (login_time)
-) engine=innodb comment = '系统访问记录';
+create table sys_login_info
+(
+    id             bigint(20) not null comment '访问ID',
+    user_name      varchar(50)  default '' comment '用户账号',
+    ipaddr         varchar(128) default '' comment '登录IP地址',
+    login_location varchar(255) default '' comment '登录地点',
+    browser        varchar(50)  default '' comment '浏览器类型',
+    os             varchar(50)  default '' comment '操作系统',
+    status         char(1)      default '0' comment '登录状态（0成功 1失败）',
+    msg            varchar(255) default '' comment '提示消息',
+    login_time     datetime comment '访问时间',
+    primary key (id),
+    key idx_sys_login_info_s (status),
+    key idx_sys_login_info_lt (login_time)
+) engine = innodb comment = '系统访问记录';
 
 
 -- ----------------------------
@@ -573,7 +575,7 @@ create table sys_notice
     notice_title   varchar(50) not null comment '公告标题',
     notice_type    char(1)     not null comment '公告类型（1通知 2公告）',
     notice_content longblob     default null comment '公告内容',
-    status         char(1)      default '0' comment '公告状态（0正常 1关闭）',
+    status         tinyint(1)   default 0 comment '公告状态（0:正常 1:关闭）',
     create_by      varchar(64)  default '' comment '创建者',
     create_time    datetime comment '创建时间',
     update_by      varchar(64)  default '' comment '更新者',
