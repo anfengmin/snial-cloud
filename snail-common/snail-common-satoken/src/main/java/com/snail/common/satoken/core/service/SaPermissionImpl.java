@@ -2,7 +2,7 @@ package com.snail.common.satoken.core.service;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.vo.UserVo;
+import com.snail.sys.api.vo.SysUserVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +21,9 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        UserVo userVo = LoginUtils.getLoginUser();
-        assert userVo != null;
-        return new ArrayList<>(userVo.getMenuPermission());
+        SysUserVo sysUserVo = LoginUtils.getLoginUser();
+        assert sysUserVo != null;
+        return new ArrayList<>(sysUserVo.getMenuPermission());
     }
 
     /**
@@ -31,8 +31,8 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        UserVo userVo = LoginUtils.getLoginUser();
-        assert userVo != null;
-        return new ArrayList<>(userVo.getRolePermission());
+        SysUserVo sysUserVo = LoginUtils.getLoginUser();
+        assert sysUserVo != null;
+        return new ArrayList<>(sysUserVo.getRolePermission());
     }
 }
