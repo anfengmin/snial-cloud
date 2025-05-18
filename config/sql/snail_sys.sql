@@ -424,7 +424,7 @@ create table sys_operate_log
     method           varchar(100)  default '' comment '方法名称',
     request_method   varchar(10)   default '' comment '请求方式',
     operator_type    tinyint(1)    default 0 comment '操作类别（0其它 1后台用户 2手机端用户）',
-    operate_name     varchar(50)   default '' comment '操作人员',
+    operator_name    varchar(50)   default '' comment '操作人员',
     dept_name        varchar(50)   default '' comment '部门名称',
     operate_url      varchar(255)  default '' comment '请求URL',
     operate_ip       varchar(128)  default '' comment '主机地址',
