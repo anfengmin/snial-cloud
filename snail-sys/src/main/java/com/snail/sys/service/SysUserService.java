@@ -1,7 +1,7 @@
 package com.snail.sys.service;
 
-import com.snail.sys.api.vo.UserVo;
-import com.snail.sys.api.domain.User;
+import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.vo.SysUserVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author makejava
  * @since 2025-05-11 20:30:04
  */
-public interface UserService extends IService<User> {
+public interface SysUserService extends IService<SysUser> {
 
 
     /**
@@ -23,5 +23,5 @@ public interface UserService extends IService<User> {
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
-    UserVo getUserInfo(String userCode);
+    SysUserVo getUserInfo(String userCode);
 }
