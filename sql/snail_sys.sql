@@ -95,7 +95,7 @@ create table sys_post
 insert into sys_post values(1, 'ceo',  '董事长',    1, 0,  0, 'admin', sysdate(), '', null, '');
 insert into sys_post values(2, 'se',   '项目经理',  2, 0,  0, 'admin', sysdate(), '', null, '');
 insert into sys_post values(3, 'hr',   '人力资源',  3, 0,  0, 'admin', sysdate(), '', null, '');
-insert into sys_post values(4, 'user', '普通员工',  4, 0,  0, 'admin', sysdate(), '', null, '');
+insert into sys_post values(4, 'sysUser', '普通员工',  4, 0,  0, 'admin', sysdate(), '', null, '');
 
 -- ----------------------------
 -- 4、角色信息表
@@ -165,7 +165,7 @@ INSERT INTO sys_menu VALUES (2, '系统监控', 0, 2, 'monitor', null, '', 1, 0,
 INSERT INTO sys_menu VALUES (3, '系统工具', 0, 3, 'tool', null, '', 1, 0, 'M', '0', 0, 0, '', 'tool', 'admin', sysdate(), '', null, '系统工具目录');
 INSERT INTO sys_menu VALUES (4, 'PLUS官网', 0, 4, 'https://gitee.com/dromara/RuoYi-Cloud-Plus', null, '', 0, 0, 'M', '0', 0, 0, '', 'guide', 'admin', sysdate(), '', null, 'RuoYi-Cloud-Plus官网地址');
 -- 二级菜单
-INSERT INTO sys_menu VALUES (100, '用户管理', 1, 1, 'user', 'system/user/index', '', 1, 0, 'C', '0', 0, 0, 'system:user:list', 'user', 'admin', sysdate(), '', null, '用户管理菜单');
+INSERT INTO sys_menu VALUES (100, '用户管理', 1, 1, 'sysUser', 'system/sysUser/index', '', 1, 0, 'C', '0', 0, 0, 'system:sysUser:list', 'sysUser', 'admin', sysdate(), '', null, '用户管理菜单');
 INSERT INTO sys_menu VALUES (101, '角色管理', 1, 2, 'role', 'system/role/index', '', 1, 0, 'C', '0', 0, 0, 'system:role:list', 'peoples', 'admin', sysdate(), '', null, '角色管理菜单');
 INSERT INTO sys_menu VALUES (102, '菜单管理', 1, 3, 'menu', 'system/menu/index', '', 1, 0, 'C', '0', 0, 0, 'system:menu:list', 'tree-table', 'admin', sysdate(), '', null, '菜单管理菜单');
 INSERT INTO sys_menu VALUES (103, '部门管理', 1, 4, 'dept', 'system/dept/index', '', 1, 0, 'C', '0', 0, 0, 'system:dept:list', 'tree', 'admin', sysdate(), '', null, '部门管理菜单');
@@ -187,13 +187,13 @@ INSERT INTO sys_menu VALUES (118, '文件管理', 1, 10, 'oss', 'system/oss/inde
 INSERT INTO sys_menu VALUES (500, '操作日志', 108, 1, 'operlog', 'system/operlog/index', '', 1, 0, 'C', '0', 0, 0, 'system:operlog:list', 'form', 'admin', sysdate(), '', null, '操作日志菜单');
 INSERT INTO sys_menu VALUES (501, '登录日志', 108, 2, 'logininfor', 'system/logininfor/index', '', 1, 0, 'C', '0', 0, 0, 'system:logininfor:list', 'logininfor', 'admin', sysdate(), '', null, '登录日志菜单');
 -- 用户管理按钮
-INSERT INTO sys_menu VALUES (1001, '用户查询', 100, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:query', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1002, '用户新增', 100, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:add', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1003, '用户修改', 100, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:edit', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1004, '用户删除', 100, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:remove', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1005, '用户导出', 100, 5, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:export', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1006, '用户导入', 100, 6, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:import', '#', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_menu VALUES (1007, '重置密码', 100, 7, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:user:resetPwd', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1001, '用户查询', 100, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:query', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1002, '用户新增', 100, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:add', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1003, '用户修改', 100, 3, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:edit', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1004, '用户删除', 100, 4, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:remove', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1005, '用户导出', 100, 5, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:export', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1006, '用户导入', 100, 6, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:import', '#', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_menu VALUES (1007, '重置密码', 100, 7, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:sysUser:resetPwd', '#', 'admin', sysdate(), '', null, '');
 -- 角色管理按钮
 INSERT INTO sys_menu VALUES (1008, '角色查询', 101, 1, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:query', '#', 'admin', sysdate(), '', null, '');
 INSERT INTO sys_menu VALUES (1009, '角色新增', 101, 2, '', '', '', 1, 0, 'F', '0', 0, 0, 'system:role:add', '#', 'admin', sysdate(), '', null, '');
@@ -538,7 +538,7 @@ create table sys_config
 ) engine = innodb comment = '参数配置';
 
 insert into sys_config values(1, '主框架页-默认皮肤样式名称',     'sys.index.skinName',       'skin-blue',     'Y', 'admin', sysdate(), '', null, '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow' );
-insert into sys_config values(2, '用户管理-账号初始密码',         'sys.user.initPassword',    '123456',        'Y', 'admin', sysdate(), '', null, '初始化密码 123456' );
+insert into sys_config values(2, '用户管理-账号初始密码',         'sys.sysUser.initPassword',    '123456',        'Y', 'admin', sysdate(), '', null, '初始化密码 123456' );
 insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.index.sideTheme',      'theme-dark',    'Y', 'admin', sysdate(), '', null, '深色主题theme-dark，浅色主题theme-light' );
 insert into sys_config values(4, '账号自助-是否开启用户注册功能', 'sys.account.registerUser', 'false',         'Y', 'admin', sysdate(), '', null, '是否开启注册用户功能（true开启，false关闭）');
 insert into sys_config values(11, 'OSS预览列表资源开关',        'sys.oss.previewListResource', 'true',      'Y', 'admin', sysdate(), '', null, 'true:开启, false:关闭');
