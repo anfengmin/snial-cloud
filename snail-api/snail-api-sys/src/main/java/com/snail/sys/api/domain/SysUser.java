@@ -62,11 +62,11 @@ public class SysUser extends BaseEntity {
     private String passWord;
 
     @ApiModelProperty(value = "帐号状态（0正常 1停用）")
-    private String status;
+    private Integer status;
 
     @TableLogic
-    @ApiModelProperty(value = "删除标志（0代表存在 1代表删除）")
-    private String deleted;
+    @ApiModelProperty(value = "删除标志（0:存在 1:删除）")
+    private Integer deleted;
 
     @ApiModelProperty(value = "最后登录IP")
     private String loginIp;
