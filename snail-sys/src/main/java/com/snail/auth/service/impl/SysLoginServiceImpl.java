@@ -10,18 +10,15 @@ import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.vo.UserVo;
-import com.snail.sys.service.UserService;
+import com.snail.sys.api.vo.SysUserVo;
+import com.snail.sys.service.SysUserService;
 import com.snial.common.core.constant.CacheConstants;
 import com.snial.common.core.constant.Constants;
 import com.snial.common.core.enums.LoginType;
 import com.snial.common.core.exception.user.UserException;
-import com.snial.common.core.utils.MessageUtils;
 import com.snial.common.core.utils.ServletUtils;
-import com.snial.common.core.utils.SpringUtils;
 import com.snial.common.core.utils.ip.AddressUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +39,7 @@ import java.util.function.Supplier;
 public class SysLoginServiceImpl implements SysLoginService {
 
     @Resource
-    private UserService userService;
+    private SysUserService sysUserService;
 
     /**
      * 密码最大错误次数(默认5次)
@@ -65,7 +62,7 @@ public class SysLoginServiceImpl implements SysLoginService {
      */
     @Override
     public String login(String userCode, String password) {
-        UserVo userInfo = userService.getUserInfo(userCode);
+        SysUserVo userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
         return StpUtil.getTokenValue();
@@ -79,7 +76,7 @@ public class SysLoginServiceImpl implements SysLoginService {
     @Override
     public void logout() {
         try {
-            UserVo loginUser = LoginUtils.getLoginUser();
+            SysUserVo loginUser = LoginUtils.getLoginUser();
             HttpServletRequest request = ServletUtils.getRequest();
             final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
             final String ip = ServletUtils.getClientIP(request);
