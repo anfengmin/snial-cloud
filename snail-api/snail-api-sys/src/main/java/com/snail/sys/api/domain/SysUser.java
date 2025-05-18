@@ -22,7 +22,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
 @ApiModel(value = "用户")
-public class User extends BaseEntity {
+public class SysUser extends BaseEntity {
 
     private static final long serialVersionUID = -79664786848105213L;
 
