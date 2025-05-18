@@ -1,7 +1,7 @@
 package com.snail.sys.service;
 
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.SysUserVo;
+import com.snail.sys.api.vo.LoginUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -23,5 +23,5 @@ public interface SysUserService extends IService<SysUser> {
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
-    SysUserVo getUserInfo(String userCode);
+    LoginUser getUserInfo(String userCode);
 }
