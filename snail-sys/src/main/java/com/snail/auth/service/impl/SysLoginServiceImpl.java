@@ -78,6 +78,7 @@ public class SysLoginServiceImpl implements SysLoginService {
         try {
             SysUserVo loginUser = LoginUtils.getLoginUser();
             HttpServletRequest request = ServletUtils.getRequest();
+            assert request != null;
             final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
             final String ip = ServletUtils.getClientIP(request);
 
