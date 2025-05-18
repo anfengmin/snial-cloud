@@ -25,7 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AutoMapper(target = SysUser.class)
 @ApiModel(value = "用户")
-public class SysUserVo implements Serializable {
+public class LoginUser implements Serializable {
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "用户ID")
