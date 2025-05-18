@@ -30,12 +30,12 @@ public class SysSysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impl
      */
     @Override
     public SysUserVo getUserInfo(String userCode) {
-        SysUser sysUserInfo = this.lambdaQuery().eq(com.snail.sys.api.domain.SysUser::getUserCode, userCode).one();
+        SysUser sysUserInfo = this.lambdaQuery().eq(SysUser::getUserCode, userCode).one();
         if (ObjectUtil.isEmpty(sysUserInfo)) {
-            throw new UserException("用户不存在", userCode);
+            throw new UserException("user.not.exists", userCode);
         }
         if (UserConstants.USER_DISABLE.equals(sysUserInfo.getStatus())) {
-            throw new UserException("账号已禁用", userCode);
+            throw new UserException("user.blocked", userCode);
         }
         SysUserVo sysUserVo = BeanUtil.copyProperties(sysUserInfo, SysUserVo.class);
 
