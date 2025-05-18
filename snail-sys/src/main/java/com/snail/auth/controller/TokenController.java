@@ -45,7 +45,7 @@ public class TokenController {
         return R.ok(rspMap);
     }
 
-    @ApiModelProperty(value = "登录")
+    @ApiModelProperty(value = "登出")
     @PostMapping("logout")
     public R<Void> logout() {
         sysLoginService.logout();
