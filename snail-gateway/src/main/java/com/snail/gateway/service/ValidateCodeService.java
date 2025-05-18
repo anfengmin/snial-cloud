@@ -1,6 +1,7 @@
 package com.snail.gateway.service;
 
 
+import com.snail.gateway.vo.CaptchaVo;
 import com.snial.common.core.exception.CaptchaException;
 import com.snial.common.core.utils.R;
 
@@ -20,7 +21,7 @@ public interface ValidateCodeService {
      * @return common.core.utils.R<java.util.Map < java.lang.String, java.lang.Object>>
      * @since 1.0
      */
-    R<Map<String, Object>> createCaptcha() throws IOException, CaptchaException;
+    R<CaptchaVo> createCaptcha() throws IOException, CaptchaException;
 
     /**
      * 校验验证码
