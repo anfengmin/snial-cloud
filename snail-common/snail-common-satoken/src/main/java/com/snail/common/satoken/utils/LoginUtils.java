@@ -7,7 +7,7 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
-import com.snail.sys.api.vo.UserVo;
+import com.snail.sys.api.vo.SysUserVo;
 import com.snial.common.core.constant.CacheConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -34,22 +34,22 @@ public class LoginUtils {
     /**
      * 登录系统
      *
-     * @param userVo 登录用户信息
+     * @param sysUserVo 登录用户信息
      */
-    public static void login(UserVo userVo) {
-        loginByDevice(userVo);
+    public static void login(SysUserVo sysUserVo) {
+        loginByDevice(sysUserVo);
     }
 
     /**
      * 登录系统 基于 设备类型
      * 针对相同用户体系不同设备
      *
-     * @param userVo 登录用户信息
+     * @param sysUserVo 登录用户信息
      */
-    public static void loginByDevice(UserVo userVo) {
+    public static void loginByDevice(SysUserVo sysUserVo) {
         SaStorage storage = SaHolder.getStorage();
-        storage.set(LOGIN_USER_KEY, userVo);
-        storage.set(USER_KEY, userVo.getId());
+        storage.set(LOGIN_USER_KEY, sysUserVo);
+        storage.set(USER_KEY, sysUserVo.getId());
         SaLoginModel model = new SaLoginModel();
 
         // 自定义分配 不同用户体系 不同 token 授权时间 不设置默认走全局 yml 配置
@@ -61,16 +61,16 @@ public class LoginUtils {
 //            model.setTimeout(86400).setActiveTimeout(1800);
 //        }
 //        userType + CacheConstants.LOGINID_JOIN_CODE + userId
-        String loginId = userVo.getUserType() + CacheConstants.LOGINID_JOIN_CODE + userVo.getId();
-        StpUtil.login(userVo.getUserCode(), model.setExtra(USER_KEY, userVo.getUserCode()));
-        StpUtil.getTokenSession().set(LOGIN_USER_KEY, userVo);
+        String loginId = sysUserVo.getUserType() + CacheConstants.LOGINID_JOIN_CODE + sysUserVo.getId();
+        StpUtil.login(sysUserVo.getUserCode(), model.setExtra(USER_KEY, sysUserVo.getUserCode()));
+        StpUtil.getTokenSession().set(LOGIN_USER_KEY, sysUserVo);
     }
 
     /**
      * 获取用户(多级缓存)
      */
-    public static UserVo getLoginUser() {
-        UserVo loginUser = (UserVo) SaHolder.getStorage().get(LOGIN_USER_KEY);
+    public static SysUserVo getLoginUser() {
+        SysUserVo loginUser = (SysUserVo) SaHolder.getStorage().get(LOGIN_USER_KEY);
         if (loginUser != null) {
             return loginUser;
         }
@@ -78,7 +78,7 @@ public class LoginUtils {
         if (ObjectUtil.isNull(session)) {
             return null;
         }
-        loginUser = (UserVo) session.get(LOGIN_USER_KEY);
+        loginUser = (SysUserVo) session.get(LOGIN_USER_KEY);
         SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
         return loginUser;
     }
@@ -86,12 +86,12 @@ public class LoginUtils {
     /**
      * 获取用户基于token
      */
-    public static UserVo getLoginUser(String token) {
+    public static SysUserVo getLoginUser(String token) {
         SaSession session = StpUtil.getTokenSessionByToken(token);
         if (ObjectUtil.isNull(session)) {
             return null;
         }
-        return (UserVo) session.get(LOGIN_USER_KEY);
+        return (SysUserVo) session.get(LOGIN_USER_KEY);
     }
 
     /**
