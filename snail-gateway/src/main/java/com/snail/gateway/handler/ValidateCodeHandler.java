@@ -1,6 +1,7 @@
 package com.snail.gateway.handler;
 
 import com.snail.gateway.service.ValidateCodeService;
+import com.snail.gateway.vo.CaptchaVo;
 import com.snial.common.core.exception.CaptchaException;
 import com.snial.common.core.utils.R;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class ValidateCodeHandler implements HandlerFunction<ServerResponse> {
 
     @Override
     public Mono<ServerResponse> handle(ServerRequest serverRequest) {
-        R<Map<String, Object>> ajax;
+        R<CaptchaVo> ajax;
         try {
             ajax = validateCodeService.createCaptcha();
         } catch (CaptchaException | IOException e) {
