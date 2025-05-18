@@ -29,7 +29,7 @@ public interface UserConstants {
     /**
      * 用户封禁状态
      */
-    String USER_DISABLE = "1";
+    Integer USER_DISABLE = 1;
 
     /**
      * 角色正常状态
