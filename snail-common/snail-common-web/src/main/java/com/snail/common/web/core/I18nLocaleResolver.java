@@ -1,4 +1,4 @@
-package com.snial.common.web.core;
+package com.snail.common.web.core;
 
 import org.springframework.web.servlet.LocaleResolver;
 
