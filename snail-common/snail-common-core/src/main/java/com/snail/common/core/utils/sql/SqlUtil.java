@@ -1,4 +1,4 @@
-package com.snial.common.core.utils.sql;
+package com.snail.common.core.utils.sql;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.StrUtil;
