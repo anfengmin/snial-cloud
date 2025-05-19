@@ -1,4 +1,4 @@
-package com.snial.common.core.enums;
+package com.snail.common.core.enums;
 
 /**
  * 操作人类别
