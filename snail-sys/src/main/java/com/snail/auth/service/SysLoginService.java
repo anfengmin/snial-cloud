@@ -54,13 +54,13 @@ public class SysLoginService {
      * login
      *
      * @param userCode userCode
-     * @param password password
+     * @param passWord passWord
      * @return java.lang.String
      * @since 1.0
      */
-    public String login(String userCode, String password) {
+    public String login(String userCode, String passWord) {
         LoginUser userInfo = sysUserService.getUserInfo(userCode);
-        checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(password, userInfo.getPassWord()));
+        checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
         return StpUtil.getTokenValue();
     }
@@ -144,6 +144,7 @@ public class SysLoginService {
         // 登录成功 清空错误次数
         RedisUtils.deleteObject(errorKey);
     }
+
 
 
 }

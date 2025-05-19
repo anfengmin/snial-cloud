@@ -29,8 +29,8 @@ create table sys_user
 
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user values(1,  103, 'admin', '管理员','', 'sys_user', 'admin@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '管理员');
-insert into sys_user values(2,  105, 'levi', '里维','' ,'sys_user', 'levi@163.com',  '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '测试员');
+insert into sys_user values(1,  103, 'admin', '管理员','', 'sys_user', 'admin@163.com', '15888888888', '1', '', '$2a$10$dR4Lrr6bCjU.5Of7N9BdOOB3yERAHPoKqSS3ZdmsUAkS0.GRJZ4Eq', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '管理员');
+insert into sys_user values(2,  105, 'levi', '里维','' ,'sys_user', 'levi@163.com',  '15666666666', '1', '', '$2a$10$dR4Lrr6bCjU.5Of7N9BdOOB3yERAHPoKqSS3ZdmsUAkS0.GRJZ4Eq', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '测试员');
 
 -- ----------------------------
 -- 2、部门表
