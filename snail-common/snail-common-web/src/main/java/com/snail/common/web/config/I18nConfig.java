@@ -1,6 +1,6 @@
-package com.snial.common.web.config;
+package com.snail.common.web.config;
 
-import com.snial.common.web.core.I18nLocaleResolver;
+import com.snail.common.web.core.I18nLocaleResolver;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
