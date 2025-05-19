@@ -1,4 +1,4 @@
-package com.snial.common.core.domain;
+package com.snail.common.core.domain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
