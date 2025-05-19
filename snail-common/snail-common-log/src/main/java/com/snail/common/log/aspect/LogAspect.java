@@ -1,4 +1,4 @@
-package com.snial.common.log.aspect;
+package com.snail.common.log.aspect;
 
 
 import cn.hutool.core.lang.Dict;
@@ -8,12 +8,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.vo.LoginUser;
-import com.snial.common.core.enums.BusinessStatus;
-import com.snial.common.core.utils.ServletUtils;
-import com.snial.common.core.utils.SpringUtils;
-import com.snial.common.core.utils.ip.AddressUtils;
-import com.snial.common.log.annotation.Log;
-import com.snial.common.log.event.OperateLogEvent;
+import com.snail.common.core.enums.BusinessStatus;
+import com.snail.common.core.utils.ServletUtils;
+import com.snail.common.core.utils.SpringUtils;
+import com.snail.common.core.utils.ip.AddressUtils;
+import com.snail.common.log.annotation.Log;
+import com.snail.common.log.event.OperateLogEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
