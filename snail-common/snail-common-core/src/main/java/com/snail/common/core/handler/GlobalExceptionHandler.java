@@ -1,9 +1,9 @@
-package com.snial.common.core.handler;
+package com.snail.common.core.handler;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.snial.common.core.utils.R;
-import com.snial.common.core.exception.ServiceException;
-import com.snial.common.core.exception.base.BaseException;
+import com.snail.common.core.utils.R;
+import com.snail.common.core.exception.ServiceException;
+import com.snail.common.core.exception.base.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
