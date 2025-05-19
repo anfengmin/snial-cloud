@@ -1,4 +1,4 @@
-package com.snial.common.core.constant;
+package com.snail.common.core.constant;
 
 /**
  * 代码生成通用常量
