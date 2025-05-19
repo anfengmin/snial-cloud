@@ -1,4 +1,4 @@
-package com.snial.common.core.validate;
+package com.snail.common.core.validate;
 
 /**
  * 校验分组 add
