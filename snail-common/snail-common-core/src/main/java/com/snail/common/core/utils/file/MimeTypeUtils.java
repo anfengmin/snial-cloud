@@ -1,4 +1,4 @@
-package com.snial.common.core.utils.file;
+package com.snail.common.core.utils.file;
 
 /**
  * 媒体类型工具类
