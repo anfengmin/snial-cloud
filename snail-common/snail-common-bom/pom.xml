@@ -36,7 +36,14 @@
             <!-- web服务 -->
             <dependency>
                 <groupId>com.snail</groupId>
-                <artifactId>snial-common-web</artifactId>
+                <artifactId>snail-common-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- 日志服务 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-log</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
