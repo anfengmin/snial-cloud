@@ -1,6 +1,6 @@
 package com.snail.common.redis.utils;
 
-import com.snial.common.core.constant.CacheConstants;
+import com.snail.common.core.constant.CacheConstants;
 
 /**
  * 字典工具类
