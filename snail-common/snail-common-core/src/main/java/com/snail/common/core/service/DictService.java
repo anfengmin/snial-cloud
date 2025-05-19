@@ -1,4 +1,4 @@
-package com.snial.common.core.service;
+package com.snail.common.core.service;
 
 
 import cn.hutool.core.text.StrPool;
