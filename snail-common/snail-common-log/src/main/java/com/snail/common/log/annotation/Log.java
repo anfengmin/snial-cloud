@@ -1,7 +1,7 @@
-package com.snial.common.log.annotation;
+package com.snail.common.log.annotation;
 
-import com.snial.common.core.enums.BusinessType;
-import com.snial.common.core.enums.OperatorType;
+import com.snail.common.core.enums.BusinessType;
+import com.snail.common.core.enums.OperatorType;
 
 import java.lang.annotation.*;
 
