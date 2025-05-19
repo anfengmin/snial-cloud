@@ -1,6 +1,6 @@
-package com.snial.common.core.exception.file;
+package com.snail.common.core.exception.file;
 
-import com.snial.common.core.exception.base.BaseException;
+import com.snail.common.core.exception.base.BaseException;
 
 /**
  * 文件信息异常类
