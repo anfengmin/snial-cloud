@@ -1,4 +1,4 @@
-package com.snial.common.core.exception.file;
+package com.snail.common.core.exception.file;
 
 /**
  * 文件名称超长限制异常类
