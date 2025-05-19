@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>snial-common-log</artifactId>
+    <artifactId>snail-common-log</artifactId>
 
     <description>日志记录</description>
 
