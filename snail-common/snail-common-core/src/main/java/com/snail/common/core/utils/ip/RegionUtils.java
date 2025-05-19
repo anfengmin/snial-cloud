@@ -1,10 +1,10 @@
-package com.snial.common.core.utils.ip;
+package com.snail.common.core.utils.ip;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.ObjectUtil;
-import com.snial.common.core.exception.ServiceException;
-import com.snial.common.core.utils.file.FileUtils;
+import com.snail.common.core.exception.ServiceException;
+import com.snail.common.core.utils.file.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
 
