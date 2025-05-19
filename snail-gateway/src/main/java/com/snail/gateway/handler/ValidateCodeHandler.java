@@ -2,8 +2,8 @@ package com.snail.gateway.handler;
 
 import com.snail.gateway.service.ValidateCodeService;
 import com.snail.gateway.vo.CaptchaVo;
-import com.snial.common.core.exception.CaptchaException;
-import com.snial.common.core.utils.R;
+import com.snail.common.core.exception.CaptchaException;
+import com.snail.common.core.utils.R;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
