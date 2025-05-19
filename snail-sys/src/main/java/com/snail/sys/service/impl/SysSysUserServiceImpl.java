@@ -7,8 +7,8 @@ import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.api.vo.LoginUser;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.service.SysUserService;
-import com.snial.common.core.constant.UserConstants;
-import com.snial.common.core.exception.user.UserException;
+import com.snail.common.core.constant.UserConstants;
+import com.snail.common.core.exception.user.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
