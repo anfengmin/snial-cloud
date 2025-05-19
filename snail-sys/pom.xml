@@ -53,7 +53,7 @@
 
         <dependency>
             <groupId>com.snail</groupId>
-            <artifactId>snial-common-web</artifactId>
+            <artifactId>snail-common-web</artifactId>
         </dependency>
 
         <!-- SpringBoot Actuator -->
