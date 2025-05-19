@@ -7,8 +7,8 @@ import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.form.LoginBody;
 
 import com.snail.sys.api.vo.LoginUser;
-import com.snial.common.core.constant.Constants;
-import com.snial.common.core.utils.R;
+import com.snail.common.core.constant.Constants;
+import com.snail.common.core.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
