@@ -1,7 +1,7 @@
-package com.snial.common.core.exception.base;
+package com.snail.common.core.exception.base;
 
 import cn.hutool.core.util.StrUtil;
-import com.snial.common.core.utils.MessageUtils;
+import com.snail.common.core.utils.MessageUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
