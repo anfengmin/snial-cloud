@@ -1,4 +1,4 @@
-package com.snial.common.web.config;
+package com.snail.common.web.config;
 
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
