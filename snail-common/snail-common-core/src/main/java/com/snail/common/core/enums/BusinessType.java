@@ -1,4 +1,4 @@
-package com.snial.common.core.enums;
+package com.snail.common.core.enums;
 
 /**
  * 业务操作类型
