@@ -1,10 +1,10 @@
-package com.snial.common.core.utils;
+package com.snail.common.core.utils;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpStatus;
-import com.snial.common.core.constant.Constants;
+import com.snail.common.core.constant.Constants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
