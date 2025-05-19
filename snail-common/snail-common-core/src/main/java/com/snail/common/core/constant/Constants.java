@@ -1,4 +1,4 @@
-package com.snial.common.core.constant;
+package com.snail.common.core.constant;
 
 /**
  * 通用常量信息
