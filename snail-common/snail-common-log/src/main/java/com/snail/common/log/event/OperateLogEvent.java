@@ -1,4 +1,4 @@
-package com.snial.common.log.event;
+package com.snail.common.log.event;
 
 import lombok.Builder;
 import lombok.Data;
