@@ -1,4 +1,4 @@
-package com.snial.common.core.exception;
+package com.snail.common.core.exception;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
