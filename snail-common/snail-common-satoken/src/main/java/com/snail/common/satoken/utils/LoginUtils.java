@@ -8,7 +8,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.snail.sys.api.vo.LoginUser;
-import com.snial.common.core.constant.CacheConstants;
+import com.snail.common.core.constant.CacheConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
