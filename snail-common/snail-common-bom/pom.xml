@@ -47,6 +47,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- 数据库服务 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-mybatis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
