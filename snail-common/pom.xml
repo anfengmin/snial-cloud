@@ -15,6 +15,7 @@
         <module>snail-common-satoken</module>
         <module>snail-common-web</module>
         <module>snail-common-log</module>
+        <module>snail-common-mybatis</module>
     </modules>
 
     <artifactId>snail-common</artifactId>
