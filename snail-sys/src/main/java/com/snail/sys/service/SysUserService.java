@@ -24,4 +24,14 @@ public interface SysUserService extends IService<SysUser> {
      * <p>1.0 Initialization method </p>
      */
     LoginUser getUserInfo(String userCode);
+
+    /**
+     * registerUserInfo
+     *
+     * @param sysUser sysUser
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean registerUserInfo(SysUser sysUser);
 }
