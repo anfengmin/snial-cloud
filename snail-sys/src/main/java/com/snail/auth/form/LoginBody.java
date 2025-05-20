@@ -1,4 +1,4 @@
-package com.snail.sys.api.form;
+package com.snail.auth.form;
 
 import com.snail.common.core.constant.UserConstants;
 import io.swagger.annotations.ApiModel;
