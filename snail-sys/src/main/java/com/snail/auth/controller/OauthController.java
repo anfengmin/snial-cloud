@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.snail.sys.api.form.LoginBody;
+import com.snail.auth.form.LoginBody;
 import com.snail.common.core.utils.MessageUtils;
 import com.snail.common.core.utils.R;
 import io.swagger.annotations.Api;
