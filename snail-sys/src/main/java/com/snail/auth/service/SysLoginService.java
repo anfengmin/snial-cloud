@@ -6,8 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
+import com.snail.auth.form.RegisterBody;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.api.vo.LoginUser;
 import com.snail.sys.service.SysUserService;
 import com.snail.common.core.constant.CacheConstants;
@@ -146,7 +148,28 @@ public class SysLoginService {
     }
 
 
+    /**
+     * register
+     *
+     * @param registerBody registerBody
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    public void register(RegisterBody registerBody) {
+        // 校验用户类型是否存在
+        // 注册用户信息
+        SysUser sysUser = new SysUser();
+        sysUser.setUserCode(registerBody.getUserCode());
+        sysUser.setUserName(registerBody.getUserName());
+        sysUser.setPassWord(BCrypt.hashpw(registerBody.getPassWord()));
+        sysUser.setCreateBy(registerBody.getUserCode());
+        sysUser.setUpdateBy(registerBody.getUserCode());
+        boolean regFlag = sysUserService.registerUserInfo(sysUser);
+        if (!regFlag) {
+            throw new UserException("user.register.error");
+        }
 
+    }
 }
 
 
