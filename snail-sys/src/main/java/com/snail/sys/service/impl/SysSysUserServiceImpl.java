@@ -42,4 +42,24 @@ public class SysSysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impl
         log.info("userInfo:{}", sysUserInfo);
         return loginUser;
     }
+
+    /**
+     * 注册用户信息
+     *
+     * @param sysUser sysUser
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean registerUserInfo(SysUser sysUser) {
+        boolean exists = this.lambdaQuery()
+                .eq(SysUser::getUserCode, sysUser.getUserCode())
+                .ne(ObjectUtil.isNotNull(sysUser.getId()), SysUser::getId, sysUser.getId())
+                .exists();
+        if (exists) {
+            throw new UserException("user.register.save.error", sysUser.getUserCode());
+        }
+        return this.save(sysUser);
+    }
 }
