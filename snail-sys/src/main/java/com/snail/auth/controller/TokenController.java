@@ -2,9 +2,10 @@ package com.snail.auth.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.snail.auth.form.RegisterBody;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.form.LoginBody;
+import com.snail.auth.form.LoginBody;
 
 import com.snail.sys.api.vo.LoginUser;
 import com.snail.common.core.constant.Constants;
@@ -59,5 +60,16 @@ public class TokenController {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         LoginUser loginUser = LoginUtils.getLoginUser("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJzeXNfdXNlcjoxIiwicm5TdHIiOiIxZ3NUdFZTa0F1aUZKZTB6Um5jb2pTdU5wVFdPdHUxVSIsInVzZXJJZCI6MX0.LGZOLO3D-cE31afzXr0lRDfVjAODWsy82h8dWio8dbM");
         return R.ok(login);
+    }
+
+
+    /**
+     * 用户注册
+     */
+    @PostMapping("register")
+    public R<Void> register(@RequestBody RegisterBody registerBody) {
+        // 用户注册
+        sysLoginService.register(registerBody);
+        return R.ok();
     }
 }
