@@ -12,12 +12,6 @@
     <artifactId>snail-common-web</artifactId>
 
     <dependencies>
-        <!-- 引入公共核心模块 -->
-        <dependency>
-            <groupId>com.snail</groupId>
-            <artifactId>snail-common-core</artifactId>
-            <version>${snail.version}</version>
-        </dependency>
 
         <!-- SpringBoot Web容器 -->
         <dependency>
@@ -42,19 +36,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Nacos 注册中心 -->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <optional>true</optional>
+        </dependency>
 
-<!--        &lt;!&ndash; Nacos 配置中心 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-<!--        </dependency>-->
-
-        <!-- 监控相关 -->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-metrics</artifactId>
@@ -71,12 +58,7 @@
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-core</artifactId>
             <version>2.7.6</version>
-        </dependency>
-
-        <!-- validation -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
