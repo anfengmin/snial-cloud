@@ -1,0 +1,64 @@
+##导入宏定义
+$!{define.vm}
+##设置表后缀（宏定义）
+#setTableSuffix("Controller")
+##保存文件（宏定义）
+#save("/controller", "Controller.java")
+##包路径（宏定义）
+#setPackageSuffix("controller")
+##定义服务名
+#set($serviceName = $!tool.append($!tool.firstLowerCase($!tableInfo.name), "Service"))
+##定义实体对象名
+#set($entityName = $!tool.firstLowerCase($!tableInfo.name))
+#import com.baomidou.mybatisplus.extension.api.ApiController;
+import com.baomidou.mybatisplus.extension.api.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import $!{tableInfo.savePackageName}.entity.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.List;
+##表注释
+#tableComment("")
+@Api(tags = "$!{tableInfo.comment}")
+@RestController
+@RequestMapping("$!tool.firstLowerCase($!tableInfo.name)")
+public class $!{tableName} {
+
+        @Resource
+        private $!{tableInfo.name}Service $!{serviceName};
+
+        @GetMapping("queryByPage")
+        @ApiOperation(value = "分页查询", notes = "分页查询")
+        public R<Page<$!{tableInfo.name}>>queryByPage(@RequestBody $!{tableInfo.name}PageDTO dto){
+            return $!{serviceName}.queryByPage(dto);
+        }
+
+        @GetMapping("info/{id}")
+        @ApiOperation(value = "主键查询", notes = "主键查询")
+        public R<$!{tableInfo.name}> selectOne(@PathVariable Serializable id){
+            return R.ok($!{serviceName}.getById(id));
+        }
+
+        @PostMapping("add")
+        @ApiOperation(value = "新增数据", notes = "新增数据")
+        public R<Boolean> add(@RequestBody $!{tableInfo.name} $!{entityName}){
+            return R.ok($!{serviceName}.save($!{entityName}Entity));
+        }
+
+        @PutMapping("edit")
+        @ApiOperation(value = "修改数据", notes = "修改数据")
+        public R<Boolean> edit(@RequestBody $!{tableInfo.name} $!{entityName}){
+            return R.ok($!{serviceName}.updateById($!{entityName}Entity));
+        }
+
+        @DeleteMapping("delete")
+        @ApiOperation(value = "删除数据", notes = "删除数据")
+        public R<Boolean> delete(@RequestParam("idList") List<Long> idList){
+            return R.ok($!{serviceName}.removeByIds(idList));
+        }
+}
