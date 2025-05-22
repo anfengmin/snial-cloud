@@ -1,0 +1,32 @@
+##导入宏定义
+$!{define.vm}
+##保存文件（宏定义）
+#save("/dto", "PageDTO.java")
+##包路径（宏定义）
+#setPackageSuffix("dto")
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+
+##表注释（宏定义）
+#tableComment("")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(value = #if(${tableInfo.comment})"${tableInfo.comment}"#end)
+public class $!{tableInfo.name}PageDTO extends PageDTO<$!{tableInfo.name}> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    #foreach($column in $tableInfo.fullColumn)
+        #if(${column.comment})
+        @ApiModelProperty(value="${column.comment}")#end
+
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+
+    #end
+}
