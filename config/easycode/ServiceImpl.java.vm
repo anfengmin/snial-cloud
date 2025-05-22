@@ -1,0 +1,33 @@
+##导入宏定义
+$!{define.vm}
+##设置表后缀（宏定义）
+#setTableSuffix("ServiceImpl")
+##保存文件（宏定义）
+#save("/service/impl", "ServiceImpl.java")
+##包路径（宏定义）
+#setPackageSuffix("service.impl")
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import $!{tableInfo.savePackageName}.dao.$!{tableInfo.name}Dao;
+import $!{tableInfo.savePackageName}.entity.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+##表注释（宏定义）
+#tableComment("")
+@Service("$!tool.firstLowerCase($tableInfo.name)Service")
+public class $!{tableName} extends ServiceImpl<$!{tableInfo.name}Dao, $!{tableInfo.name}> implements $!{tableInfo.name}Service {
+
+        /**
+         * 分页查询
+         *
+         * @param dto      筛选条件
+         * @return 查询结果
+         */
+        @Override
+        public R<Page<$!{tableInfo.name}>> queryByPage($!{tableInfo.name}PageDTO dto) {
+            Page<$!{tableInfo.name}> page = new Page<>(dto.getCurrent(), dto.getSize());
+            Page<$!{tableInfo.name}> result = this.lambdaQuery().page(page);
+            return R.ok(result);
+        }
+}
