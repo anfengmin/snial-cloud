@@ -1,0 +1,40 @@
+##导入宏定义
+$!{define.vm}
+##保存文件（宏定义）
+#save("/dto", "DTO.java")
+##包路径（宏定义）
+#setPackageSuffix("dto")
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import java.io.Serializable;
+import javax.validation.constraints.*;
+
+
+##表注释（宏定义）
+#tableComment("")
+@Data
+@ApiModel(value = #if(${tableInfo.comment})"${tableInfo.comment}"#end)
+public class $!{tableInfo.name}DTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    #foreach($column in $tableInfo.fullColumn)
+        #if(${column.name} != "deleteFlag")
+
+            #if(${column.comment})
+            @ApiModelProperty(value="${column.comment}")#end
+
+            #if($column.name == "id")
+            @NotNull(message = "${column.comment}不能为空", groups = {EditGroup.class})
+            #elseif(${column.type} == "java.lang.String" && $column.name != "id")
+            @NotEmpty(message = "${column.comment}不能为空", groups = {AddGroup.class, EditGroup.class})
+            #else
+            @NotNull(message = "${column.comment}不能为空", groups = {AddGroup.class, EditGroup.class})
+            #end
+        private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+        #end
+    #end
+}
