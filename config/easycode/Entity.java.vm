@@ -1,0 +1,47 @@
+##导入宏定义
+$!{define.vm}
+##保存文件（宏定义）
+#save("/entity", "Entity.java")
+##包路径（宏定义）
+#setPackageSuffix("entity")
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import cn.hutool.core.date.DatePattern;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+##表注释（宏定义）
+#tableComment("")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("${tableInfo.obj.name}")
+@ApiModel(value = #if(${tableInfo.comment})"${tableInfo.comment}"#end)
+public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
+
+private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+#if(${column.obj.name} == ${tableInfo.pkColumn.get(0).obj.name})
+@JsonFormat(shape = JsonFormat.Shape.STRING)
+@TableId(type = IdType.AUTO)#end
+
+#if(${column.comment})
+@ApiModelProperty(value="${column.comment}")#end
+
+#if(${column.type} == "java.util.Date" || ${column.type} == "java.sql.Date" || ${column.type} == "java.sql.Timestamp")
+@JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+#end
+#if(${column.name} == "deleteFlag")
+@TableLogic
+#end
+private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+}
