@@ -43,4 +43,22 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
                 .orderByAsc(SysDept::getOrderNo)
                 .list();
     }
+
+    /**
+     * 校验部门名称是否唯一
+     *
+     * @param dept dept
+     * @return boolean
+     * @since 1.0
+     */
+    @Override
+    public boolean checkDeptNameUnique(SysDept dept) {
+        return this.lambdaQuery()
+                .eq(SysDept::getDeptName, dept.getDeptName())
+                .eq(SysDept::getParentId, dept.getParentId())
+                .ne(ObjectUtil.isNotNull(dept.getId()), SysDept::getId, dept.getId())
+                .exists();
+    }
+
+
 }
