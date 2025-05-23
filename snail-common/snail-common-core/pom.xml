@@ -91,7 +91,10 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+        </dependency>
 
         <!--  自动生成YML配置关联JSON文件  -->
         <dependency>
