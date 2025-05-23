@@ -25,29 +25,13 @@ public class SysDeptController {
     private SysDeptService sysDeptService;
 
 
-    @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
-    public R<SysDept> queryById(@PathVariable("id") Long id) {
-        return R.ok(sysDeptService.getById(id));
+    @GetMapping("/list")
+    @ApiOperation(value = "获取部门列表")
+    public R<List<SysDept>> list(SysDept dept) {
+        List<SysDept> depts = sysDeptService.queryDeptList(dept);
+        return R.ok(depts);
     }
 
-    @PostMapping
-    @ApiOperation(value = "新增数据")
-    public R<Boolean> add(SysDept sysDept) {
-        return R.ok(sysDeptService.save(sysDept));
-    }
-
-    @PutMapping
-    @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysDept sysDept) {
-        return R.ok(sysDeptService.updateById(sysDept));
-    }
-
-    @DeleteMapping
-    @ApiOperation(value = "删除数据")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
-        return R.ok(sysDeptService.removeByIds(ids));
-    }
 
 }
 
