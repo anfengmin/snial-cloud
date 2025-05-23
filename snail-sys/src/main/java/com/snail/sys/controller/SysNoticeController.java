@@ -1,15 +1,14 @@
 package com.snail.sys.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysNotice;
 import com.snail.sys.service.SysNoticeService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 通知公告(SysNotice)表控制层
@@ -25,11 +24,6 @@ public class SysNoticeController {
     @Resource
     private SysNoticeService sysNoticeService;
 
-    @GetMapping
-    @ApiOperation(value = "分页查询")
-    public R<Page<SysNotice>> queryByPage(SysNotice sysNotice, PageRequest pageRequest) {
-        return R.ok(sysNoticeService.queryByPage(sysNotice, pageRequest));
-    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
