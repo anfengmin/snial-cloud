@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 用户与岗位关联表(SysUserPost)表控制层
@@ -25,11 +26,6 @@ public class SysUserPostController {
     @Resource
     private SysUserPostService sysUserPostService;
 
-    @GetMapping
-    @ApiOperation(value = "分页查询")
-    public R<Page<SysUserPost>> queryByPage(SysUserPost sysUserPost, PageRequest pageRequest) {
-        return R.ok(sysUserPostService.queryByPage(sysUserPost, pageRequest));
-    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
