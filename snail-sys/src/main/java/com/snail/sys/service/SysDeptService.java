@@ -22,4 +22,13 @@ public interface SysDeptService extends IService<SysDept> {
      * @since 1.0
      */
     List<SysDept> queryDeptList(SysDept dept);
+
+    /**
+     * 校验部门名称是否唯一
+     *
+     * @param dept dept
+     * @return boolean
+     * @since 1.0
+     */
+    boolean checkDeptNameUnique(SysDept dept);
 }
