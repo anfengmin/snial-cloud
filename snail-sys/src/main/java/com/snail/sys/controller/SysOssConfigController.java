@@ -1,15 +1,14 @@
 package com.snail.sys.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysOssConfig;
 import com.snail.sys.service.SysOssConfigService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 对象存储配置表(SysOssConfig)表控制层
@@ -25,11 +24,6 @@ public class SysOssConfigController {
     @Resource
     private SysOssConfigService sysOssConfigService;
 
-    @GetMapping
-    @ApiOperation(value = "分页查询")
-    public R<Page<SysOssConfig>> queryByPage(SysOssConfig sysOssConfig, PageRequest pageRequest) {
-        return R.ok(sysOssConfigService.queryByPage(sysOssConfig, pageRequest));
-    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
