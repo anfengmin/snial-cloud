@@ -3,6 +3,8 @@ package com.snail.sys.service;
 import com.snail.sys.domain.SysDept;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 
 /**
  * 部门表(SysDept)表服务接口
@@ -12,5 +14,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysDeptService extends IService<SysDept> {
 
-
+    /**
+     * 获取部门列表
+     *
+     * @param dept dept
+     * @return java.util.List<com.snail.sys.domain.SysDept>
+     * @since 1.0
+     */
+    List<SysDept> queryDeptList(SysDept dept);
 }
