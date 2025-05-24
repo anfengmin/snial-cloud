@@ -1,13 +1,16 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
+import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.java.Log;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +64,18 @@ public class SysDeptController {
             return R.fail("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
         return R.isOk(sysDeptService.save(dept));
+    }
+
+    @DeleteMapping("/{deptId}")
+    @ApiOperation(value = "删除部门")
+    public R<Boolean> remove(@PathVariable Long deptId) {
+        if (sysDeptService.hasChildByDeptId(deptId)) {
+            return R.warn("存在下级部门,不允许删除");
+        }
+        if (sysDeptService.checkDeptExistUser(deptId)) {
+            return R.warn("部门存在用户,不允许删除");
+        }
+        return R.isOk(sysDeptService.removeById(deptId));
     }
 
 }
