@@ -31,4 +31,22 @@ public interface SysDeptService extends IService<SysDept> {
      * @since 1.0
      */
     boolean checkDeptNameUnique(SysDept dept);
+
+    /**
+     * 校验部门是否有子部门
+     *
+     * @param deptId deptId
+     * @return boolean
+     * @since 1.0
+     */
+    boolean hasChildByDeptId(Long deptId);
+
+    /**
+     * checkDeptExistUser
+     *
+     * @param deptId deptId
+     * @return boolean
+     * @since 1.0
+     */
+    boolean checkDeptExistUser(Long deptId);
 }
