@@ -60,5 +60,31 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
                 .exists();
     }
 
+    /**
+     * 校验部门是否有子部门
+     *
+     * @param deptId deptId
+     * @return boolean
+     * @since 1.0
+     */
+    @Override
+    public boolean hasChildByDeptId(Long deptId) {
+        return this.lambdaQuery()
+                .eq(SysDept::getParentId, deptId)
+                .exists();
+    }
+
+    /**
+     * 查询部门是否存在用户
+     *
+     * @param deptId deptId
+     * @return boolean
+     * @since 1.0
+     */
+    @Override
+    public boolean checkDeptExistUser(Long deptId) {
+        return false;
+    }
+
 
 }
