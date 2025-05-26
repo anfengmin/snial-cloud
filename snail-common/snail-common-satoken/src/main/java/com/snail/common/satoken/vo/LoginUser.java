@@ -1,4 +1,4 @@
-package com.snail.sys.api.vo;
+package com.snail.common.satoken.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
