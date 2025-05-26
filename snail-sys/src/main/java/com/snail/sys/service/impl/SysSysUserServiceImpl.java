@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.LoginUser;
+import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.service.SysUserService;
 import com.snail.common.core.constant.UserConstants;
