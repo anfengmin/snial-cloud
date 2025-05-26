@@ -10,7 +10,7 @@ import com.snail.auth.form.RegisterBody;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.LoginUser;
+import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.service.SysUserService;
 import com.snail.common.core.constant.CacheConstants;
 import com.snail.common.core.constant.Constants;
