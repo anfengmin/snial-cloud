@@ -7,7 +7,7 @@ import com.snail.auth.service.SysLoginService;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.auth.form.LoginBody;
 
-import com.snail.sys.api.vo.LoginUser;
+import com.snail.common.satoken.vo.LoginUser;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.utils.R;
 import io.swagger.annotations.Api;
