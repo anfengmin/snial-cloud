@@ -1,2 +1,2 @@
-com.snial.common.core.handler.GlobalExceptionHandler
-com.snial.common.core.utils.SpringUtils
+com.snail.common.core.handler.GlobalExceptionHandler
+com.snail.common.core.utils.SpringUtils
