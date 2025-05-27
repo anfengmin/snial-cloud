@@ -34,6 +34,11 @@ public class SysDictDataController {
         return R.ok(page);
     }
 
+    @GetMapping(value = "/{dictCode}")
+    public R<SysDictData> getInfo(@PathVariable Long dictCode) {
+        return R.ok(sysDictDataService.getById(dictCode));
+    }
+
     @PostMapping
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysDictData sysDictData) {
