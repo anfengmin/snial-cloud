@@ -1,14 +1,18 @@
 package com.snail.sys.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysDictData;
 import com.snail.sys.service.SysDictDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,9 +38,17 @@ public class SysDictDataController {
         return R.ok(page);
     }
 
+    @ApiOperation(value = "获取字典数据详细信息")
     @GetMapping(value = "/{dictCode}")
     public R<SysDictData> getInfo(@PathVariable Long dictCode) {
         return R.ok(sysDictDataService.getById(dictCode));
+    }
+
+    @ApiOperation(value = "获取字典数据列表")
+    @GetMapping(value = "/type/{dictType}")
+    @Cacheable(cacheNames = CacheNames.SYS_DICT, key = "#dictType")
+    public R<List<SysDictData>> dictType(@PathVariable String dictType) {
+        return R.ok(sysDictDataService.queryDictDataByType(dictType));
     }
 
     @PostMapping
