@@ -2,7 +2,7 @@ package com.snail.sys.dto;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.snail.sys.api.domain.SysUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
