@@ -24,23 +24,6 @@ public class SysLoginInfoController {
     @Resource
     private SysLoginInfoService sysLoginInfoService;
 
-    @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
-    public R<SysLoginInfo> queryById(@PathVariable("id") Long id) {
-        return R.ok(sysLoginInfoService.getById(id));
-    }
-
-    @PostMapping
-    @ApiOperation(value = "新增数据")
-    public R<Boolean> add(SysLoginInfo sysLoginInfo) {
-        return R.ok(sysLoginInfoService.save(sysLoginInfo));
-    }
-
-    @PutMapping
-    @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysLoginInfo sysLoginInfo) {
-        return R.ok(sysLoginInfoService.updateById(sysLoginInfo));
-    }
 
     @DeleteMapping
     @ApiOperation(value = "删除系统访问记录")
