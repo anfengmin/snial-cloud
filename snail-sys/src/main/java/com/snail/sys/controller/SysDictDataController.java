@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 字典数据表(SysDictData)表控制层
+ * 数据字典信息
  *
  * @author makejava
  * @since 2025-05-21 21:34:18
