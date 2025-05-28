@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 系统访问记录(SysLoginInfo)表控制层
+ * 系统访问记录
  *
  * @author makejava
  * @since 2025-05-21 21:50:06
