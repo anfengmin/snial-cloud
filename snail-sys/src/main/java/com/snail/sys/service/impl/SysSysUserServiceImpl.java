@@ -3,13 +3,16 @@ package com.snail.sys.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.dao.SysUserDao;
+import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysUserService;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.user.UserException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +24,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("userService")
 public class SysSysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> implements SysUserService {
+
+    /**
+     * 分页查询
+     *
+     * @param dto dto
+     * @return 分页结果
+     * @since 1.0
+     */
+    @Override
+    public R<Page<SysUser>> queryByPage(SysUserPageDTO dto) {
+        return null;
+    }
 
     /**
      * 根据用户账号获取用户信息
