@@ -1,5 +1,6 @@
 package com.snail.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.snail.sys.domain.SysLoginInfo;
 import com.snail.sys.dao.SysLoginInfoDao;
 import com.snail.sys.service.SysLoginInfoService;
@@ -21,5 +22,13 @@ public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLog
     @Resource
     private SysLoginInfoDao sysLoginInfoDao;
 
-
+    /**
+     * 清空登录日志
+     *
+     * @since 1.0
+     */
+    @Override
+    public void cleanLogInfo() {
+        this.remove(new LambdaQueryWrapper<>());
+    }
 }
