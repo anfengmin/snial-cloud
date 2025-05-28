@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 参数配置表(SysConfig)表控制层
+ * 参数配置 信息操作处理
  *
  * @author makejava
  * @since 2025-05-21 21:32:37
