@@ -1,16 +1,13 @@
 package com.snail.sys.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.java.Log;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 部门表(SysDept)表控制层
+ * 部门信息
  *
  * @author makejava
  * @since 2025-05-21 21:30:46
