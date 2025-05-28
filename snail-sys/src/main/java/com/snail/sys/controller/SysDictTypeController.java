@@ -18,35 +18,47 @@ import java.util.List;
  */
 @Api(tags = "字典类型")
 @RestController
-@RequestMapping("/v1/sysDictType")
+@RequestMapping("/v1/dict/type")
 public class SysDictTypeController {
 
     @Resource
     private SysDictTypeService sysDictTypeService;
 
 
-    @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
-    public R<SysDictType> queryById(@PathVariable("id") Long id) {
+    @GetMapping("/{dictId}")
+    @ApiOperation(value = "查询字典类型详细")
+    public R<SysDictType> queryById(@PathVariable("dictId") Long id) {
         return R.ok(sysDictTypeService.getById(id));
     }
 
     @PostMapping
-    @ApiOperation(value = "新增数据")
+    @ApiOperation(value = "新增字典类型")
     public R<Boolean> add(SysDictType sysDictType) {
+        if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
+            return R.fail("新增字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
+        }
         return R.ok(sysDictTypeService.save(sysDictType));
     }
 
     @PutMapping
-    @ApiOperation(value = "编辑数据")
+    @ApiOperation(value = "编辑字典类型")
     public R<Boolean> edit(SysDictType sysDictType) {
+        if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
+            return R.fail("修改字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
+        }
         return R.ok(sysDictTypeService.updateById(sysDictType));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{ids}")
     @ApiOperation(value = "删除数据")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@PathVariable("ids") List<Long> ids) {
         return R.ok(sysDictTypeService.removeByIds(ids));
+    }
+
+    @DeleteMapping("/refreshCache")
+    public R<Void> refreshCache() {
+        sysDictTypeService.resetDictCache();
+        return R.ok();
     }
 
 }
