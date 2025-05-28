@@ -11,14 +11,14 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 菜单权限表(SysMenu)表控制层
+ * 菜单信息
  *
  * @author makejava
  * @since 2025-05-21 21:36:54
  */
 @Api(tags = "菜单权限表")
 @RestController
-@RequestMapping("/v1/sysMenu")
+@RequestMapping("/v1/menu")
 public class SysMenuController {
 
     @Resource
