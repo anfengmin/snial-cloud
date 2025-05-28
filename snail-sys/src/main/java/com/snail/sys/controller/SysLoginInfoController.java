@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Api(tags = "系统访问记录")
 @RestController
-@RequestMapping("/v1/sysLoginInfo")
+@RequestMapping("/v1/loginfo")
 public class SysLoginInfoController {
 
     @Resource
@@ -43,9 +43,15 @@ public class SysLoginInfoController {
     }
 
     @DeleteMapping
-    @ApiOperation(value = "删除数据")
+    @ApiOperation(value = "删除系统访问记录")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
         return R.ok(sysLoginInfoService.removeByIds(ids));
+    }
+
+    @DeleteMapping("/clean")
+    public R<Void> clean() {
+        sysLoginInfoService.cleanLogInfo();
+        return R.ok();
     }
 
 }
