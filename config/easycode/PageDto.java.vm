@@ -6,9 +6,10 @@ $!{define.vm}
 #setPackageSuffix("dto")
 ##自动导入包（全局变量）
 $!{autoImport.vm}
-import com.fasterxml.jackson.annotation.JsonFormat;
+import $!{tableInfo.savePackageName}.domain.$!{tableInfo.name};
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
