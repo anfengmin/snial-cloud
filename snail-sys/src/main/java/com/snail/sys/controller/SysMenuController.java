@@ -1,30 +1,36 @@
 package com.snail.sys.controller;
 
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysMenu;
-import com.snail.sys.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.snail.sys.domain.SysMenu;
+import com.snail.sys.service.SysMenuService;
+import com.snail.sys.dto.SysMenuPageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
+import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 菜单信息
+ * 菜单权限
  *
  * @author makejava
- * @since 2025-05-21 21:36:54
+ * @since 2025-05-29 21:44:59
  */
-@Api(tags = "菜单权限表")
+@Api(tags = "菜单权限")
 @RestController
-@RequestMapping("/v1/menu")
+@RequestMapping("/v1/sysMenu")
 public class SysMenuController {
 
     @Resource
     private SysMenuService sysMenuService;
 
-
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysMenu>> queryByPage(@RequestBody SysMenuPageDTO dto) {
+        return sysMenuService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
