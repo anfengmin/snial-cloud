@@ -1,47 +1,55 @@
-##导入宏定义
+##引入宏定义
 $!{define.vm}
-##保存文件（宏定义）
-#save("/entity", "Entity.java")
-##包路径（宏定义）
-#setPackageSuffix("entity")
-##自动导入包（全局变量）
+
+##使用宏定义设置回调（保存位置与文件后缀）
+#save("/domain", ".java")
+
+##使用宏定义设置包后缀
+#setPackageSuffix("domain")
+
+##使用全局变量实现默认包导入
 $!{autoImport.vm}
-import cn.hutool.core.date.DatePattern;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-##表注释（宏定义）
-#tableComment("")
+##使用宏定义实现类注释信息
+#tableComment("实体类")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("${tableInfo.obj.name}")
-@ApiModel(value = #if(${tableInfo.comment})"${tableInfo.comment}"#end)
+@TableName("$!{tableInfo.obj.name}")
+@ApiModel(value = "#if($!{tableInfo.comment})$!{tableInfo.comment}#else$!{tableInfo.name}#end")
 public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
 
-private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = $!tool.serial();
 
 #foreach($column in $tableInfo.fullColumn)
-#if(${column.obj.name} == ${tableInfo.pkColumn.get(0).obj.name})
-@JsonFormat(shape = JsonFormat.Shape.STRING)
-@TableId(type = IdType.AUTO)#end
 
-#if(${column.comment})
-@ApiModelProperty(value="${column.comment}")#end
-
-#if(${column.type} == "java.util.Date" || ${column.type} == "java.sql.Date" || ${column.type} == "java.sql.Timestamp")
-@JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-#end
-#if(${column.name} == "deleteFlag")
-@TableLogic
-#end
+    #if(${column.name} == "id")
+    @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "#if($!{column.comment})$!{column.comment}#else主键#end")
+    #elseif(${column.name} == "deleted")
+    @TableLogic
+    @ApiModelProperty(value = "#if($!{column.comment})$!{column.comment}#else逻辑删除标记#end")
+    #elseif(${column.name} == "createBy")
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "创建者")
+    #elseif(${column.name} == "createTime")
+    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "创建时间")
+    #elseif(${column.name} == "updateBy")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty(value = "更新者")
+    #elseif(${column.name} == "updateTime")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ApiModelProperty(value = "更新时间")
+    #else
+    @ApiModelProperty(value = "#if($!{column.comment})$!{column.comment}#else#end")
+    #end
 private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
 #end
+
 }
