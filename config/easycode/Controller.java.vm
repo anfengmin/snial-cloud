@@ -1,64 +1,69 @@
-##导入宏定义
-$!{define.vm}
-##设置表后缀（宏定义）
-#setTableSuffix("Controller")
-##保存文件（宏定义）
-#save("/controller", "Controller.java")
-##包路径（宏定义）
-#setPackageSuffix("controller")
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name, "Controller"))
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+        #set($pk = $tableInfo.pkColumn.get(0))
+#end
 ##定义服务名
 #set($serviceName = $!tool.append($!tool.firstLowerCase($!tableInfo.name), "Service"))
-##定义实体对象名
-#set($entityName = $!tool.firstLowerCase($!tableInfo.name))
-#import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
+
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import $!{tableInfo.savePackageName}.entity.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.domain.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
+import $!{tableInfo.savePackageName}.dto.$!{tableInfo.name}PageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
-
+import com.snail.common.core.utils.R;
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
-##表注释
-#tableComment("")
+
+/**
+ * $!{tableInfo.comment}
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
 @Api(tags = "$!{tableInfo.comment}")
 @RestController
-@RequestMapping("$!tool.firstLowerCase($!tableInfo.name)")
+@RequestMapping("/v1/$!tool.firstLowerCase($tableInfo.name)")
 public class $!{tableName} {
 
-        @Resource
-        private $!{tableInfo.name}Service $!{serviceName};
+@Resource
+private $!{tableInfo.name}Service $!{serviceName};
 
-        @GetMapping("queryByPage")
-        @ApiOperation(value = "分页查询", notes = "分页查询")
-        public R<Page<$!{tableInfo.name}>>queryByPage(@RequestBody $!{tableInfo.name}PageDTO dto){
-            return $!{serviceName}.queryByPage(dto);
+@PostMapping("queryByPage")
+@ApiOperation(value = "分页查询", notes = "分页查询")
+public R<Page<$!{tableInfo.name}>>queryByPage(@RequestBody $!{tableInfo.name}PageDTO dto){
+        return $!{serviceName}.queryByPage(dto);
         }
 
-        @GetMapping("info/{id}")
-        @ApiOperation(value = "主键查询", notes = "主键查询")
-        public R<$!{tableInfo.name}> selectOne(@PathVariable Serializable id){
-            return R.ok($!{serviceName}.getById(id));
+@GetMapping("{id}")
+@ApiOperation(value = "主键查询")
+public R<$!{tableInfo.name}> queryById(@PathVariable("id") $!pk.shortType id) {
+        return R.ok($!{serviceName}.getById(id));
         }
 
-        @PostMapping("add")
-        @ApiOperation(value = "新增数据", notes = "新增数据")
-        public R<Boolean> add(@RequestBody $!{tableInfo.name} $!{entityName}){
-            return R.ok($!{serviceName}.save($!{entityName}Entity));
+@PostMapping
+@ApiOperation(value = "新增数据")
+public R<Boolean> add($!{tableInfo.name} $!{tool.firstLowerCase($tableInfo.name)}) {
+        return R.ok($!{serviceName}.save($!{tool.firstLowerCase($tableInfo.name)}));
         }
 
-        @PutMapping("edit")
-        @ApiOperation(value = "修改数据", notes = "修改数据")
-        public R<Boolean> edit(@RequestBody $!{tableInfo.name} $!{entityName}){
-            return R.ok($!{serviceName}.updateById($!{entityName}Entity));
+@PutMapping
+@ApiOperation(value = "编辑数据")
+public R<Boolean> edit($!{tableInfo.name} $!{tool.firstLowerCase($tableInfo.name)}) {
+        return R.ok($!{serviceName}.updateById($!{tool.firstLowerCase($tableInfo.name)}));
         }
 
-        @DeleteMapping("delete")
-        @ApiOperation(value = "删除数据", notes = "删除数据")
-        public R<Boolean> delete(@RequestParam("idList") List<Long> idList){
-            return R.ok($!{serviceName}.removeByIds(idList));
+@DeleteMapping
+@ApiOperation(value = "删除数据")
+public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+        return R.ok($!{serviceName}.removeByIds(ids));
         }
-}
+
+        }
