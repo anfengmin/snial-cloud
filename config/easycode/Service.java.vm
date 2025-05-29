@@ -1,20 +1,38 @@
-##导入宏定义
-$!{define.vm}
-##设置表后缀（宏定义）
-#setTableSuffix("Service")
-##保存文件（宏定义）
-#save("/service", "Service.java")
-##包路径（宏定义）
-#setPackageSuffix("service")
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name, "Service"))
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+$!callback.setSavePath($tool.append($tableInfo.savePath, "/service"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service;
+
+import $!{tableInfo.savePackageName}.domain.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.dto.$!{tableInfo.name}PageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
-import $!{tableInfo.savePackageName}.entity.$!{tableInfo.name};
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.utils.R;
 
-##表注释（宏定义）
-#tableComment("")
-public interface $!{tableName} extends IService<$!{tableInfo.name}> {
+/**
+ * $!{tableInfo.comment}
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+public interface $!{tableName} extends IService<$!tableInfo.name> {
 
-
+        /**
+            * 分页查询
+            *
+            * @param dto dto
+            * @return 分页结果
+            * @since 1.0
+            */
         R<Page<$!{tableInfo.name}>> queryByPage($!{tableInfo.name}PageDTO dto);
 
-}
+
+        }
