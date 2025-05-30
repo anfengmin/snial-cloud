@@ -1,29 +1,34 @@
 package com.snail.sys.controller;
-
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysPost;
-import com.snail.sys.service.SysPostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.snail.sys.domain.SysPost;
+import com.snail.sys.service.SysPostService;
+import com.snail.sys.dto.SysPostPageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
-
+import com.snail.common.core.utils.R;
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 岗位信息(SysPost)表控制层
+ * 岗位信息
  *
  * @author makejava
- * @since 2025-05-21 21:52:59
+ * @since 2025-05-30 23:05:39
  */
 @Api(tags = "岗位信息")
 @RestController
 @RequestMapping("/v1/sysPost")
 public class SysPostController {
-
+    
     @Resource
     private SysPostService sysPostService;
-
+    
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysPost>>queryByPage(@RequestBody SysPostPageDTO dto){
+        return sysPostService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
