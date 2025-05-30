@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.service.SysUserRoleService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.snail.sys.dto.SysUserRolePageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
 import com.snail.common.core.utils.R;
 
@@ -13,10 +13,10 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 用户和角色关联表(SysUserRole)表控制层
+ * 用户和角色关联表
  *
  * @author makejava
- * @since 2025-05-21 21:53:04
+ * @since 2025-05-30 23:14:01
  */
 @Api(tags = "用户和角色关联表")
 @RestController
@@ -26,7 +26,11 @@ public class SysUserRoleController {
     @Resource
     private SysUserRoleService sysUserRoleService;
 
-
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysUserRole>> queryByPage(@RequestBody SysUserRolePageDTO dto) {
+        return sysUserRoleService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
