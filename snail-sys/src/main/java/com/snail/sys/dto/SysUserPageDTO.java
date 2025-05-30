@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 用户(SysUser)
  *
  * @author makejava
- * @since 2025-05-28 22:49:37
+ * @since 2025-05-30 23:07:00
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
