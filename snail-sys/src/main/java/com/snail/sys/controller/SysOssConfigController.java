@@ -1,20 +1,22 @@
 package com.snail.sys.controller;
 
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysOssConfig;
-import com.snail.sys.service.SysOssConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.snail.sys.domain.SysOssConfig;
+import com.snail.sys.service.SysOssConfigService;
+import com.snail.sys.dto.SysOssConfigPageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
+import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 对象存储配置表(SysOssConfig)表控制层
+ * 对象存储配置表
  *
  * @author makejava
- * @since 2025-05-21 21:52:58
+ * @since 2025-05-30 23:04:57
  */
 @Api(tags = "对象存储配置表")
 @RestController
@@ -24,6 +26,11 @@ public class SysOssConfigController {
     @Resource
     private SysOssConfigService sysOssConfigService;
 
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysOssConfig>> queryByPage(@RequestBody SysOssConfigPageDTO dto) {
+        return sysOssConfigService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
