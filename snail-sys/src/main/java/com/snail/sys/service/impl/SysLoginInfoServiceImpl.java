@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 
-import javax.annotation.Resource;
 
 /**
  * 系统访问记录(SysLoginInfo)表服务实现类
@@ -18,9 +17,6 @@ import javax.annotation.Resource;
  */
 @Service("sysLoginInfoService")
 public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLoginInfo> implements SysLoginInfoService {
-
-    @Resource
-    private SysLoginInfoDao sysLoginInfoDao;
 
     /**
      * 清空登录日志

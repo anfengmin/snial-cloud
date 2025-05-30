@@ -1,10 +1,7 @@
 package com.snail.sys.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.redis.utils.CacheUtils;
@@ -13,7 +10,6 @@ import com.snail.sys.domain.SysDictType;
 import com.snail.sys.dao.SysDictTypeDao;
 import com.snail.sys.service.SysDictDataService;
 import com.snail.sys.service.SysDictTypeService;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -32,9 +28,6 @@ import java.util.stream.Collectors;
  */
 @Service("sysDictTypeService")
 public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeDao, SysDictType> implements SysDictTypeService {
-
-    @Resource
-    private SysDictTypeDao sysDictTypeDao;
 
     @Resource
     private SysDictDataService sysDictDataService;
