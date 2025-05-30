@@ -1,20 +1,22 @@
 package com.snail.sys.controller;
 
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysRole;
-import com.snail.sys.service.SysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.snail.sys.domain.SysRole;
+import com.snail.sys.service.SysRoleService;
+import com.snail.sys.dto.SysRolePageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
+import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 角色信息(SysRole)表控制层
+ * 角色信息
  *
  * @author makejava
- * @since 2025-05-21 21:53:00
+ * @since 2025-05-30 23:06:10
  */
 @Api(tags = "角色信息")
 @RestController
@@ -24,6 +26,11 @@ public class SysRoleController {
     @Resource
     private SysRoleService sysRoleService;
 
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysRole>> queryByPage(@RequestBody SysRolePageDTO dto) {
+        return sysRoleService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
