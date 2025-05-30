@@ -1,7 +1,6 @@
 package com.snail.sys.controller;
 
 import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysLoginInfo;
 import com.snail.sys.service.SysLoginInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
