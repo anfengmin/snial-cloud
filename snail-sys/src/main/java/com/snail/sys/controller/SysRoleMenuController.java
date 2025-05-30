@@ -1,20 +1,22 @@
 package com.snail.sys.controller;
 
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysRoleMenu;
-import com.snail.sys.service.SysRoleMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.snail.sys.domain.SysRoleMenu;
+import com.snail.sys.service.SysRoleMenuService;
+import com.snail.sys.dto.SysRoleMenuPageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
+import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 角色和菜单关联(SysRoleMenu)表控制层
+ * 角色和菜单关联
  *
  * @author makejava
- * @since 2025-05-21 21:53:02
+ * @since 2025-05-30 23:06:37
  */
 @Api(tags = "角色和菜单关联")
 @RestController
@@ -23,6 +25,12 @@ public class SysRoleMenuController {
 
     @Resource
     private SysRoleMenuService sysRoleMenuService;
+
+    @PostMapping("queryByPage")
+    @ApiOperation(value = "分页查询", notes = "分页查询")
+    public R<Page<SysRoleMenu>> queryByPage(@RequestBody SysRoleMenuPageDTO dto) {
+        return sysRoleMenuService.queryByPage(dto);
+    }
 
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
