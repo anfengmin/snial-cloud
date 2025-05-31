@@ -28,8 +28,8 @@ public class SysMenuController {
     @Resource
     private SysMenuService sysMenuService;
 
-    @ApiOperation(value = "获取菜单列表")
     @GetMapping("/list")
+    @ApiOperation(value = "获取菜单列表")
     public R<List<SysMenu>> list(SysMenu menu) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
@@ -42,11 +42,12 @@ public class SysMenuController {
         return R.ok(sysMenuService.getById(menuId));
     }
 
-    @GetMapping("/menuTreeList")
-    public R<List<Tree<Long>>> menuTree(SysMenu menu) {
+    @GetMapping("/queryMenuTree")
+    @ApiOperation(value = "获取菜单下拉树列表")
+    public R<List<Tree<Long>>> queryMenuTree(SysMenu menu) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
-        return R.ok(sysMenuService.menuTreeList(menus));
+        return R.ok(sysMenuService.queryMenuTree(menus));
     }
 
     @PostMapping
