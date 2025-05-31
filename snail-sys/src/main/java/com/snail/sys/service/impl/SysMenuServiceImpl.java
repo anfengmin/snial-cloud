@@ -75,14 +75,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
     }
 
     /**
-     * menuTreeList
+     * 获取菜单下拉树列表
      *
      * @param menus menus
      * @return java.util.List<cn.hutool.core.lang.tree.Tree < java.lang.Long>>
      * @since 1.0
      */
     @Override
-    public List<Tree<Long>> menuTreeList(List<SysMenu> menus) {
+    public List<Tree<Long>> queryMenuTree(List<SysMenu> menus) {
         if (CollUtil.isEmpty(menus)) {
             return Collections.emptyList();
         }
@@ -94,7 +94,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
     }
 
     /**
-     * menuList
+     * 构建菜单列表
      *
      * @param menu    menu
      * @param roleIds roleIds
