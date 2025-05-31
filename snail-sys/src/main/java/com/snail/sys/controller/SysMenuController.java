@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.snail.common.satoken.utils.LoginUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,10 +36,17 @@ public class SysMenuController {
         return R.ok(menus);
     }
 
-    @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
-    public R<SysMenu> queryById(@PathVariable("id") Long id) {
-        return R.ok(sysMenuService.getById(id));
+    @GetMapping("/{menuId}")
+    @ApiOperation(value = "根据菜单编号获取详细信息")
+    public R<SysMenu> queryById(@PathVariable Long menuId) {
+        return R.ok(sysMenuService.getById(menuId));
+    }
+
+    @GetMapping("/menuTreeList")
+    public R<List<Tree<Long>>> menuTree(SysMenu menu) {
+        Long userId = LoginUtils.getUserId();
+        List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
+        return R.ok(sysMenuService.menuTreeList(menus));
     }
 
     @PostMapping
