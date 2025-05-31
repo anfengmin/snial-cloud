@@ -45,4 +45,13 @@ public interface SysMenuService extends IService<SysMenu> {
      * @since 1.0
      */
     List<Tree<Long>> queryMenuTree(List<SysMenu> menus);
+
+    /**
+     * 根据角色ID查询菜单树信息
+     *
+     * @param roleId roleId
+     * @return java.util.List<java.lang.Long>
+     * @since 1.0
+     */
+    List<Long> queryMenuListByRoleId(Long roleId);
 }
