@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import com.snail.common.satoken.utils.LoginUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.SysMenu;
@@ -20,16 +21,18 @@ import java.util.List;
  */
 @Api(tags = "菜单权限")
 @RestController
-@RequestMapping("/v1/sysMenu")
+@RequestMapping("/v1/menu")
 public class SysMenuController {
 
     @Resource
     private SysMenuService sysMenuService;
 
-    @PostMapping("queryByPage")
-    @ApiOperation(value = "分页查询", notes = "分页查询")
-    public R<Page<SysMenu>> queryByPage(@RequestBody SysMenuPageDTO dto) {
-        return sysMenuService.queryByPage(dto);
+    @ApiOperation(value = "获取菜单列表")
+    @GetMapping("/list")
+    public R<List<SysMenu>> list(SysMenu menu) {
+        Long userId = LoginUtils.getUserId();
+        List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
+        return R.ok(menus);
     }
 
     @GetMapping("{id}")
