@@ -10,9 +10,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.utils.R;
 import com.snail.sys.dao.SysMenuDao;
 import com.snail.sys.domain.SysMenu;
+import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysMenuPageDTO;
 import com.snail.sys.service.SysMenuService;
+import com.snail.sys.service.SysRoleMenuService;
+import com.snail.sys.service.SysRoleService;
 import com.snail.sys.service.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
 
     @Resource
     private SysUserRoleService sysUserRoleService;
+    @Resource
+    private SysRoleService sysRoleService;
+    @Resource
+    private SysRoleMenuService  sysRoleMenuService;
 
     /**
      * 分页查询
@@ -91,6 +98,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
                         .setParentId(menu.getParentId())
                         .setName(menu.getMenuName())
                         .setWeight(menu.getOrderNum()));
+    }
+
+    /**
+     * 根据角色ID查询菜单树信息
+     *
+     * @param roleId roleId
+     * @return java.util.List<java.lang.Long>
+     * @since 1.0
+     */
+    @Override
+    public List<Long> queryMenuListByRoleId(Long roleId) {
+        List<SysRoleMenu> userRoles = sysRoleMenuService.lambdaQuery().eq(SysRoleMenu::getRoleId, roleId).list();
+        //        List<SysMenu> list = this.lambdaQuery().in(SysMenu::getId, menuIds).select(SysMenu::getId).list();
+//        List<Long> menuIds = list.stream().map(SysMenu::getId).collect(Collectors.toList());
+        return userRoles.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
     }
 
     /**
