@@ -1,5 +1,6 @@
 package com.snail.sys.service;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.common.core.utils.R;
@@ -35,4 +36,13 @@ public interface SysMenuService extends IService<SysMenu> {
      * @since 1.0
      */
     List<SysMenu> queryMenuList(SysMenu menu, Long userId);
+
+    /**
+     * menuTreeList
+     *
+     * @param menus menus
+     * @return java.util.List<cn.hutool.core.lang.tree.Tree<java.lang.Long>>
+     * @since 1.0
+     */
+    List<Tree<Long>> menuTreeList(List<SysMenu> menus);
 }
