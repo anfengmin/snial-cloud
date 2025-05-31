@@ -2,6 +2,8 @@ package com.snail.auth.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.snail.auth.form.RegisterBody;
 import com.snail.auth.service.SysLoginService;
 import com.snail.common.satoken.utils.LoginUtils;
@@ -13,6 +15,7 @@ import com.snail.common.core.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,7 @@ import java.util.Map;
  * Created time 2025/5/11
  * @since 1.0
  */
+@Slf4j
 @Api(tags = "登录")
 @Validated
 @RequiredArgsConstructor
@@ -39,10 +43,10 @@ public class TokenController {
     public R<Map<String, Object>> login(@Validated @RequestBody LoginBody form) {
         // 用户登录
         String accessToken = sysLoginService.login(form.getUserCode(), form.getPassWord());
-
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<>();
-        rspMap.put(Constants.ACCESS_TOKEN, accessToken);
+        String token = Constants.BEARER + accessToken;
+        rspMap.put(Constants.ACCESS_TOKEN, token);
         return R.ok(rspMap);
     }
 
