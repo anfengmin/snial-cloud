@@ -1,6 +1,8 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -70,6 +72,25 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
             List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
             return menuList(menu, roleIds);
         }
+    }
+
+    /**
+     * menuTreeList
+     *
+     * @param menus menus
+     * @return java.util.List<cn.hutool.core.lang.tree.Tree < java.lang.Long>>
+     * @since 1.0
+     */
+    @Override
+    public List<Tree<Long>> menuTreeList(List<SysMenu> menus) {
+        if (CollUtil.isEmpty(menus)) {
+            return Collections.emptyList();
+        }
+        return TreeUtil.build(menus, 0L,
+                (menu, tree) -> tree.setId(menu.getId())
+                        .setParentId(menu.getParentId())
+                        .setName(menu.getMenuName())
+                        .setWeight(menu.getOrderNum()));
     }
 
     /**
