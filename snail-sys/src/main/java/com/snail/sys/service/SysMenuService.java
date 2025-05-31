@@ -38,11 +38,11 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> queryMenuList(SysMenu menu, Long userId);
 
     /**
-     * menuTreeList
+     * 获取菜单下拉树列表
      *
      * @param menus menus
      * @return java.util.List<cn.hutool.core.lang.tree.Tree<java.lang.Long>>
      * @since 1.0
      */
-    List<Tree<Long>> menuTreeList(List<SysMenu> menus);
+    List<Tree<Long>> queryMenuTree(List<SysMenu> menus);
 }
