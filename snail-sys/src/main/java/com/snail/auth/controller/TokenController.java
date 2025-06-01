@@ -2,16 +2,13 @@ package com.snail.auth.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.BCrypt;
+import com.snail.auth.form.LoginBody;
 import com.snail.auth.form.RegisterBody;
 import com.snail.auth.service.SysLoginService;
-import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.auth.form.LoginBody;
-
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.utils.R;
+import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.common.satoken.vo.LoginUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
