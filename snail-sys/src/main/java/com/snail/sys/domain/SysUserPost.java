@@ -21,7 +21,7 @@ public class SysUserPost extends Model<SysUserPost> {
 
     private static final long serialVersionUID = -52753061857241092L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "用户ID")
     private Long userId;
 
