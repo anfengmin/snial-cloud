@@ -21,7 +21,7 @@ public class SysUserRole extends Model<SysUserRole> {
 
     private static final long serialVersionUID = -26215685220310436L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "用户ID")
     private Long userId;
 
