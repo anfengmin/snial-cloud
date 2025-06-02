@@ -21,7 +21,7 @@ public class SysRoleDept extends Model<SysRoleDept> {
 
     private static final long serialVersionUID = -73263080247909543L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "角色ID")
     private Long roleId;
 
