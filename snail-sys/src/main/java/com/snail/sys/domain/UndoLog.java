@@ -21,7 +21,7 @@ public class UndoLog extends Model<UndoLog> {
 
     private static final long serialVersionUID = 634391168589750851L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "branch transaction id")
     private Long branchId;
 
