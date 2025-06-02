@@ -23,7 +23,7 @@ public class SysOssConfig extends Model<SysOssConfig> {
 
     private static final long serialVersionUID = 527786467057027481L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "主建")
     private Long ossConfigId;
 
