@@ -21,7 +21,7 @@ public class SysRoleMenu extends Model<SysRoleMenu> {
 
     private static final long serialVersionUID = -23476875467648078L;
 
-
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "角色ID")
     private Long roleId;
 
