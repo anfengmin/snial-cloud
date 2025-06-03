@@ -2,7 +2,6 @@ package com.snail.sys.dao;
 
 import com.snail.sys.domain.SysConfig;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 
 /**
@@ -11,7 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author makejava
  * @since 2025-05-21 21:32:38
  */
-@Mapper
 public interface SysConfigDao extends BaseMapper<SysConfig> {
 
 }
