@@ -1,50 +1,35 @@
+# Tomcat
 server:
   port: 8080
+  servlet:
+    context-path: /
 
+# Spring
 spring:
   application:
+    # 应用名称
     name: snail-gateway
   profiles:
-    active: dev
+    # 环境配置
+    active: @profiles.active@
+
+--- # nacos 配置
+spring:
   cloud:
     nacos:
+      # nacos 服务地址
+      server-addr: @nacos.server@
+      username: @nacos.username@
+      password: @nacos.password@
       discovery:
-        server-addr: 127.0.0.1:8848
+        # 注册组
+        group: @nacos.discovery.group@
+        namespace: ${spring.profiles.active}
       config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yml
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      routes:
-        # 系统模块
-        - id: snail-sys
-          uri: lb://snail-sys
-          predicates:
-            - Path=/sys/**
-          filters:
-            - StripPrefix=1
-
-  # Redis配置
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    database: 0
-    password: 
-    timeout: 10s
-
-# 验证码配置
-security:
-  captcha:
-    # 验证码类型 math 数组计算 char 字符验证
-    type: math
-    # 验证码类别 circle 圆圈干扰 line 线段干扰 shear 扭曲干扰
-    category: circle
-    # 数字验证码位数
-    numberLength: 2
-    # 字符验证码长度
-    charLength: 4
-    # 验证码开关
-    enabled: true
+        # 配置组
+        group: @nacos.config.group@
+        namespace: ${spring.profiles.active}
+  config:
+    import:
+      - optional:nacos:snail-global.yml
+      - optional:nacos:${spring.application.name}.yml
