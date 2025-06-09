@@ -3,10 +3,14 @@ package com.snail.auth.service;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.form.RegisterBody;
+import com.snail.common.core.utils.SpringUtils;
+import com.snail.common.log.annotation.Log;
+import com.snail.common.log.event.LoginInfoEvent;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.SysUser;
@@ -64,6 +68,9 @@ public class SysLoginService {
         LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
+        recordLoginInfo()
+//        recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
+
         return StpUtil.getTokenValue();
     }
 
@@ -94,14 +101,15 @@ public class SysLoginService {
                 log.error("用户退出异常");
             }
         }
+
         // 封装对象
-//        LogininforEvent logininfor = new LogininforEvent();
-//        logininfor.setUserName(username);
-//        logininfor.setIpaddr(ip);
-//        logininfor.setLoginLocation(address);
-//        logininfor.setBrowser(browser);
-//        logininfor.setOs(os);
-//        logininfor.setMsg(message);
+//        LoginInfoEvent loginInfo = new LoginInfoEvent();
+//        loginInfo.setUserName(username);
+//        loginInfo.setIpaddr(ip);
+//        loginInfo.setLoginLocation(address);
+//        loginInfo.setBrowser(browser);
+//        loginInfo.setOs(os);
+//        loginInfo.setMsg(message);
 //        // 日志状态
 //        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
 //            logininfor.setStatus(Constants.LOGIN_SUCCESS_STATUS);
@@ -170,6 +178,34 @@ public class SysLoginService {
         }
 
     }
+
+    public void recordLoginInfo(String username, String status, String message) {
+        HttpServletRequest request = ServletUtils.getRequest();
+        final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
+        final String ip = ServletUtils.getClientIP(request);
+
+        String address = AddressUtils.getRealAddressByIP(ip);
+        // 获取客户端操作系统
+        String os = userAgent.getOs().getName();
+        // 获取客户端浏览器
+        String browser = userAgent.getBrowser().getName();
+        // 封装对象
+        LoginInfoEvent loginInfo = new LoginInfoEvent();
+        loginInfo.setUserName(username);
+        loginInfo.setIpaddr(ip);
+        loginInfo.setLoginLocation(address);
+        loginInfo.setBrowser(browser);
+        loginInfo.setOs(os);
+        loginInfo.setMsg(message);
+        // 日志状态
+        if (StrUtil.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
+            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
+        } else if (Constants.LOGIN_FAIL.equals(status)) {
+            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
+        }
+        SpringUtils.context().publishEvent(loginInfo);
+    }
+
 }
 
 
