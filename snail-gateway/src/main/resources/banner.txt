@@ -11,5 +11,4 @@ ${AnsiColor.BLUE}
 Spring Boot Version: ${spring-boot.version}
 Spring Application Name: ${spring.application.name}
 Spring Application Version: ${application.version}
-Cloud Version: ${spring-cloud.version}
-Nacos Version: ${spring-cloud-alibaba.version}
+
