@@ -1,6 +1,5 @@
 package com.snail.common.log.event;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
