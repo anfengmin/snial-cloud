@@ -69,39 +69,30 @@ public class SysLoginService {
         LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
-        recordLoginInfo(userInfo.getUserName(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
+        recordLoginInfo(userInfo.getUserCode(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
 
         return StpUtil.getTokenValue();
     }
 
     /**
-     * logout
+     * 用户登出
      *
      * @since 1.0
      */
     public void logout() {
         try {
+            // 获取当前登录用户并记录登出信息
             LoginUser loginUser = LoginUtils.getLoginUser();
-            HttpServletRequest request = ServletUtils.getRequest();
-            assert request != null;
-            final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
-            final String ip = ServletUtils.getClientIP(request);
-
-            String address = AddressUtils.getRealAddressByIP(ip);
-            // 获取客户端操作系统
-            String os = userAgent.getOs().getName();
-            // 获取客户端浏览器
-            String browser = userAgent.getBrowser().getName();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                StpUtil.logout();
-            } catch (NotLoginException ignored) {
-                log.error("用户退出异常");
+            if (loginUser != null) {
+                recordLoginInfo(loginUser.getUserCode(), Constants.LOGOUT, MessageUtils.message("user.logout.success"));
             }
+            // 执行登出操作
+            StpUtil.logout();
+        } catch (NotLoginException e) {
+            log.warn("用户登出时未检测到有效登录: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("用户登出异常: ", e);
         }
-
     }
 
 
