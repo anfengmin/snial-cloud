@@ -8,6 +8,7 @@ import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.form.RegisterBody;
+import com.snail.common.core.utils.MessageUtils;
 import com.snail.common.core.utils.SpringUtils;
 import com.snail.common.log.annotation.Log;
 import com.snail.common.log.event.LoginInfoEvent;
@@ -68,8 +69,7 @@ public class SysLoginService {
         LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
-        recordLoginInfo()
-//        recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
+        recordLoginInfo(userInfo.getUserName(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
 
         return StpUtil.getTokenValue();
     }
@@ -102,21 +102,6 @@ public class SysLoginService {
             }
         }
 
-        // 封装对象
-//        LoginInfoEvent loginInfo = new LoginInfoEvent();
-//        loginInfo.setUserName(username);
-//        loginInfo.setIpaddr(ip);
-//        loginInfo.setLoginLocation(address);
-//        loginInfo.setBrowser(browser);
-//        loginInfo.setOs(os);
-//        loginInfo.setMsg(message);
-//        // 日志状态
-//        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
-//            logininfor.setStatus(Constants.LOGIN_SUCCESS_STATUS);
-//        } else if (Constants.LOGIN_FAIL.equals(status)) {
-//            logininfor.setStatus(Constants.LOGIN_FAIL_STATUS);
-//        }
-//        SpringUtils.context().publishEvent(logininfor);
     }
 
 
