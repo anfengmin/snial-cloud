@@ -8,21 +8,20 @@ import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.form.RegisterBody;
-import com.snail.common.core.utils.MessageUtils;
-import com.snail.common.core.utils.SpringUtils;
-import com.snail.common.log.annotation.Log;
-import com.snail.common.log.event.LoginInfoEvent;
-import com.snail.common.redis.utils.RedisUtils;
-import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.domain.SysUser;
-import com.snail.common.satoken.vo.LoginUser;
-import com.snail.sys.service.SysUserService;
 import com.snail.common.core.constant.CacheConstants;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.enums.LoginType;
 import com.snail.common.core.exception.user.UserException;
+import com.snail.common.core.utils.MessageUtils;
 import com.snail.common.core.utils.ServletUtils;
+import com.snail.common.core.utils.SpringUtils;
 import com.snail.common.core.utils.ip.AddressUtils;
+import com.snail.common.log.event.LoginInfoEvent;
+import com.snail.common.redis.utils.RedisUtils;
+import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.common.satoken.vo.LoginUser;
+import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -120,10 +119,12 @@ public class SysLoginService {
             // 达到规定错误次数 则锁定登录
             if (errorNumber.equals(maxRetryCount)) {
                 RedisUtils.setCacheObject(errorKey, errorNumber, Duration.ofMinutes(lockTime));
+                recordLoginInfo(userCode, loginFail, MessageUtils.message(loginType.getRetryLimitExceed(), maxRetryCount, lockTime));
                 throw new UserException(loginType.getRetryLimitExceed(), maxRetryCount, lockTime);
             } else {
                 // 未达到规定错误次数 则递增
                 RedisUtils.setCacheObject(errorKey, errorNumber);
+                recordLoginInfo(userCode, loginFail, MessageUtils.message(loginType.getRetryLimitCount(), errorNumber));
                 throw new UserException(loginType.getRetryLimitCount(), errorNumber);
             }
         }
@@ -145,18 +146,32 @@ public class SysLoginService {
         SysUser sysUser = new SysUser();
         sysUser.setUserCode(registerBody.getUserCode());
         sysUser.setUserName(registerBody.getUserName());
+        sysUser.setNickName(registerBody.getUserName());
         sysUser.setPassWord(BCrypt.hashpw(registerBody.getPassWord()));
         sysUser.setCreateBy(registerBody.getUserCode());
         sysUser.setUpdateBy(registerBody.getUserCode());
+        sysUser.setUserType(registerBody.getUserType());
         boolean regFlag = sysUserService.registerUserInfo(sysUser);
         if (!regFlag) {
             throw new UserException("user.register.error");
         }
+        recordLoginInfo(registerBody.getUserCode(), Constants.REGISTER, MessageUtils.message("user.register.success"));
+
 
     }
 
+    /**
+     * 记录登录信息
+     *
+     * @param username username
+     * @param status status
+     * @param message message
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
     public void recordLoginInfo(String username, String status, String message) {
         HttpServletRequest request = ServletUtils.getRequest();
+        assert request != null;
         final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
         final String ip = ServletUtils.getClientIP(request);
 
