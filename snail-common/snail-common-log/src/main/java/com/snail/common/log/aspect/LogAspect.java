@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -88,7 +89,7 @@ public class LogAspect {
             String ip = ServletUtils.getClientIP();
             operLog.setOperateIp(ip);
             operLog.setOperateLocation(AddressUtils.getRealAddressByIP(ip));
-            operLog.setOperateUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
+            operLog.setOperateUrl(StringUtils.substring(Objects.requireNonNull(ServletUtils.getRequest()).getRequestURI(), 0, 255));
             LoginUser loginUser = LoginUtils.getLoginUser();
             operLog.setOperatorName(loginUser.getUserName());
             operLog.setDeptName(loginUser.getDeptName());

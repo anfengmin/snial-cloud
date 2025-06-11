@@ -47,12 +47,12 @@ public interface Constants {
     /**
      * 登录成功状态
      */
-    String LOGIN_SUCCESS_STATUS = "0";
+    Integer LOGIN_SUCCESS_STATUS = 0;
 
     /**
      * 登录失败状态
      */
-    String LOGIN_FAIL_STATUS = "1";
+    Integer LOGIN_FAIL_STATUS = 1;
 
     /**
      * 登录成功
