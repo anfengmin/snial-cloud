@@ -25,7 +25,6 @@ public class SysConfigController {
     private SysConfigService sysConfigService;
 
 
-
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
     public R<SysConfig> queryById(@PathVariable("id") Long id) {
