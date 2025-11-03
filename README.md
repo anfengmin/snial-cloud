@@ -22,7 +22,7 @@
 | `yudao-server`        | 管理后台 + 用户 APP 的服务端 |
 | `yudao-admin-ui`      | 管理后台的 UI 界面        |
 | `yudao-user-ui`       | 用户 APP 的 UI 界面     |
-| `yudao-module-system` | 系统功能的 Module 模块    |
+| `snail-sys`           | 系统功能的 Module 模块    |
 | `yudao-module-member` | 会员中心的 Module 模块    |
 | `yudao-module-infra`  | 基础设施的 Module 模块    |
 | `yudao-module-tool`   | 研发工具的 Module 模块    |
