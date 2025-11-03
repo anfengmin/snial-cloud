@@ -19,7 +19,7 @@ import $!{tableInfo.savePackageName}.dto.$!{tableInfo.name}PageDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
 import com.snail.common.core.utils.R;
-import javax.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
@@ -33,8 +33,8 @@ import java.util.List;
 @RequestMapping("/v1/$!tool.firstLowerCase($tableInfo.name)")
 public class $!{tableName} {
 
-@Resource
-private $!{tableInfo.name}Service $!{serviceName};
+
+private final $!{tableInfo.name}Service $!{serviceName};
 
 @PostMapping("queryByPage")
 @ApiOperation(value = "分页查询", notes = "分页查询")
