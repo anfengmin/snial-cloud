@@ -8,7 +8,9 @@ import com.snail.common.redis.utils.RedisUtils;
 import com.snail.gateway.config.properties.CaptchaProperties;
 import com.snail.gateway.enums.CaptchaType;
 import com.snail.gateway.service.ValidateCodeService;
+import com.snail.gateway.utils.SlidingCaptchaUtil;
 import com.snail.gateway.vo.CaptchaVo;
+import com.snail.gateway.vo.SlidingCaptchaVo;
 import com.snail.common.core.constant.CacheConstants;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.exception.CaptchaException;
@@ -22,6 +24,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.time.Duration;
 
 /**
@@ -99,6 +102,66 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         RedisUtils.deleteObject(verifyKey);
 
         if (!code.equalsIgnoreCase(captcha)) {
+            throw new CaptchaException();
+        }
+    }
+
+    /**
+     * 生成滑动验证码
+     *
+     * @return R<SlidingCaptchaVo>
+     * @since 1.0
+     */
+    @Override
+    public R<SlidingCaptchaVo> createSlidingCaptcha() throws IOException, CaptchaException {
+        SlidingCaptchaVo slidingCaptchaVo = new SlidingCaptchaVo();
+
+        // 生成验证码信息
+        String uuid = IdUtil.simpleUUID();
+        String verifyKey = CacheConstants.SLIDING_CAPTCHA_CODE_KEY + uuid;
+
+        // 生成滑动验证码图片
+        SlidingCaptchaUtil.SlidingCaptchaResult result = SlidingCaptchaUtil.generate();
+
+        // 保存正确的X坐标到Redis
+        RedisUtils.setCacheObject(verifyKey, String.valueOf(result.getX()), Duration.ofMinutes(Constants.CAPTCHA_EXPIRATION));
+
+        slidingCaptchaVo.setUuid(uuid);
+        slidingCaptchaVo.setBackgroundImg(result.getBackgroundImg());
+        slidingCaptchaVo.setSliderImg(result.getSliderImg());
+
+        return R.ok(slidingCaptchaVo);
+    }
+
+    /**
+     * 校验滑动验证码
+     *
+     * @param uuid uuid
+     * @param x    x坐标
+     * @since 1.0
+     */
+    @Override
+    public void checkSlidingCaptcha(String uuid, Integer x) throws CaptchaException {
+        if (x == null) {
+            throw new CaptchaException("user.jcaptcha.not.blank");
+        }
+        if (StringUtils.isEmpty(uuid)) {
+            throw new CaptchaExpireException();
+        }
+        String verifyKey = CacheConstants.SLIDING_CAPTCHA_CODE_KEY + uuid;
+        String correctXStr = RedisUtils.getCacheObject(verifyKey);
+        RedisUtils.deleteObject(verifyKey);
+
+        if (StringUtils.isEmpty(correctXStr)) {
+            throw new CaptchaExpireException();
+        }
+
+        try {
+            int correctX = Integer.parseInt(correctXStr);
+            if (!SlidingCaptchaUtil.verify(correctX, x)) {
+                throw new CaptchaException();
+            }
+        } catch (NumberFormatException e) {
             throw new CaptchaException();
         }
     }
