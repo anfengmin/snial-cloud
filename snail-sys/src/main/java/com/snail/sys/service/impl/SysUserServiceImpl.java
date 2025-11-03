@@ -3,27 +3,20 @@ package com.snail.sys.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.user.UserException;
+import com.snail.common.core.utils.R;
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
-import com.snail.sys.domain.SysDept;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import java.util.List;
-import java.util.Map;
 
 
 /**
