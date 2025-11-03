@@ -27,3 +27,4 @@ public class SlidingCaptchaVo implements Serializable {
     private String sliderImg;
 }
 
+
