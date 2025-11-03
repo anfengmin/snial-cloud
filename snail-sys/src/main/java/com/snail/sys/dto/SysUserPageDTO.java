@@ -1,15 +1,12 @@
 package com.snail.sys.dto;
 
-import java.util.Date;
-
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.domain.PageBaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户(SysUser)
@@ -17,10 +14,10 @@ import java.io.Serializable;
  * @author makejava
  * @since 2025-05-30 23:07:00
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
 @ApiModel(value = "用户")
-public class SysUserPageDTO extends PageDTO<SysUser> implements Serializable {
+public class SysUserPageDTO extends PageBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -83,5 +80,6 @@ public class SysUserPageDTO extends PageDTO<SysUser> implements Serializable {
 
     @ApiModelProperty(value = "备注")
     private String remark;
+
 
 }
