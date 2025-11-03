@@ -1,7 +1,11 @@
 package com.snail.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysConfig;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snail.sys.dto.SysConfigPageDTO;
+
 
 
 /**
@@ -12,5 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysConfigService extends IService<SysConfig> {
 
+    R<Page<SysConfig>> queryByPage(SysConfigPageDTO dto);
 
+    String selectConfigByKey(String configKey);
 }
