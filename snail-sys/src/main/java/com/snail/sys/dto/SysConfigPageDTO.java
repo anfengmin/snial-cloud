@@ -1,14 +1,11 @@
 package com.snail.sys.dto;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.snail.sys.api.domain.PageBaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 参数配置(SysConfig)实体类
@@ -20,7 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_config")
 @ApiModel(value = "参数配置")
-public class SysConfigPageDTO extends PageDTO<SysConfigPageDTO> implements Serializable {
+public class SysConfigPageDTO extends PageBaseEntity {
 
     private static final long serialVersionUID = -80967284801503921L;
 
@@ -39,13 +36,6 @@ public class SysConfigPageDTO extends PageDTO<SysConfigPageDTO> implements Seria
 
     @ApiModelProperty(value = "系统内置（Y是 N否）")
     private String configType;
-
-    @ApiModelProperty(value = "开始时间")
-    private String beginTime;
-
-    @ApiModelProperty(value = "结束时间")
-    private String endTime;
-
 
 
 }
