@@ -45,3 +45,5 @@ nbdist/
 !*/build/*.xml
 
 .flattened-pom.xml
+.history
+.vscode
