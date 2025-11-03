@@ -10,7 +10,7 @@ spring cloud alibab 2025 -> nacos-2.2.0
 ```shell
 sudo /usr/local/mysql/support-files/mysql.server start
 ```
-#### 开机启动nacos-2.3.2
+#### 开机启动nacos-2.2.0
 ```shell
 sudo /Users/ansir/work/nacos/nacos-2.2.0/bin/startup.sh -m standalone
 ```
