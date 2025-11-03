@@ -2,11 +2,11 @@ package com.snail.gateway.service;
 
 
 import com.snail.gateway.vo.CaptchaVo;
+import com.snail.gateway.vo.SlidingCaptchaVo;
 import com.snail.common.core.exception.CaptchaException;
 import com.snail.common.core.utils.R;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 验证码处理
@@ -31,4 +31,21 @@ public interface ValidateCodeService {
      * @since 1.0
      */
     void checkCaptcha(String key, String value) throws CaptchaException;
+
+    /**
+     * 生成滑动验证码
+     *
+     * @return R<SlidingCaptchaVo>
+     * @since 1.0
+     */
+    R<SlidingCaptchaVo> createSlidingCaptcha() throws IOException, CaptchaException;
+
+    /**
+     * 校验滑动验证码
+     *
+     * @param uuid uuid
+     * @param x    x坐标
+     * @since 1.0
+     */
+    void checkSlidingCaptcha(String uuid, Integer x) throws CaptchaException;
 }
