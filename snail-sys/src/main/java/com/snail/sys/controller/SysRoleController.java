@@ -1,16 +1,15 @@
 package com.snail.sys.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.utils.R;
+import com.snail.sys.domain.SysRole;
+import com.snail.sys.dto.SysRolePageDTO;
+import com.snail.sys.service.SysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.snail.sys.domain.SysRole;
-import com.snail.sys.service.SysRoleService;
-import com.snail.sys.dto.SysRolePageDTO;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.snail.common.core.utils.R;
 
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 角色信息
@@ -20,40 +19,23 @@ import java.util.List;
  */
 @Api(tags = "角色信息")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/sysRole")
 public class SysRoleController {
 
-    @Resource
-    private SysRoleService sysRoleService;
+    private final SysRoleService sysRoleService;
 
     @PostMapping("queryByPage")
-    @ApiOperation(value = "分页查询", notes = "分页查询")
+    @ApiOperation(value = "分页查询")
     public R<Page<SysRole>> queryByPage(@RequestBody SysRolePageDTO dto) {
         return sysRoleService.queryByPage(dto);
     }
 
-    @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
-    public R<SysRole> queryById(@PathVariable("id") Long id) {
-        return R.ok(sysRoleService.getById(id));
-    }
 
-    @PostMapping
-    @ApiOperation(value = "新增数据")
-    public R<Boolean> add(SysRole sysRole) {
-        return R.ok(sysRoleService.save(sysRole));
-    }
-
-    @PutMapping
-    @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysRole sysRole) {
-        return R.ok(sysRoleService.updateById(sysRole));
-    }
-
-    @DeleteMapping
-    @ApiOperation(value = "删除数据")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
-        return R.ok(sysRoleService.removeByIds(ids));
+    @GetMapping(value = "/{roleId}")
+    @ApiOperation(value = "根据角色编号获取详细信息")
+    public R<SysRole> getInfo(@PathVariable Long roleId) {
+        return R.ok(sysRoleService.selectRoleById(roleId));
     }
 
 }
