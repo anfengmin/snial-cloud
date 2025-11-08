@@ -8,6 +8,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.snail.common.core.constant.CacheConstants;
+import com.snail.common.core.constant.UserConstants;
 import com.snail.common.satoken.vo.LoginUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -126,4 +127,17 @@ public class LoginUtils {
     }
 
 
+    /**
+     * 是否为管理员
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public static boolean isAdmin(Long userId) {
+        return UserConstants.ADMIN_ID.equals(userId);
+    }
+
+    public static boolean isAdmin() {
+        return isAdmin(getUserId());
+    }
 }
