@@ -1,22 +1,29 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.UserConstants;
+import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
+import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
+import com.snail.sys.domain.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -32,6 +39,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
 
     private final SysDeptService sysDeptService;
+
     /**
      * 分页查询
      *
@@ -93,5 +101,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             throw new UserException("user.register.save.error", sysUser.getUserCode());
         }
         return this.save(sysUser);
+    }
+
+    /**
+     * checkUserDataScope
+     *
+     * @param userId userId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public void checkUserDataScope(Long userId) {
+        if (!LoginUtils.isAdmin(userId)) {
+            this.lambdaQuery()
+                    .eq(SysUser::getId, userId)
+                    .oneOpt()
+                    .orElseThrow(() -> new ServiceException("没有权限访问用户数据！"));
+        }
+    }
+
+    @Override
+    public SysUserVo getInfo(Long userId) {
+        this.checkUserDataScope(userId);
+        // TODO
+        return null;
     }
 }
