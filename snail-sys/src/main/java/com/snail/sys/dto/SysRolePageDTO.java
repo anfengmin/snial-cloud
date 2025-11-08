@@ -2,6 +2,7 @@ package com.snail.sys.dto;
 
 import java.util.Date;
 
+import com.snail.sys.api.domain.PageBaseEntity;
 import com.snail.sys.domain.SysRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,7 +21,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "角色信息")
-public class SysRolePageDTO extends PageDTO<SysRole> implements Serializable {
+public class SysRolePageDTO extends PageBaseEntity {
 
     private static final long serialVersionUID = 1L;
 
