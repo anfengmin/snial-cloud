@@ -3,6 +3,7 @@ package com.snail.sys.service;
 
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,5 +44,21 @@ public interface SysUserService extends IService<SysUser> {
      */
     boolean registerUserInfo(SysUser sysUser);
 
+    /**
+     * checkUserDataScope
+     *
+     * @param userId userId
+     * @since 1.0
+     */
+    void checkUserDataScope(Long userId);
 
+    /**
+     * getInfo
+     *
+     * @param userId userId
+     * @return com.snail.sys.domain.vo.SysUserVo
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    SysUserVo getInfo(Long userId);
 }
