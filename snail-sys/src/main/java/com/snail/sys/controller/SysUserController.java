@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户
@@ -36,7 +37,9 @@ public class SysUserController {
         return sysUserService.queryByPage(dto);
     }
 
+
     @GetMapping("getInfo")
+    @ApiOperation(value = "获取用户信息")
     public R<SysUserVo> getInfo() {
         LoginUser loginUser = LoginUtils.getLoginUser();
         assert loginUser != null;
@@ -48,7 +51,15 @@ public class SysUserController {
                 .build();
         return R.ok(build);
     }
-    @GetMapping("{id}")
+
+
+    @GetMapping(value = {"/", "/{userId}"})
+    @ApiOperation(value = "用户id获取用户信息")
+    public R<SysUserVo> getInfo(@PathVariable(value = "userId", required = false) Long userId) {
+        SysUserVo sysUserVo = sysUserService.getInfo(userId);
+        return R.ok(sysUserVo);
+    }
+        @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
     public R<SysUser> queryById(@PathVariable("id") Long id) {
         return R.ok(sysUserService.getById(id));
