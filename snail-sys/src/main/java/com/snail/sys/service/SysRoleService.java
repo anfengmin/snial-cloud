@@ -23,5 +23,22 @@ public interface SysRoleService extends IService<SysRole> {
      */
     R<Page<SysRole>> queryByPage(SysRolePageDTO dto);
 
+    /**
+     * selectRoleById
+     *
+     * @param roleId roleId
+     * @return com.snail.sys.domain.SysRole
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    SysRole selectRoleById(Long roleId);
 
+    /**
+     * checkRoleDataScope
+     *
+     * @param roleId roleId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void checkRoleDataScope(Long roleId);
 }
