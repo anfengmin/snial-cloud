@@ -23,5 +23,13 @@ public interface SysUserRoleService extends IService<SysUserRole> {
      */
     R<Page<SysUserRole>> queryByPage(SysUserRolePageDTO dto);
 
-
+    /**
+     * 校验用户是管理员角色
+     *
+     * @param userId userId
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkAdminRole(Long userId);
 }
