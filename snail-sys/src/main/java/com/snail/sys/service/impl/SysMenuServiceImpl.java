@@ -17,9 +17,9 @@ import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysRoleService;
 import com.snail.sys.service.SysUserRoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,16 +31,14 @@ import java.util.stream.Collectors;
  * @author makejava
  * @since 2025-05-29 21:45:02
  */
+@RequiredArgsConstructor
 @Service("sysMenuService")
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> implements SysMenuService {
 
 
-    @Resource
-    private SysUserRoleService sysUserRoleService;
-    @Resource
-    private SysRoleService sysRoleService;
-    @Resource
-    private SysRoleMenuService  sysRoleMenuService;
+    private final SysUserRoleService sysUserRoleService;
+    private final SysRoleService sysRoleService;
+    private final SysRoleMenuService  sysRoleMenuService;
 
     /**
      * 分页查询
@@ -66,7 +64,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
     @Override
     public List<SysMenu> queryMenuList(SysMenu menu, Long userId) {
         // 获取用户角色
-        List<SysUserRole> userRoles = sysUserRoleService.lambdaQuery().eq(SysUserRole::getUserId, userId).list();
+        List<SysUserRole> userRoles = sysUserRoleService.queryRoleListByUserId(userId);
         if (CollUtil.isEmpty(userRoles)) {
             return Collections.emptyList();
         }
@@ -109,9 +107,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
      */
     @Override
     public List<Long> queryMenuListByRoleId(Long roleId) {
-        List<SysRoleMenu> userRoles = sysRoleMenuService.lambdaQuery().eq(SysRoleMenu::getRoleId, roleId).list();
-        //        List<SysMenu> list = this.lambdaQuery().in(SysMenu::getId, menuIds).select(SysMenu::getId).list();
-//        List<Long> menuIds = list.stream().map(SysMenu::getId).collect(Collectors.toList());
+        List<SysRoleMenu> userRoles = sysRoleMenuService.querySysRoleMenuListByRoleId(roleId);
         return userRoles.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
     }
 
