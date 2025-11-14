@@ -32,4 +32,19 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
         Page<SysUserRole> result = this.lambdaQuery().page(page);
         return R.ok(result);
     }
+
+    /**
+     * 校验用户是管理员角色
+     *
+     * @param userId userId
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean checkAdminRole(Long userId) {
+        return this.lambdaQuery().eq(SysUserRole::getUserId, userId).exists();
+    }
+
+
 }
