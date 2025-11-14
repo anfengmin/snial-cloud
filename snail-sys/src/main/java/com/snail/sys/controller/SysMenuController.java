@@ -1,17 +1,15 @@
 package com.snail.sys.controller;
 
 import cn.hutool.core.lang.tree.Tree;
+import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.SysMenu;
 import com.snail.sys.service.SysMenuService;
-import com.snail.sys.dto.SysMenuPageDTO;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.snail.common.core.utils.R;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +22,11 @@ import java.util.Map;
  */
 @Api(tags = "菜单权限")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/menu")
 public class SysMenuController {
 
-    @Resource
-    private SysMenuService sysMenuService;
+    private final SysMenuService sysMenuService;
 
     @GetMapping("/list")
     @ApiOperation(value = "获取菜单列表")
