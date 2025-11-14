@@ -13,6 +13,8 @@ import com.snail.common.satoken.vo.LoginUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * 登录鉴权助手
  * <p>
@@ -134,7 +136,7 @@ public class LoginUtils {
      * @return 结果
      */
     public static boolean isAdmin(Long userId) {
-        return UserConstants.ADMIN_ID.equals(userId);
+        return Objects.requireNonNull(getLoginUser()).getRolePermission().contains(UserConstants.ADMIN_ROLE_KEY);
     }
 
     public static boolean isAdmin() {
