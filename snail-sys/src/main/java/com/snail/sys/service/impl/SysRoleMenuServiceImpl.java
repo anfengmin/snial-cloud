@@ -9,6 +9,8 @@ import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.List;
+
 
 /**
  * 角色和菜单关联
@@ -31,5 +33,18 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuDao, SysRoleM
         Page<SysRoleMenu> page = new Page<>(dto.getCurrent(), dto.getSize());
         Page<SysRoleMenu> result = this.lambdaQuery().page(page);
         return R.ok(result);
+    }
+
+    /**
+     * 角色id查询菜单列表
+     *
+     * @param roleId roleId
+     * @return java.util.List<com.snail.sys.domain.SysRoleMenu>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public List<SysRoleMenu> querySysRoleMenuListByRoleId(Long roleId) {
+        return this.lambdaQuery().eq(SysRoleMenu::getRoleId, roleId).list();
     }
 }
