@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 
+import java.util.List;
+
 /**
  * 用户和角色关联表
  *
@@ -32,4 +34,14 @@ public interface SysUserRoleService extends IService<SysUserRole> {
      * <p>1.0 Initialization method </p>
      */
     boolean checkAdminRole(Long userId);
+
+    /**
+     * 用户ID获取用户角色信息
+     *
+     * @param userId userId
+     * @return java.util.List<com.snail.sys.domain.SysUserRole>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    List<SysUserRole> queryRoleListByUserId(Long userId);
 }
