@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 
+import java.util.List;
+
 /**
  * 角色和菜单关联
  *
@@ -23,5 +25,13 @@ public interface SysRoleMenuService extends IService<SysRoleMenu> {
      */
     R<Page<SysRoleMenu>> queryByPage(SysRoleMenuPageDTO dto);
 
-
+    /**
+     * 角色id查询菜单列表
+     *
+     * @param roleId roleId
+     * @return java.util.List<com.snail.sys.domain.SysRoleMenu>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    List<SysRoleMenu> querySysRoleMenuListByRoleId(Long roleId);
 }
