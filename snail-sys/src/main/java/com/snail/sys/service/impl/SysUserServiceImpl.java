@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.UserConstants;
@@ -17,6 +18,7 @@ import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.domain.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
+import com.snail.sys.service.SysUserRoleService;
 import com.snail.sys.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
 
     private final SysDeptService sysDeptService;
+    private final SysUserRoleService sysUserRoleService;
 
     /**
      * 分页查询
@@ -112,7 +115,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
      */
     @Override
     public void checkUserDataScope(Long userId) {
-        if (!LoginUtils.isAdmin(userId)) {
+        boolean flag = sysUserRoleService.checkAdminRole(userId);
+        if (!flag) {
             this.lambdaQuery()
                     .eq(SysUser::getId, userId)
                     .oneOpt()
@@ -125,5 +129,71 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         this.checkUserDataScope(userId);
         // TODO
         return null;
+    }
+
+    /**
+     * add
+     *
+     * @param sysUser sysUser
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public R<Boolean> add(SysUser sysUser) {
+        boolean flag = this.checkUserCodeUnique(sysUser);
+        if (flag) {
+            return R.fail("新增用户:" + sysUser.getUserCode() + "失败，登录账号已存在");
+        }
+        sysUser.setPassWord(BCrypt.hashpw(sysUser.getPassWord()));
+        boolean save = this.save(sysUser);
+        return R.ok(save);
+    }
+    /**
+     * checkUserCodeUnique
+     *
+     * @param sysUser sysUser
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean checkUserCodeUnique(SysUser sysUser) {
+        return this.lambdaQuery().eq(SysUser::getUserCode, sysUser.getUserCode())
+                .ne(ObjectUtil.isNotNull(sysUser.getId()), SysUser::getId, sysUser.getId())
+                .exists();
+    }
+
+    /**
+     * edit
+     *
+     * @param user user
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public R<Boolean> edit(SysUser user) {
+        this.checkUserAllowed(user);
+        this.checkUserDataScope(user.getId());
+
+        if (checkUserCodeUnique(user)) {
+            return R.fail("修改用户:" + user.getUserCode() + "失败，登录账号已存在");
+        }
+        return R.ok(this.updateById(user));
+    }
+
+    /**
+     * 校验用户是否允许操作
+     *
+     * @param user user
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public void checkUserAllowed(SysUser user) {
+        if (StrUtil.isNotBlank(user.getUserCode()) && user.isAdmin()) {
+            throw new ServiceException("不允许操作超级管理员用户");
+        }
     }
 }
