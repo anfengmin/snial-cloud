@@ -66,15 +66,15 @@ public class SysUserController {
     }
 
     @PostMapping
-    @ApiOperation(value = "新增数据")
+    @ApiOperation(value = "新增用户")
     public R<Boolean> add(SysUser sysUser) {
-        return R.ok(sysUserService.save(sysUser));
+        return sysUserService.add(sysUser);
     }
 
     @PutMapping
-    @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysUser sysUser) {
-        return R.ok(sysUserService.updateById(sysUser));
+    @ApiOperation(value = "编辑用户")
+    public R<Boolean> edit(SysUser user) {
+        return sysUserService.edit(user);
     }
 
     @DeleteMapping
