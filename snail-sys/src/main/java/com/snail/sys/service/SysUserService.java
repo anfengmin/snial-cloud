@@ -61,4 +61,43 @@ public interface SysUserService extends IService<SysUser> {
      * <p>1.0 Initialization method </p>
      */
     SysUserVo getInfo(Long userId);
+
+    /**
+     * add
+     *
+     * @param sysUser sysUser
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    R<Boolean> add(SysUser sysUser);
+
+    /**
+     * checkUserCodeUnique
+     *
+     * @param sysUser sysUser
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkUserCodeUnique(SysUser sysUser);
+
+    /**
+     * edit
+     *
+     * @param user user
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    R<Boolean> edit(SysUser user);
+    /**
+     * 校验用户是否允许操作
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void checkUserAllowed(SysUser user);
 }
