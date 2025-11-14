@@ -1,5 +1,6 @@
 package com.snail.sys.service.impl;
 
+import com.snail.common.core.constant.UserConstants;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dao.SysUserRoleDao;
 import com.snail.sys.dto.SysUserRolePageDTO;
@@ -8,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import java.util.List;
 
 
 /**
@@ -43,7 +46,22 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
      */
     @Override
     public boolean checkAdminRole(Long userId) {
-        return this.lambdaQuery().eq(SysUserRole::getUserId, userId).exists();
+        return this.lambdaQuery()
+                .eq(SysUserRole::getUserId, userId)
+                .eq(SysUserRole::getRoleId, UserConstants.ADMIN_ID).exists();
+    }
+
+    /**
+     * 用户ID获取用户角色信息
+     *
+     * @param userId userId
+     * @return java.util.List<com.snail.sys.domain.SysUserRole>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public List<SysUserRole> queryRoleListByUserId(Long userId) {
+        return this.lambdaQuery().eq(SysUserRole::getUserId, userId).list();
     }
 
 
