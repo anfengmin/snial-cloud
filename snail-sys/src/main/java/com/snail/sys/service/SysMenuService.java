@@ -41,7 +41,7 @@ public interface SysMenuService extends IService<SysMenu> {
      * 获取菜单下拉树列表
      *
      * @param menus menus
-     * @return java.util.List<cn.hutool.core.lang.tree.Tree<java.lang.Long>>
+     * @return java.util.List<cn.hutool.core.lang.tree.Tree < java.lang.Long>>
      * @since 1.0
      */
     List<Tree<Long>> queryMenuTree(List<SysMenu> menus);
@@ -54,4 +54,53 @@ public interface SysMenuService extends IService<SysMenu> {
      * @since 1.0
      */
     List<Long> queryMenuListByRoleId(Long roleId);
+
+    /**
+     * 新增菜单
+     *
+     * @param sysMenu sysMenu
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     */
+    R<Boolean> addMenu(SysMenu sysMenu);
+
+    /**
+     * 校验菜单名称是否唯一
+     *
+     * @param sysMenu sysMenu
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkMenuNameExits(SysMenu sysMenu);
+
+    /**
+     * 修改菜单
+     *
+     * @param sysMenu sysMenu
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    R<Boolean> editMenu(SysMenu sysMenu);
+
+    /**
+     * 删除菜单
+     *
+     * @param ids ids
+     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    R<Boolean> deleteMenuByIds(List<Long> ids);
+
+    /**
+     * 判断是否存在子菜单
+     *
+     * @param ids ids
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean hasChildByMenuIds(List<Long> ids);
 }
