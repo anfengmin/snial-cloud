@@ -57,7 +57,7 @@ public class SysDeptController {
     @PostMapping("/add")
     @ApiOperation(value = "新增部门")
     public R<Boolean> add(@Validated @RequestBody SysDept dept) {
-        if (sysDeptService.checkDeptNameUnique(dept)) {
+        if (sysDeptService.checkDeptNameExists(dept)) {
             return R.fail("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
         return R.isOk(sysDeptService.save(dept));
