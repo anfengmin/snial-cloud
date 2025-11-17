@@ -45,14 +45,14 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
     }
 
     /**
-     * 校验部门名称是否唯一
+     * 校验部门名称是否存在
      *
      * @param dept dept
      * @return boolean
      * @since 1.0
      */
     @Override
-    public boolean checkDeptNameUnique(SysDept dept) {
+    public boolean checkDeptNameExists(SysDept dept) {
         return this.lambdaQuery()
                 .eq(SysDept::getDeptName, dept.getDeptName())
                 .eq(SysDept::getParentId, dept.getParentId())
