@@ -86,8 +86,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-mybatis</artifactId>
         </dependency>
 
         <!-- Dynamic DataSource -->
