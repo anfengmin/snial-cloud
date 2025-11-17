@@ -74,7 +74,7 @@ public interface UserConstants {
     /**
      * 是否菜单外链（是）
      */
-    String YES_FRAME = "0";
+    Integer YES_FRAME = 0;
 
     /**
      * 是否菜单外链（否）
