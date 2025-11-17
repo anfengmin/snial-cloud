@@ -30,7 +30,7 @@ public interface SysDeptService extends IService<SysDept> {
      * @return boolean
      * @since 1.0
      */
-    boolean checkDeptNameUnique(SysDept dept);
+    boolean checkDeptNameExists(SysDept dept);
 
     /**
      * 校验部门是否有子部门
