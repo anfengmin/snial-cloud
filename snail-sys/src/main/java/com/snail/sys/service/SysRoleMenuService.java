@@ -34,4 +34,14 @@ public interface SysRoleMenuService extends IService<SysRoleMenu> {
      * <p>1.0 Initialization method </p>
      */
     List<SysRoleMenu> querySysRoleMenuListByRoleId(Long roleId);
+
+    /**
+     * 判断菜单是否被角色使用
+     *
+     * @param ids ids
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkMenuExistRole(List<Long> ids);
 }
