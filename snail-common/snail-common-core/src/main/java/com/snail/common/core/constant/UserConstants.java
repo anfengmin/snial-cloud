@@ -49,7 +49,7 @@ public interface UserConstants {
     /**
      * 部门停用状态
      */
-    String DEPT_DISABLE = "1";
+    Integer DEPT_DISABLE = 1;
 
     /**
      * 岗位正常状态
