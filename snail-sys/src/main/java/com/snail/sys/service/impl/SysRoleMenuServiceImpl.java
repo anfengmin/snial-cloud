@@ -47,4 +47,17 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuDao, SysRoleM
     public List<SysRoleMenu> querySysRoleMenuListByRoleId(Long roleId) {
         return this.lambdaQuery().eq(SysRoleMenu::getRoleId, roleId).list();
     }
+
+    /**
+     * 判断菜单是否被角色使用
+     *
+     * @param ids ids
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean checkMenuExistRole(List<Long> ids) {
+        return this.lambdaQuery().in(SysRoleMenu::getMenuId, ids).exists();
+    }
 }
