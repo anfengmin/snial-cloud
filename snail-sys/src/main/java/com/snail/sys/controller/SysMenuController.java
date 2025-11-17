@@ -8,11 +8,10 @@ import com.snail.sys.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 菜单权限
@@ -52,32 +51,32 @@ public class SysMenuController {
 
     @GetMapping(value = "/roleMenuTrees/{roleId}")
     @ApiOperation(value = "获取角色菜单下拉树列表")
-    public R<Map<String, Object>> roleMenuTrees(@PathVariable("roleId") Long roleId) {
+    public R<List<Tree<Long>>> roleMenuTrees(@PathVariable("roleId") Long roleId) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(new SysMenu(), userId);
-        Map<String, Object> ajax = new HashMap<>();
-        ajax.put("checkedKeys", sysMenuService.queryMenuListByRoleId(roleId));
-        ajax.put("menus", sysMenuService.queryMenuTree(menus));
-        return R.ok(ajax);
+        List<Tree<Long>> trees = sysMenuService.queryMenuTree(menus);
+        return R.ok(trees);
     }
 
     @PostMapping
-    @ApiOperation(value = "新增数据")
-    public R<Boolean> add(SysMenu sysMenu) {
-        return R.ok(sysMenuService.save(sysMenu));
+    @ApiOperation(value = "新增菜单")
+    public R<Boolean> add(@Validated @RequestBody SysMenu sysMenu) {
+        return sysMenuService.addMenu(sysMenu);
     }
 
     @PutMapping
-    @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysMenu sysMenu) {
-        return R.ok(sysMenuService.updateById(sysMenu));
+    @ApiOperation(value = "编辑菜单")
+    public R<Boolean> edit(@Validated @RequestBody SysMenu sysMenu) {
+        return sysMenuService.editMenu(sysMenu);
     }
 
     @DeleteMapping
-    @ApiOperation(value = "删除数据")
+    @ApiOperation(value = "删除菜单")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
-        return R.ok(sysMenuService.removeByIds(ids));
+        return sysMenuService.deleteMenuByIds(ids);
     }
+
+
 
 }
 
