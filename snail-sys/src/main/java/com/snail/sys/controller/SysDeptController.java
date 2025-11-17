@@ -2,16 +2,18 @@ package com.snail.sys.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,16 +24,16 @@ import java.util.List;
  */
 @Api(tags = "部门表")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/dept")
 public class SysDeptController {
 
-    @Resource
-    private SysDeptService sysDeptService;
+    private final SysDeptService sysDeptService;
 
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation(value = "获取部门列表")
-    public R<List<SysDept>> list(SysDept dept) {
+    public R<List<SysDept>> list(@RequestBody SysDept dept) {
         List<SysDept> depts = sysDeptService.queryDeptList(dept);
         return R.ok(depts);
     }
@@ -61,6 +63,26 @@ public class SysDeptController {
             return R.fail("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
         return R.isOk(sysDeptService.save(dept));
+    }
+
+    @PostMapping("/edit")
+    @ApiOperation(value = "修改部门")
+    public R<Boolean> edit(@Validated @RequestBody SysDept dept) {
+        Long deptId = dept.getId();
+        sysDeptService.checkDeptDataScope(deptId);
+        if (sysDeptService.checkDeptNameExists(dept)) {
+            return R.fail("修改部门'" + dept.getDeptName() + "'失败，部门名称已存在");
+        } else if (dept.getParentId().equals(deptId)) {
+            return R.fail("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己");
+
+        } else if (ObjectUtil.equals(UserConstants.DEPT_DISABLE, dept.getStatus())) {
+            if (sysDeptService.selectNormalChildrenDeptById(deptId) > 0) {
+                return R.fail("该部门包含未停用的子部门!");
+            } else if (sysDeptService.checkDeptExistUser(deptId)) {
+                return R.fail("该部门下存在已分配用户，不能禁用!");
+            }
+        }
+        return sysDeptService.updateDept(dept);
     }
 
     @DeleteMapping("/{deptId}")
