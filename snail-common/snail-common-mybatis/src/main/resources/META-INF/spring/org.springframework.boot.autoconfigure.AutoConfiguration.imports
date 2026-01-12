@@ -1,0 +1,2 @@
+com.snail.common.mybatis.config.MybatisPlusConfiguration
+com.snail.common.mybatis.exception.MybatisExceptionHandler

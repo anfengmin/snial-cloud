@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.snail.common.mybatis.config.MybatisPlusConfiguration\
-com.snail.common.mybatis.handler.MybatisExceptionHandler

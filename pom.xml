@@ -15,7 +15,7 @@
     <modules>
         <module>snail-common</module>
         <module>snail-gateway</module>
-        <module>snail-api</module>
+        <module>snail-sys-api</module>
         <module>snail-sys</module>
     </modules>
 
@@ -195,11 +195,11 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.yulichang</groupId>
-                <artifactId>mybatis-plus-join-boot-starter</artifactId>
-                <version>${mybatis-plus-join.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.github.yulichang</groupId>-->
+<!--                <artifactId>mybatis-plus-join-boot-starter</artifactId>-->
+<!--                <version>${mybatis-plus-join.version}</version>-->
+<!--            </dependency>-->
 
             <!-- sql性能分析插件 -->
             <dependency>

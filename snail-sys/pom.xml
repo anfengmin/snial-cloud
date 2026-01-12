@@ -111,7 +111,7 @@
 
         <dependency>
             <groupId>com.snail</groupId>
-            <artifactId>snail-api-sys</artifactId>
+            <artifactId>snail-sys-api</artifactId>
             <version>${snail.version}</version>
         </dependency>
 

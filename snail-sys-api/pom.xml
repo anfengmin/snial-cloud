@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.snail</groupId>
-        <artifactId>snail-api</artifactId>
+        <artifactId>snail-cloud</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>snail-api-sys</artifactId>
-
+    <artifactId>snail-sys-api</artifactId>
+    <packaging>jar</packaging>
+    <description>系统模块API定义 - 独立模块，可单独构建和发布</description>
 
     <dependencies>
         <dependency>

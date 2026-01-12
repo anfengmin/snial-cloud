@@ -13,6 +13,7 @@ import com.snail.common.mybatis.helper.DataBaseHelper;
 import com.snail.common.redis.utils.CacheUtils;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysDeptDao;
+import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
@@ -33,7 +34,11 @@ import java.util.List;
 @Service("sysDeptService")
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> implements SysDeptService {
 
-    private final SysUserService sysUserService;
+    /**
+     * 这里仅在校验部门下是否存在用户时需要访问用户表，
+     * 为了避免与 SysUserServiceImpl 形成循环依赖，直接依赖 SysUserDao 即可。
+     */
+    private final SysUserDao sysUserDao;
 
     /**
      * 获取部门列表
@@ -94,7 +99,10 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
      */
     @Override
     public boolean checkDeptExistUser(Long deptId) {
-        return sysUserService.lambdaQuery().eq(SysUser::getDeptId, deptId).exists();
+        // 直接通过 SysUserDao 查询，避免注入 SysUserService 造成循环依赖
+        return sysUserDao.selectCount(
+                new LambdaQueryWrapper<SysUser>().eq(SysUser::getDeptId, deptId)
+        ) > 0;
     }
 
     /**
