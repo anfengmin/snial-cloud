@@ -2,6 +2,7 @@ package com.snail.common.web.config;
 
 import io.undertow.server.DefaultByteBufferPool;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 
@@ -12,6 +13,7 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
  * Created time 2025/5/18
  * @since 1.0
  */
+@AutoConfiguration
 public class UndertowConfig implements WebServerFactoryCustomizer<UndertowServletWebServerFactory> {
 
     /**
