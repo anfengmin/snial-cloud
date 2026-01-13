@@ -20,6 +20,9 @@ public class R<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String SUCCESS_MSG = MessageUtils.message("r.success");
+    private static final String FAIL_MSG = MessageUtils.message("r.fail");
+
     /**
      * 消息状态码
      */
@@ -48,7 +51,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> ok() {
-        return restResult(null, HttpStatus.SUCCESS, "处理成功");
+        return restResult(null, HttpStatus.SUCCESS, SUCCESS_MSG);
     }
 
     /**
@@ -67,7 +70,7 @@ public class R<T> implements Serializable {
             return fail();
         }
         // 成功
-        return restResult(data, HttpStatus.SUCCESS, "处理成功");
+        return restResult(data, HttpStatus.SUCCESS, SUCCESS_MSG);
     }
 
     public static <T> R<T> ok(String msg) {
@@ -97,7 +100,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> fail() {
-        return restResult(null, HttpStatus.ERROR, "处理失败");
+        return restResult(null, HttpStatus.ERROR, FAIL_MSG);
     }
 
     /**
@@ -123,7 +126,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> fail(T data) {
-        return restResult(data, HttpStatus.ERROR, "处理失败");
+        return restResult(data, HttpStatus.ERROR, FAIL_MSG);
     }
 
     /**
@@ -186,9 +189,9 @@ public class R<T> implements Serializable {
      */
     public static R<Boolean> isOk(boolean flag) {
         if (flag) {
-            return ok(true, "处理成功");
+            return ok(true, SUCCESS_MSG);
         } else {
-            return fail(false, "处理失败");
+            return fail(false, FAIL_MSG);
         }
     }
 

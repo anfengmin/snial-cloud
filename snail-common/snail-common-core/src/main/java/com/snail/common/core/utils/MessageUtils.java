@@ -32,4 +32,12 @@ public class MessageUtils {
             return code;
         }
     }
+
+    public static String message(String code) {
+        try {
+            return MESSAGE_SOURCE.getMessage(code, null, LocaleContextHolder.getLocale());
+        } catch (NoSuchMessageException e) {
+            return code;
+        }
+    }
 }
