@@ -38,6 +38,11 @@
             <artifactId>snail-common-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-alone-redis</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

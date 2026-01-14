@@ -170,6 +170,12 @@
                 <version>${satoken.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-alone-redis</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+
             <!-- Mybatis 依赖配置 -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -428,7 +434,7 @@
         </resources>
     </build>
 
-    <!--<repositories>
+    <repositories>
         <repository>
             <id>public</id>
             <name>aliyun nexus</name>
@@ -451,5 +457,5 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>-->
+    </pluginRepositories>
 </project>
