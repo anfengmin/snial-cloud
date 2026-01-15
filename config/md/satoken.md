@@ -12,6 +12,14 @@
     <version>1.44.0</version>
 </dependency>
 
+```
+
+```xml
+<!-- 需要调用 Apache 的 commons-pool2 -->
+<dependency>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-pool2</artifactId>
+</dependency>
 ```  
  - 2.然后在application.yml中增加配置
         # Sa-Token 配置
