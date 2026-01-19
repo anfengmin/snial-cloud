@@ -1,7 +1,10 @@
 package com.snail.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysLoginInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snail.sys.dto.SysLogPageDTO;
 
 
 /**
@@ -17,4 +20,12 @@ public interface SysLoginInfoService extends IService<SysLoginInfo> {
      * 清空登录日志
      */
     void cleanLogInfo();
+
+    /**
+     * 分页查询
+     *
+     * @param dto dto
+     * @return R
+     */
+    R<Page<SysLoginInfo>> queryByPage(SysLogPageDTO dto);
 }
