@@ -29,4 +29,10 @@ public class SearchBaseEntity implements Serializable {
 
     @ApiModelProperty(value = "结束时间")
     private String endTime;
+
+    @ApiModelProperty(value = "排序列")
+    private String column;
+
+    @ApiModelProperty(value = "排序的方向desc或者asc")
+    private boolean orderType;
 }
