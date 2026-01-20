@@ -1,5 +1,6 @@
 package com.snail.sys.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.snail.sys.domain.SysNotice;
 import com.snail.sys.dao.SysNoticeDao;
 import com.snail.sys.dto.SysNoticePageDTO;
@@ -29,7 +30,11 @@ public class SysNoticeServiceImpl extends ServiceImpl<SysNoticeDao, SysNotice> i
         @Override
         public R<Page<SysNotice>> queryByPage(SysNoticePageDTO dto) {
             Page<SysNotice> page = new Page<>(dto.getCurrent(), dto.getSize());
-            Page<SysNotice> result = this.lambdaQuery().page(page);
+            Page<SysNotice> result = this.lambdaQuery()
+                    .eq(StrUtil.isNotBlank(dto.getNoticeType()), SysNotice::getNoticeType, dto.getNoticeType())
+                    .like(StrUtil.isNotBlank(dto.getNoticeTitle()), SysNotice::getNoticeTitle, dto.getNoticeTitle())
+                    .like(StrUtil.isNotBlank(dto.getCreateBy()), SysNotice::getCreateBy, dto.getCreateBy())
+                    .page(page);
             return R.ok(result);
         }
 }
