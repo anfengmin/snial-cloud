@@ -1,4 +1,4 @@
-package com.snail.sys.api.domain;
+package com.snail.common.core.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;

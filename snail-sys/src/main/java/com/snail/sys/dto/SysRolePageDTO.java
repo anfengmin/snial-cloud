@@ -2,15 +2,11 @@ package com.snail.sys.dto;
 
 import java.util.Date;
 
-import com.snail.sys.api.domain.PageBaseEntity;
-import com.snail.sys.domain.SysRole;
+import com.snail.common.core.domain.PageBaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
 
 /**
  * 角色信息(SysRole)

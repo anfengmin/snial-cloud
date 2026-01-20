@@ -1,6 +1,6 @@
 package com.snail.sys.dto;
 
-import com.snail.sys.api.domain.PageBaseEntity;
+import com.snail.common.core.domain.PageBaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
