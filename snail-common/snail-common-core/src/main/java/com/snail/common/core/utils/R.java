@@ -20,8 +20,6 @@ public class R<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String SUCCESS_MSG = MessageUtils.message("r.success");
-    private static final String FAIL_MSG = MessageUtils.message("r.fail");
 
     /**
      * 消息状态码
@@ -43,6 +41,20 @@ public class R<T> implements Serializable {
     private T data;
 
     /**
+     * 获取成功消息（根据当前请求的 Accept-Language 动态获取）
+     */
+    private static String getSuccessMsg() {
+        return MessageUtils.message("r.success");
+    }
+
+    /**
+     * 获取失败消息（根据当前请求的 Accept-Language 动态获取）
+     */
+    private static String getFailMsg() {
+        return MessageUtils.message("r.fail");
+    }
+
+    /**
      * <p style="color: #AE00AE"> ok </p>
      *
      * @return com.haier.hwork.expense.common.util.R<T>
@@ -51,7 +63,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> ok() {
-        return restResult(null, HttpStatus.SUCCESS, SUCCESS_MSG);
+        return restResult(null, HttpStatus.SUCCESS, getSuccessMsg());
     }
 
     /**
@@ -70,7 +82,7 @@ public class R<T> implements Serializable {
             return fail();
         }
         // 成功
-        return restResult(data, HttpStatus.SUCCESS, SUCCESS_MSG);
+        return restResult(data, HttpStatus.SUCCESS, getSuccessMsg());
     }
 
     public static <T> R<T> ok(String msg) {
@@ -100,7 +112,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> fail() {
-        return restResult(null, HttpStatus.ERROR, FAIL_MSG);
+        return restResult(null, HttpStatus.ERROR, getFailMsg());
     }
 
     /**
@@ -126,7 +138,7 @@ public class R<T> implements Serializable {
      * <p> 1.0 Initialization method </p>
      */
     public static <T> R<T> fail(T data) {
-        return restResult(data, HttpStatus.ERROR, FAIL_MSG);
+        return restResult(data, HttpStatus.ERROR, getFailMsg());
     }
 
     /**
@@ -189,9 +201,9 @@ public class R<T> implements Serializable {
      */
     public static R<Boolean> isOk(boolean flag) {
         if (flag) {
-            return ok(true, SUCCESS_MSG);
+            return ok(true, getSuccessMsg());
         } else {
-            return fail(false, FAIL_MSG);
+            return fail(false, getFailMsg());
         }
     }
 
