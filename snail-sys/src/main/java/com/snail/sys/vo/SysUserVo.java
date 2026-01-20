@@ -1,4 +1,4 @@
-package com.snail.sys.domain.vo;
+package com.snail.sys.vo;
 
 import com.snail.sys.api.domain.SysUser;
 import io.swagger.annotations.ApiModelProperty;
