@@ -2,6 +2,8 @@ package com.snail.sys.dto;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.snail.common.core.domain.PageBaseEntity;
 import com.snail.sys.domain.SysOperateLog;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,7 +22,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "操作日志记录")
-public class SysOperateLogPageDTO extends PageDTO<SysOperateLog> implements Serializable {
+public class SysOperateLogPageDTO extends PageBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,5 +73,9 @@ public class SysOperateLogPageDTO extends PageDTO<SysOperateLog> implements Seri
 
     @ApiModelProperty(value = "操作时间")
     private Date operTime;
+    
+    @ApiModelProperty(value = "业务类型数组")
+    @TableField(exist = false)
+    private Integer[] businessTypes;
 
 }
