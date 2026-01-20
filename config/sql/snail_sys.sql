@@ -433,11 +433,11 @@ create table sys_operate_log
     json_result      varchar(2000) default '' comment '返回参数',
     status           tinyint(1)    default 0 comment '操作状态（0正常 1异常）',
     error_msg        varchar(2000) default '' comment '错误消息',
-    oper_time        datetime comment '操作时间',
+    operate_time     datetime comment '操作时间',
     primary key (id),
     key idx_sys_oper_log_bt (business_type),
     key idx_sys_oper_log_s (status),
-    key idx_sys_oper_log_ot (oper_time)
+    key idx_sys_oper_log_ot (operate_time)
 ) engine = innodb comment = '操作日志记录';
 
 
