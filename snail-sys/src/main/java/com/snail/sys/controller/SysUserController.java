@@ -5,7 +5,7 @@ import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.domain.vo.SysUserVo;
+import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户
