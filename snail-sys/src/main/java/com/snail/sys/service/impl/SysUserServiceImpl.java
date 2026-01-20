@@ -1,7 +1,6 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
@@ -11,11 +10,10 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
-import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
-import com.snail.sys.domain.vo.SysUserVo;
+import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserRoleService;
@@ -23,9 +21,6 @@ import com.snail.sys.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 
 /**
