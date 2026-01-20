@@ -23,5 +23,11 @@ public interface SysOperateLogService extends IService<SysOperateLog> {
      */
      R<Page<SysOperateLog>> queryByPage(SysOperateLogPageDTO dto);
 
-
+    /**
+     * cleanOperateLog
+     *
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void cleanOperateLog();
 }
