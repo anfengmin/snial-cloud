@@ -43,11 +43,9 @@ public class SysOperateLogController {
         return R.ok(sysOperateLogService.removeByIds(ids));
     }
 
-    /**
-     * 清空操作日志记录
-     */
     @Log(title = "操作日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
+    @ApiOperation(value = "清空操作日志记录")
     public R<Void> clean() {
         sysOperateLogService.cleanOperateLog();
         return R.ok();
