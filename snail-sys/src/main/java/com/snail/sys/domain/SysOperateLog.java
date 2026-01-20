@@ -71,6 +71,6 @@ public class SysOperateLog extends Model<SysOperateLog> {
     private String errorMsg;
 
     @ApiModelProperty(value = "操作时间")
-    private Date operTime;
+    private Date operateTime;
 
 }
