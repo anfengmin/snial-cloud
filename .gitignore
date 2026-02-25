@@ -46,4 +46,4 @@ nbdist/
 
 .flattened-pom.xml
 .history
-.vscode
+.vscode.DS_Store
