@@ -53,6 +53,14 @@ public interface SysUserService extends IService<SysUser> {
     void checkUserDataScope(Long userId);
 
     /**
+     * 构建登录用户信息（包含权限）
+     *
+     * @param userCode 用户账号
+     * @return 登录用户信息
+     */
+    LoginUser buildLoginUser(String userCode);
+
+    /**
      * getInfo
      *
      * @param userId userId

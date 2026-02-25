@@ -13,6 +13,7 @@ sudo /usr/local/mysql/support-files/mysql.server start
 #### 开机启动nacos-2.2.0
 ```shell
 sudo /Users/ansir/work/nacos/nacos-2.2.0/bin/startup.sh -m standalone
+sudo /Users/ansir/work/nacos/nacos-2.5.1/bin/startup.sh -m standalone
 ```
 
 ---

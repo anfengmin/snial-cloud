@@ -109,3 +109,19 @@ mybatis-plus:
       insertStrategy: NOT_NULL
       updateStrategy: NOT_NULL
       where-strategy: NOT_NULL
+
+# Sa-Token 配置
+# https://sa-token.dev33.cn/
+sa-token:
+  # Token名称 (同时也是cookie名称)
+  token-name: Authorization
+  # Token有效期（单位：秒），默认30天
+  timeout: 2592000
+  # 是否允许同一账号多地登录
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个Token
+  is-share: true
+  # Token风格: uuid、simple-uuid、random-32、random-64、random-128
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false

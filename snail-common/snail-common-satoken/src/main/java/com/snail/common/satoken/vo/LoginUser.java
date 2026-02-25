@@ -11,11 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 
 /**
- * No explanation is needed - Levi
+ * 登录用户信息
+ * <p>
+ * 核心用户信息存储在Token中，权限信息从数据库动态获取
  *
  * @author Anfm
  * Created time 2025/5/12
@@ -24,8 +24,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AutoMapper(target = SysUser.class)
-@ApiModel(value = "用户")
+@ApiModel(value = "登录用户信息")
 public class LoginUser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "用户ID")
@@ -57,7 +59,7 @@ public class LoginUser implements Serializable {
     private String userType;
 
     @ApiModelProperty(value = "最后登录时间")
-    private Date loginDate;
+    private Long loginDate;
 
     @ApiModelProperty(value = "过期时间")
     private Long expireTime;
@@ -73,12 +75,4 @@ public class LoginUser implements Serializable {
 
     @ApiModelProperty(value = "操作系统")
     private String os;
-
-    @ApiModelProperty(value = "菜单权限")
-    private Set<String> menuPermission;
-
-    @ApiModelProperty(value = "角色权限")
-    private Set<String> rolePermission;
-
-
 }

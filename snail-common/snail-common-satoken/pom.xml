@@ -18,13 +18,6 @@
             <artifactId>sa-token-core</artifactId>
         </dependency>
 
-        <!-- Sa-Token 整合 jwt -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-jwt</artifactId>
-            <version>${satoken.version}</version>
-        </dependency>
-
         <!-- RuoYi Api System -->
         <dependency>
             <groupId>com.snail</groupId>
@@ -32,26 +25,11 @@
             <version>${snail.version}</version>
         </dependency>
 
-        <!-- RuoYi Common Redis-->
+        <!-- Redis（用于存储Token） -->
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-common-redis</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>cn.dev33</groupId>-->
-<!--            <artifactId>sa-token-alone-redis</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-pool2</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>cn.dev33</groupId>-->
-<!--            <artifactId>sa-token-redis-jackson</artifactId>-->
-<!--        </dependency>-->
 
     </dependencies>
 

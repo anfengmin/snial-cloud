@@ -32,12 +32,19 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; Sa-Token 权限认证（网关鉴权）&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>cn.dev33</groupId>-->
-<!--            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>-->
-<!--            <version>${satoken.version}</version>-->
-<!--        </dependency>-->
+        <!-- Sa-Token 权限认证（网关鉴权）- 响应式版本 -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+            <version>${satoken.version}</version>
+        </dependency>
+
+        <!-- Sa-Token 整合 JWT -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-jwt</artifactId>
+            <version>${satoken.version}</version>
+        </dependency>
 
         <!-- Redis -->
         <dependency>

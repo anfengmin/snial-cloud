@@ -4,6 +4,9 @@ import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.util.SaFoxUtil;
 import com.snail.common.redis.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -11,14 +14,26 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Sa-Token持久层接口(使用框架自带RedisUtils实现 协议统一)
+ * Sa-Token持久层接口
+ * <p>
+ * 支持两种模式：
+ * 1. 使用Spring默认Redis（业务Redis）
+ * 2. 使用独立配置的Redis（Sa-Token专用）
+ * <p>
+ * 通过 satoken.redis.enabled 配置切换
  *
  * @author Anfm
  * Created time 2025/5/14
  * @since 1.0
  */
+@Slf4j
+@Component
+@ConditionalOnProperty(name = "satoken.redis.enabled", havingValue = "false", matchIfMissing = true)
 public class PlusSaTokenDao implements SaTokenDao {
 
+    /**
+     * 直接使用 RedisUtils 静态工具类
+     */
 
     /**
      * 获取Value，如无返空
@@ -106,7 +121,7 @@ public class PlusSaTokenDao implements SaTokenDao {
     public <T> T getObject(String key, Class<T> clazz) {
         Object cacheObject = RedisUtils.getCacheObject(key);
         if (cacheObject == null) {
-        return null;
+            return null;
         }
         return clazz.cast(cacheObject);
     }

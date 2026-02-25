@@ -18,9 +18,14 @@ import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserRoleService;
 import com.snail.sys.service.SysUserService;
+import com.snail.sys.service.SysMenuService;
+import com.snail.sys.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -37,6 +42,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     private final SysDeptService sysDeptService;
     private final SysUserRoleService sysUserRoleService;
+    private final SysMenuService sysMenuService;
+    private final SysRoleService sysRoleService;
 
     /**
      * 分页查询
@@ -79,6 +86,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
         log.info("userInfo:{}", sysUserInfo);
         return loginUser;
+    }
+
+    /**
+     * 构建登录用户信息（包含权限）- 权限从数据库动态获取，此方法保留用于兼容
+     *
+     * @param userCode 用户账号
+     * @return 登录用户信息
+     */
+    @Override
+    public LoginUser buildLoginUser(String userCode) {
+        // 权限信息现在通过 SysSaPermissionImpl 从数据库动态获取
+        // 此方法保留用于兼容，返回基本的用户信息
+        return getUserInfo(userCode);
     }
 
     /**
