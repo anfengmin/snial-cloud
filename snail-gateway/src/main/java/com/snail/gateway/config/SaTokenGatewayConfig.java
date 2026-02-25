@@ -7,9 +7,6 @@ import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
@@ -58,12 +55,9 @@ public class SaTokenGatewayConfig {
                 })
                 // 异常处理
                 .setError(e -> {
-                    // 获取response
-                    ServerWebExchange exchange = cn.dev33.satoken.context.SaRouter.getContext();
-                    ServerHttpResponse response = exchange.getResponse();
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    String body = "{\"code\":401,\"msg\":\"未授权：" + e.getMessage() + "\"}";
-                    return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
+                    // setError 默认会传递异常信息，这里返回 401 即可
+                    // 由于无法直接获取 response，使用返回 Mono.empty() 让 Sa-Token 自动处理
+                    return Mono.empty();
                 });
     }
 }
