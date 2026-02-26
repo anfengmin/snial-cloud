@@ -54,7 +54,7 @@ public interface UserConstants {
     /**
      * 岗位正常状态
      */
-    String POST_NORMAL = "0";
+    Integer POST_NORMAL = 0;
 
     /**
      * 岗位停用状态
