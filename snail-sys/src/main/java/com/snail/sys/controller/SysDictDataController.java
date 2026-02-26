@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.utils.R;
@@ -29,7 +30,7 @@ public class SysDictDataController {
     private SysDictDataService sysDictDataService;
 
 
-
+    @SaCheckPermission("system:dept:list")
     @ApiOperation(value = "获取字典数据列表")
     @GetMapping("/list")
     public R<Page<SysDictData>> list(SysDictData dictData, Page<SysDictData> pageQuery) {
@@ -37,12 +38,14 @@ public class SysDictDataController {
         return R.ok(page);
     }
 
+    @SaCheckPermission("system:dept:list")
     @ApiOperation(value = "查询字典数据详细")
     @GetMapping(value = "/{dictCode}")
     public R<SysDictData> getInfo(@PathVariable Long dictCode) {
         return R.ok(sysDictDataService.getById(dictCode));
     }
 
+    @SaCheckPermission("system:dept:query")
     @ApiOperation(value = "根据字典类型查询字典数据信息")
     @GetMapping(value = "/type/{dictType}")
     @Cacheable(cacheNames = CacheNames.SYS_DICT, key = "#dictType")
@@ -50,6 +53,7 @@ public class SysDictDataController {
         return R.ok(sysDictDataService.queryDictDataByType(dictType));
     }
 
+    @SaCheckPermission("system:dept:add")
     @PostMapping(value = "/add")
     @ApiOperation(value = "新增字典类型")
     public R<Boolean> add(@Validated @RequestBody SysDictData dict) {
@@ -57,12 +61,14 @@ public class SysDictDataController {
     }
 
 
+    @SaCheckPermission("system:dept:edit")
     @PutMapping
     @ApiOperation(value = "编辑字典类型")
     public R<Boolean> edit(SysDictData sysDictData) {
         return R.ok(sysDictDataService.updateById(sysDictData));
     }
 
+    @SaCheckPermission("system:dept:remove")
     @DeleteMapping
     @ApiOperation(value = "删除字典类型")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
