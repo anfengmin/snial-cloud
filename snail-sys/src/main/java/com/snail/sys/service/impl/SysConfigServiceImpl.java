@@ -3,13 +3,12 @@ package com.snail.sys.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysConfig;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.dao.SysConfigDao;
+import com.snail.sys.domain.SysConfig;
 import com.snail.sys.dto.SysConfigPageDTO;
 import com.snail.sys.service.SysConfigService;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -33,12 +32,13 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> i
      * @return 查询结果
      */
     @Override
-    public R<Page<SysConfig>> queryByPage(SysConfigPageDTO dto) {
+    public Page<SysConfig> queryByPage(SysConfigPageDTO dto) {
         // 创建分页对象
         Page<SysConfig> page = new Page<>(dto.getCurrent(), dto.getSize());
         
         // 构建查询条件并执行分页查询
-        Page<SysConfig> result = this.lambdaQuery()
+
+        return this.lambdaQuery()
                 // 参数名称模糊查询
                 .like(StrUtil.isNotBlank(dto.getConfigName()), SysConfig::getConfigName, dto.getConfigName())
                 // 系统内置类型精确查询
@@ -47,13 +47,11 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> i
                 .like(StrUtil.isNotBlank(dto.getConfigKey()), SysConfig::getConfigKey, dto.getConfigKey())
                 // 创建时间范围查询
                 .between(StrUtil.isNotBlank(dto.getBeginTime()) && StrUtil.isNotBlank(dto.getEndTime()),
-                        SysConfig::getCreateTime, 
+                        SysConfig::getCreateTime,
                         StrUtil.isNotBlank(dto.getBeginTime()) ? DateUtil.parseDateTime(dto.getBeginTime()) : null,
                         StrUtil.isNotBlank(dto.getEndTime()) ? DateUtil.parseDateTime(dto.getEndTime()) : null)
                 // 执行分页查询
                 .page(page);
-
-        return R.ok(result);
     }
 
     /**
