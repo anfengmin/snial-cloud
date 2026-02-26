@@ -1,16 +1,18 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snail.common.core.constant.CacheNames;
 import com.snail.sys.dao.SysConfigDao;
 import com.snail.sys.domain.SysConfig;
 import com.snail.sys.dto.SysConfigPageDTO;
 import com.snail.sys.service.SysConfigService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -22,9 +24,6 @@ import java.util.Optional;
 @Service("sysConfigService")
 public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> implements SysConfigService {
 
-    @Resource
-    private SysConfigDao sysConfigDao;
-
     /**
      * 分页查询
      *
@@ -33,11 +32,8 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> i
      */
     @Override
     public Page<SysConfig> queryByPage(SysConfigPageDTO dto) {
-        // 创建分页对象
         Page<SysConfig> page = new Page<>(dto.getCurrent(), dto.getSize());
         
-        // 构建查询条件并执行分页查询
-
         return this.lambdaQuery()
                 // 参数名称模糊查询
                 .like(StrUtil.isNotBlank(dto.getConfigName()), SysConfig::getConfigName, dto.getConfigName())
@@ -60,7 +56,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> i
      * @param configKey 配置键
      * @return 配置值，如果不存在则返回空字符串
      */
-    // TODO: 2025-05-22 14:25:00 缓存配置 为使用cache 注解，请自行添加缓存策略
+    @Cacheable(cacheNames = CacheNames.SYS_CONFIG, key = "#configKey")
     @Override
     public String selectConfigByKey(String configKey) {
         return Optional.ofNullable(
@@ -71,5 +67,19 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfig> i
         )
                 .map(SysConfig::getConfigValue)
                 .orElse(StrUtil.EMPTY);
+    }
+
+    /**
+     * 校验参数键名是否唯一
+     *
+     * @param sysConfig 参数配置信息
+     * @return 结果
+     */
+    @Override
+    public boolean checkConfigKeyExists(SysConfig sysConfig) {
+        return this.lambdaQuery()
+                .eq(SysConfig::getConfigKey, sysConfig.getConfigKey())
+                .ne(ObjectUtil.isNotNull(sysConfig.getId()), SysConfig::getId, sysConfig.getId())
+                .exists();
     }
 }
