@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.snail.common.core.constant.UserConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -71,5 +72,10 @@ public class SysRole extends Model<SysRole> {
 
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty(value = "是否管理员")
+    public boolean isAdmin() {
+        return UserConstants.ADMIN_ID.equals(this.id);
+    }
 
 }
