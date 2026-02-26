@@ -34,6 +34,7 @@ public class SysConfigController {
      */
     @SaCheckPermission("system:config:list")
     @GetMapping("/queryByPage")
+    @ApiOperation(value = "参数配置分页查询")
     public R<Page<SysConfig>> queryByPage(@RequestBody SysConfigPageDTO dto) {
         return R.ok(sysConfigService.queryByPage(dto));
     }
