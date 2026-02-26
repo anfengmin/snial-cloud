@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.enums.BusinessType;
@@ -28,15 +29,17 @@ public class SysOperateLogController {
     
     @Resource
     private SysOperateLogService sysOperateLogService;
-    
+
+    @SaCheckPermission("system:operatelog:list")
     @PostMapping("queryByPage")
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public R<Page<SysOperateLog>>queryByPage(@RequestBody SysOperateLogPageDTO dto){
-        return sysOperateLogService.queryByPage(dto);
+        return R.ok(sysOperateLogService.queryByPage(dto));
     }
 
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
+    @SaCheckPermission("system:operatelog:remove")
     @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
@@ -44,6 +47,7 @@ public class SysOperateLogController {
     }
 
     @Log(title = "操作日志", businessType = BusinessType.CLEAN)
+    @SaCheckPermission("system:operatelog:remove")
     @DeleteMapping("/clean")
     @ApiOperation(value = "清空操作日志记录")
     public R<Void> clean() {
