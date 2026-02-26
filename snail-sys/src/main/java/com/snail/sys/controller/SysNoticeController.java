@@ -1,5 +1,8 @@
 package com.snail.sys.controller;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.enums.BusinessType;
+import com.snail.common.log.annotation.Log;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.SysNotice;
@@ -23,31 +26,39 @@ public class SysNoticeController {
     
     @Resource
     private SysNoticeService sysNoticeService;
-    
+
+    @SaCheckPermission("system:notice:list")
     @PostMapping("queryByPage")
     @ApiOperation(value = "分页查询", notes = "分页查询")
     public R<Page<SysNotice>>queryByPage(@RequestBody SysNoticePageDTO dto){
-        return sysNoticeService.queryByPage(dto);
+        return R.ok(sysNoticeService.queryByPage(dto));
     }
 
+    @SaCheckPermission("system:notice:query")
     @GetMapping("{id}")
     @ApiOperation(value = "主键查询")
     public R<SysNotice> queryById(@PathVariable("id") Long id) {
         return R.ok(sysNoticeService.getById(id));
     }
 
+    @SaCheckPermission("system:notice:add")
+    @Log(title = "通知公告", businessType = BusinessType.INSERT)
     @PostMapping
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysNotice sysNotice) {
         return R.ok(sysNoticeService.save(sysNotice));
     }
 
+    @SaCheckPermission("system:notice:edit")
+    @Log(title = "通知公告", businessType = BusinessType.UPDATE)
     @PutMapping
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysNotice sysNotice) {
         return R.ok(sysNoticeService.updateById(sysNotice));
     }
 
+    @SaCheckPermission("system:notice:remove")
+    @Log(title = "通知公告", businessType = BusinessType.DELETE)
     @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
