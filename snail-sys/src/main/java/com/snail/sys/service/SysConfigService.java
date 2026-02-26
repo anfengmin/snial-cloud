@@ -16,7 +16,7 @@ import com.snail.sys.dto.SysConfigPageDTO;
  */
 public interface SysConfigService extends IService<SysConfig> {
 
-    R<Page<SysConfig>> queryByPage(SysConfigPageDTO dto);
+    Page<SysConfig> queryByPage(SysConfigPageDTO dto);
 
     String selectConfigByKey(String configKey);
 }
