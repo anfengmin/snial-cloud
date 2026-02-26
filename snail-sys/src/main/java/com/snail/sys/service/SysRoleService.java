@@ -1,10 +1,9 @@
 package com.snail.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.dto.SysRolePageDTO;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 
 /**
  * 角色信息
@@ -21,7 +20,7 @@ public interface SysRoleService extends IService<SysRole> {
      * @return 分页结果
      * @since 1.0
      */
-    R<Page<SysRole>> queryByPage(SysRolePageDTO dto);
+    Page<SysRole> queryByPage(SysRolePageDTO dto);
 
     /**
      * selectRoleById
@@ -41,4 +40,33 @@ public interface SysRoleService extends IService<SysRole> {
      * <p>1.0 Initialization method </p>
      */
     void checkRoleDataScope(Long roleId);
+
+    /**
+     * 校验角色是否允许操作
+     *
+     * @param role role
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void checkRoleAllowed(SysRole role);
+
+    /**
+     * 校验角色名称是否唯一
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkRoleNameExists(SysRole role);
+
+    /**
+     * 校验角色权限是否唯一
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkRoleKeyExists(SysRole role);
 }
