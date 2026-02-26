@@ -55,14 +55,6 @@ public interface SysMenuService extends IService<SysMenu> {
      */
     List<Long> queryMenuListByRoleId(Long roleId);
 
-    /**
-     * 新增菜单
-     *
-     * @param sysMenu sysMenu
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
-     * @since 1.0
-     */
-    R<Boolean> addMenu(SysMenu sysMenu);
 
     /**
      * 校验菜单名称是否唯一
@@ -72,27 +64,7 @@ public interface SysMenuService extends IService<SysMenu> {
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
-    boolean checkMenuNameExits(SysMenu sysMenu);
-
-    /**
-     * 修改菜单
-     *
-     * @param sysMenu sysMenu
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
-     * @since 1.0
-     * <p>1.0 Initialization method </p>
-     */
-    R<Boolean> editMenu(SysMenu sysMenu);
-
-    /**
-     * 删除菜单
-     *
-     * @param ids ids
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
-     * @since 1.0
-     * <p>1.0 Initialization method </p>
-     */
-    R<Boolean> deleteMenuByIds(List<Long> ids);
+    boolean checkMenuNameExists(SysMenu sysMenu);
 
     /**
      * 判断是否存在子菜单
