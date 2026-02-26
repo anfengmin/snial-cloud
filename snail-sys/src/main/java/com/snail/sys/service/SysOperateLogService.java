@@ -1,10 +1,9 @@
 package com.snail.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.sys.domain.SysOperateLog;
 import com.snail.sys.dto.SysOperateLogPageDTO;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 
 /**
  * 操作日志记录
@@ -21,7 +20,7 @@ public interface SysOperateLogService extends IService<SysOperateLog> {
      * @return 分页结果
      * @since 1.0
      */
-     R<Page<SysOperateLog>> queryByPage(SysOperateLogPageDTO dto);
+     Page<SysOperateLog> queryByPage(SysOperateLogPageDTO dto);
 
     /**
      * cleanOperateLog
