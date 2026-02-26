@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
@@ -38,6 +39,7 @@ public class SysDeptController {
         return R.ok(depts);
     }
 
+    @SaCheckPermission("system:dept:list")
     @GetMapping("/list/exclude/{deptId}")
     @ApiOperation(value = "查询部门列表（排除节点）")
     public R<List<SysDept>> excludeChild(@PathVariable(value = "deptId", required = false) Long deptId) {
@@ -50,12 +52,14 @@ public class SysDeptController {
     }
 
 
+    @SaCheckPermission("system:dept:query")
     @GetMapping("/{deptId}")
     @ApiOperation(value = "根据部门编号获取详细信息")
     public R<SysDept> getInfo(@PathVariable Long deptId) {
         return R.ok(sysDeptService.getById(deptId));
     }
 
+    @SaCheckPermission("system:dept:add")
     @PostMapping("/add")
     @ApiOperation(value = "新增部门")
     public R<Boolean> add(@Validated @RequestBody SysDept dept) {
@@ -65,6 +69,7 @@ public class SysDeptController {
         return R.isOk(sysDeptService.save(dept));
     }
 
+    @SaCheckPermission("system:dept:edit")
     @PostMapping("/edit")
     @ApiOperation(value = "修改部门")
     public R<Boolean> edit(@Validated @RequestBody SysDept dept) {
@@ -85,6 +90,7 @@ public class SysDeptController {
         return sysDeptService.updateDept(dept);
     }
 
+    @SaCheckPermission("system:dept:remove")
     @DeleteMapping("/{deptId}")
     @ApiOperation(value = "删除部门")
     public R<Boolean> remove(@PathVariable Long deptId) {
