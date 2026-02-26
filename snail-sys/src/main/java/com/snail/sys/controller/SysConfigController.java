@@ -2,13 +2,17 @@ package com.snail.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.common.core.constant.CacheNames;
+import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
+import com.snail.common.log.annotation.Log;
 import com.snail.sys.domain.SysConfig;
 import com.snail.sys.dto.SysConfigPageDTO;
 import com.snail.sys.service.SysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,20 +55,28 @@ public class SysConfigController {
     }
 
     @SaCheckPermission("system:config:add")
+    @Log(title = "参数管理", businessType = BusinessType.INSERT)
     @PostMapping
+    @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
     @ApiOperation(value = "新增数据")
-    public R<Boolean> add(@Validated @RequestBody SysConfig sysConfig) {
-        return R.ok(sysConfigService.save(sysConfig));
+    public R<Boolean> add(@Validated @RequestBody SysConfig config) {
+        return R.ok(sysConfigService.save(config));
     }
 
     @SaCheckPermission("system:config:edit")
+    @Log(title = "参数管理", businessType = BusinessType.UPDATE)
     @PutMapping
+    @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
     @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(@Validated @RequestBody SysConfig sysConfig) {
-        return R.ok(sysConfigService.updateById(sysConfig));
+    public R<Boolean> edit(@Validated @RequestBody SysConfig config) {
+        if (sysConfigService.checkConfigKeyExists(config)) {
+            return R.fail("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
+        }
+        return R.ok(sysConfigService.updateById(config));
     }
 
     @SaCheckPermission("system:config:remove")
+    @Log(title = "参数管理", businessType = BusinessType.CLEAN)
     @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
