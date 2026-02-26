@@ -1,7 +1,11 @@
 package com.snail.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.snail.sys.domain.SysConfig;
 import com.snail.sys.domain.SysDictType;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snail.sys.dto.SysConfigPageDTO;
+import com.snail.sys.dto.SysDictTypePageDTO;
 
 
 /**
@@ -12,7 +16,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysDictTypeService extends IService<SysDictType> {
 
-
+    /**
+     * queryByPage
+     *
+     * @param dto dto
+     * @return com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.snail.sys.domain.SysDictType>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    Page<SysDictType> queryByPage(SysDictTypePageDTO dto);
     /**
      * checkDictTypeUnique
      *
