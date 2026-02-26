@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.constant.CacheConstants;
 import com.snail.common.core.enums.BusinessType;
@@ -31,25 +32,29 @@ public class SysLoginInfoController {
     private SysLoginInfoService sysLoginInfoService;
 
 
+    @SaCheckPermission("system:loginfo:list")
     @GetMapping("/list")
     @ApiOperation(value = "获取系统访问记录列表")
     public R<Page<SysLoginInfo>> list(SysLogPageDTO dto) {
-        return sysLoginInfoService.queryByPage(dto);
+        return R.ok(sysLoginInfoService.queryByPage(dto));
     }
 
 
+    @SaCheckPermission("system:loginfo:remove")
     @DeleteMapping
     @ApiOperation(value = "删除系统访问记录")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
         return R.ok(sysLoginInfoService.removeByIds(ids));
     }
 
+    @SaCheckPermission("system:loginfo:remove")
     @DeleteMapping("/clean")
     public R<Void> clean() {
         sysLoginInfoService.cleanLogInfo();
         return R.ok();
     }
 
+    @SaCheckPermission("system:loginfo:unlock")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")
     public R<Void> unlock(@PathVariable("userName") String userName) {
