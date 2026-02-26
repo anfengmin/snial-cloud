@@ -1,14 +1,12 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
 import com.snail.sys.dao.SysMenuDao;
 import com.snail.sys.domain.SysMenu;
@@ -129,23 +127,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
                 .list();
     }
 
-    /**
-     * 新增菜单
-     *
-     * @param sysMenu sysMenu
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
-     * @since 1.0
-     */
-    @Override
-    public R<Boolean> addMenu(SysMenu sysMenu) {
-        if (this.checkMenuNameExits(sysMenu)) {
-            return R.fail("新增菜单'" + sysMenu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(sysMenu.getIsFrame()) && Validator.isUrl(sysMenu.getPath()) ) {
-            return R.fail("新增菜单'" + sysMenu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        }
-
-        return R.ok(this.save(sysMenu));
-    }
 
     /**
      * 校验菜单名称是否存在
@@ -156,7 +137,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
      * <p>1.0 Initialization method </p>
      */
     @Override
-    public boolean checkMenuNameExits(SysMenu sysMenu) {
+    public boolean checkMenuNameExists(SysMenu sysMenu) {
         return this.lambdaQuery()
                 .eq(SysMenu::getMenuName, sysMenu.getMenuName())
                 .eq(SysMenu::getParentId, sysMenu.getParentId())
@@ -165,48 +146,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
     }
 
     /**
-     * 修改菜单
-     *
-     * @param sysMenu sysMenu
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
-     * @since 1.0
-     * <p>1.0 Initialization method </p>
-     */
-    @Override
-    public R<Boolean> editMenu(SysMenu sysMenu) {
-        if (this.checkMenuNameExits(sysMenu)) {
-            return R.fail("修改菜单'" + sysMenu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(sysMenu.getIsFrame()) && Validator.isUrl(sysMenu.getPath()) ) {
-            return R.fail("修改菜单'" + sysMenu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        } else if (sysMenu.getParentId().equals(sysMenu.getId())) {
-            return R.fail("修改菜单'" + sysMenu.getMenuName() + "'失败，上级菜单不能选择自己");
-        }
-
-        return R.ok(this.updateById(sysMenu));
-    }
-
-    /**
-     * 删除菜单权限信息
-     *
-     * @param ids 菜单ID
-     * @return 结果
-     */
-    @Override
-    public R<Boolean> deleteMenuByIds(List<Long> ids) {
-        if (this.hasChildByMenuIds(ids)) {
-            return R.warn("存在子菜单，不允许删除");
-        } else if (sysRoleMenuService.checkMenuExistRole(ids)) {
-            return R.warn("菜单已分配,不允许删除");
-        }
-        return null;
-    }
-
-    /**
      * 判断是否存在子菜单
      *
      * @param ids 菜单ID
      * @return 结果
      */
+    @Override
     public boolean hasChildByMenuIds(List<Long> ids) {
         return this.lambdaQuery().in(SysMenu::getParentId, ids).exists();
     }
