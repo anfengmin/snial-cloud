@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.common.core.utils.R;
 import com.snail.sys.dao.SysOperateLogDao;
 import com.snail.sys.domain.SysOperateLog;
 import com.snail.sys.dto.SysOperateLogPageDTO;
@@ -33,10 +32,11 @@ public class SysOperateLogServiceImpl extends ServiceImpl<SysOperateLogDao, SysO
      * @return 查询结果
      */
     @Override
-    public R<Page<SysOperateLog>> queryByPage(SysOperateLogPageDTO dto) {
+    public Page<SysOperateLog> queryByPage(SysOperateLogPageDTO dto) {
 
         Page<SysOperateLog> page = new Page<>(dto.getCurrent(), dto.getSize());
-        Page<SysOperateLog> result = this.lambdaQuery()
+
+        return this.lambdaQuery()
                 .eq(ObjectUtil.isNotNull(dto.getBusinessType()), SysOperateLog::getBusinessType, dto.getBusinessType())
                 .like(StrUtil.isNotBlank(dto.getOperateIp()), SysOperateLog::getOperateIp, dto.getOperateIp())
                 .like(StrUtil.isNotBlank(dto.getTitle()), SysOperateLog::getTitle, dto.getTitle())
@@ -47,8 +47,6 @@ public class SysOperateLogServiceImpl extends ServiceImpl<SysOperateLogDao, SysO
                         SysOperateLog::getOperateTime, dto.getBeginTime(), dto.getEndTime())
                 .orderByDesc(SysOperateLog::getId)
                 .page(page);
-
-        return R.ok(result);
     }
 
     /**
