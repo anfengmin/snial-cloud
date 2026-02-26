@@ -1,14 +1,13 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.snail.sys.domain.SysNotice;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.dao.SysNoticeDao;
+import com.snail.sys.domain.SysNotice;
 import com.snail.sys.dto.SysNoticePageDTO;
 import com.snail.sys.service.SysNoticeService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 
 /**
@@ -28,13 +27,12 @@ public class SysNoticeServiceImpl extends ServiceImpl<SysNoticeDao, SysNotice> i
          * @return 查询结果
          */
         @Override
-        public R<Page<SysNotice>> queryByPage(SysNoticePageDTO dto) {
+        public Page<SysNotice> queryByPage(SysNoticePageDTO dto) {
             Page<SysNotice> page = new Page<>(dto.getCurrent(), dto.getSize());
-            Page<SysNotice> result = this.lambdaQuery()
+            return this.lambdaQuery()
                     .eq(StrUtil.isNotBlank(dto.getNoticeType()), SysNotice::getNoticeType, dto.getNoticeType())
                     .like(StrUtil.isNotBlank(dto.getNoticeTitle()), SysNotice::getNoticeTitle, dto.getNoticeTitle())
                     .like(StrUtil.isNotBlank(dto.getCreateBy()), SysNotice::getCreateBy, dto.getCreateBy())
                     .page(page);
-            return R.ok(result);
         }
 }
