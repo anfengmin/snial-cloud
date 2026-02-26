@@ -1,18 +1,21 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.redis.utils.CacheUtils;
+import com.snail.sys.dao.SysDictTypeDao;
 import com.snail.sys.domain.SysDictData;
 import com.snail.sys.domain.SysDictType;
-import com.snail.sys.dao.SysDictTypeDao;
+import com.snail.sys.dto.SysDictTypePageDTO;
 import com.snail.sys.service.SysDictDataService;
 import com.snail.sys.service.SysDictTypeService;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -33,6 +36,29 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeDao, SysDictT
     private SysDictDataService sysDictDataService;
 
 
+    /**
+     * 分页查询
+     *
+     * @param dto 筛选条件
+     * @return 查询结果
+     */
+    @Override
+    public Page<SysDictType> queryByPage(SysDictTypePageDTO dto) {
+
+        // 创建分页对象
+        Page<SysDictType> page = new Page<>(dto.getCurrent(), dto.getSize());
+        // 构建查询条件并执行分页查询
+
+        return this.lambdaQuery()
+                .like(StrUtil.isNotBlank(dto.getDictName()), SysDictType::getDictName, dto.getDictName())
+                .eq(ObjectUtil.isNotNull(dto.getStatus()), SysDictType::getStatus, dto.getStatus())
+                .like(StrUtil.isNotBlank(dto.getDictType()), SysDictType::getDictType, dto.getDictType())
+                .between(StrUtil.isNotBlank(dto.getBeginTime()) && StrUtil.isNotBlank(dto.getEndTime()),
+                        SysDictType::getCreateTime,
+                        StrUtil.isNotBlank(dto.getBeginTime()) ? DateUtil.parseDateTime(dto.getBeginTime()) : null,
+                        StrUtil.isNotBlank(dto.getEndTime()) ? DateUtil.parseDateTime(dto.getEndTime()) : null)
+                .page(page);
+    }
     /**
      * checkDictTypeUnique
      *
