@@ -32,9 +32,10 @@ public class SysConfigController {
     /**
      * 获取参数配置列表
      */
+    @SaCheckPermission("system:config:list")
     @GetMapping("/queryByPage")
     public R<Page<SysConfig>> queryByPage(@RequestBody SysConfigPageDTO dto) {
-        return sysConfigService.queryByPage(dto);
+        return R.ok(sysConfigService.queryByPage(dto));
     }
 
     @GetMapping("{id}")
@@ -47,18 +48,22 @@ public class SysConfigController {
     public R<Void> getConfigKey(@PathVariable String configKey) {
         return R.ok(sysConfigService.selectConfigByKey(configKey));
     }
+
+    @SaCheckPermission("system:config:add")
     @PostMapping
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(@Validated @RequestBody SysConfig sysConfig) {
         return R.ok(sysConfigService.save(sysConfig));
     }
 
+    @SaCheckPermission("system:config:edit")
     @PutMapping
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(@Validated @RequestBody SysConfig sysConfig) {
         return R.ok(sysConfigService.updateById(sysConfig));
     }
 
+    @SaCheckPermission("system:config:remove")
     @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
