@@ -1,5 +1,8 @@
 package com.snail.sys.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,12 +10,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.dto.SysRolePageDTO;
+import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysRoleService;
+import com.snail.sys.service.SysUserRoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -22,9 +31,13 @@ import java.util.Optional;
  * @author makejava
  * @since 2025-05-30 23:06:12
  */
+@RequiredArgsConstructor
 @Service("sysRoleService")
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> implements SysRoleService {
 
+    private final SysRoleMenuService sysRoleMenuService;
+
+    private final SysUserRoleService sysUserRoleService;
 
     /**
      * 分页查询
@@ -141,5 +154,61 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
                 .eq(ObjectUtil.isNotNull(role.getId()), SysRole::getId, role.getId())
                 .eq(SysRole::getRoleKey, role.getRoleKey())
                 .exists();
+    }
+
+    /**
+     * 更新角色信息
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean updateRole(SysRole role) {
+        // 修改角色信息
+        this.updateById(role);
+        // 删除角色与菜单关联
+        sysRoleMenuService.deleteRoleMenuByRoleId(role.getId());
+        // 新增角色菜单信息
+        return sysRoleMenuService.insertRoleMenu(role);
+    }
+
+
+    /**
+     * 清除角色在线用户缓存
+     *
+     * @param roleId roleId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public void cleanOnlineUserByRole(Long roleId) {
+        // 如果角色未绑定用户 直接返回
+        Long num = sysUserRoleService.selectCount(roleId);
+        if (num == 0) {
+            return;
+        }
+        List<String> keys = StpUtil.searchTokenValue("", 0, -1, false);
+        if (CollUtil.isEmpty(keys)) {
+            return;
+        }
+
+        // 角色关联的在线用户量过大会导致redis阻塞卡顿 谨慎操作
+        keys.parallelStream().forEach(key -> {
+            String token = StrUtil.subAfter(key, StrUtil.COLON, true);
+            // 如果已经过期则跳过
+            if (StpUtil.stpLogic.getTokenActiveTimeoutByToken(token) < -1) {
+                return;
+            }
+            LoginUser loginUser = LoginUtils.getLoginUser(token);
+            if (loginUser.getRoles().stream().anyMatch(r -> r.getRoleId().equals(roleId))) {
+                try {
+                    StpUtil.logoutByTokenValue(token);
+                } catch (NotLoginException ignored) {
+                }
+            }
+        });
     }
 }
