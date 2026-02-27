@@ -41,9 +41,9 @@ public class SysLoginInfoController {
 
 
     @SaCheckPermission("system:loginfo:remove")
-    @DeleteMapping
+    @PostMapping
     @ApiOperation(value = "删除系统访问记录")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysLoginInfoService.removeByIds(ids));
     }
 

@@ -1,17 +1,15 @@
-package com.snail.sys.domain;
-
-import java.util.Date;
+package com.snail.sys.api.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.snail.common.core.constant.UserConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 角色信息(SysRole)实体类
@@ -20,13 +18,11 @@ import javax.validation.constraints.NotNull;
  * @since 2025-05-21 21:53:00
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_role")
 @ApiModel(value = "角色信息")
-public class SysRole extends Model<SysRole> {
+public class SysRole implements Serializable {
 
     private static final long serialVersionUID = 361781560607356976L;
-
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "角色ID")

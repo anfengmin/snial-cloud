@@ -1,7 +1,7 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.snail.sys.domain.SysRole;
+import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.dao.SysRoleMenuDao;
 import com.snail.sys.dto.SysRoleMenuPageDTO;

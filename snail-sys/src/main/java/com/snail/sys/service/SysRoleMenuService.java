@@ -1,6 +1,6 @@
 package com.snail.sys.service;
 
-import com.snail.sys.domain.SysRole;
+import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.dto.SysRoleMenuPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;

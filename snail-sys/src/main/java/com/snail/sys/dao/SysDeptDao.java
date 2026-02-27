@@ -1,6 +1,6 @@
 package com.snail.sys.dao;
 
-import com.snail.sys.domain.SysDept;
+import com.snail.sys.api.domain.SysDept;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

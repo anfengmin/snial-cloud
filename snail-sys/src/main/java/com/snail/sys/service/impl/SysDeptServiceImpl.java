@@ -14,9 +14,8 @@ import com.snail.common.redis.utils.CacheUtils;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysDeptDao;
 import com.snail.sys.dao.SysUserDao;
-import com.snail.sys.domain.SysDept;
+import com.snail.sys.api.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
-import com.snail.sys.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
      * 获取部门列表
      *
      * @param dept dept
-     * @return java.util.List<com.snail.sys.domain.SysDept>
+     * @return java.util.List<com.snail.sys.api.domain.SysDept>
      * @since 1.0
      */
     @Override

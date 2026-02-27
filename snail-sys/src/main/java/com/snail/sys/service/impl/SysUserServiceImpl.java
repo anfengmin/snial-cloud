@@ -13,21 +13,18 @@ import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.domain.SysDept;
+import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
-import com.snail.sys.domain.SysDept;
-import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysUserRole;
-import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
-import com.snail.sys.service.SysDeptService;
-import com.snail.sys.service.SysUserRoleService;
-import com.snail.sys.service.SysUserService;
-import com.snail.sys.service.SysMenuService;
-import com.snail.sys.service.SysRoleService;
+import com.snail.sys.service.*;
+import com.snail.sys.vo.SysUserVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,10 +41,8 @@ import java.util.List;
 public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> implements SysUserService {
 
 
-    private final SysDeptService sysDeptService;
     private final SysUserRoleService sysUserRoleService;
-    private final SysMenuService sysMenuService;
-    private final SysRoleService sysRoleService;
+    private final SysUserPostService sysUserPostService;
 
     /**
      * 分页查询
@@ -56,9 +51,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
      * @return 查询结果
      */
     @Override
-    public R<Page<SysUser>> queryByPage(SysUserPageDTO dto) {
+    public Page<SysUser> queryByPage(SysUserPageDTO dto) {
         Page<SysUser> page = new Page<>(dto.getCurrent(), dto.getSize());
-        Page<SysUser> result = this.lambdaQuery()
+        return this.lambdaQuery()
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
                 .eq(StrUtil.isNotEmpty(dto.getUserCode()), SysUser::getUserCode, dto.getUserCode())
                 .like(StrUtil.isNotEmpty(dto.getUserName()), SysUser::getUserName, dto.getUserName())
@@ -68,7 +63,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                         SysUser::getCreateTime, dto.getBeginTime(), dto.getEndTime())
 
                 .page(page);
-        return R.ok(result);
     }
 
     /**
@@ -151,22 +145,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     }
 
     /**
-     * add
+     * insertUser
      *
-     * @param sysUser sysUser
+     * @param user user
      * @return com.snail.common.core.utils.R<java.lang.Boolean>
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
     @Override
-    public R<Boolean> add(SysUser sysUser) {
-        boolean flag = this.checkUserCodeUnique(sysUser);
-        if (flag) {
-            return R.fail("新增用户:" + sysUser.getUserCode() + "失败，登录账号已存在");
-        }
-        sysUser.setPassWord(BCrypt.hashpw(sysUser.getPassWord()));
-        boolean save = this.save(sysUser);
-        return R.ok(save);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean insertUser(SysUser user) {
+        // 新增用户信息
+        user.setPassWord(BCrypt.hashpw(user.getPassWord()));
+        boolean save = this.save(user);
+        // 新增用户岗位关联
+        sysUserPostService.insertUserPost(user);
+        // 新增用户与角色管理
+        sysUserRoleService.insertUserRole(user);
+        return save;
     }
     /**
      * checkUserCodeUnique
@@ -259,6 +255,61 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                 .like(StrUtil.isNotBlank(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo());
         return baseMapper.selectJoinPage(page, SysUser.class, wrapper);
 
+    }
+
+    /**
+     * 校验手机号码是否唯一
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean checkPhoneExists(SysUser user) {
+        return this.lambdaQuery().eq(SysUser::getPhoneNo, user.getPhoneNo())
+                .ne(ObjectUtil.isNotNull(user.getId()), SysUser::getId, user.getId())
+                .exists();
+    }
+
+    /**
+     * 校验邮箱是否唯一
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean checkEmailExists(SysUser user) {
+        return this.lambdaQuery().eq(SysUser::getEmail,user.getEmail())
+                .ne(ObjectUtil.isNotNull(user.getId()), SysUser::getId, user.getId())
+                .exists();
+    }
+
+    /**
+     * updateUser
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateUser(SysUser user) {
+        Long userId = user.getId();
+
+        // 删除用户与岗位关联
+        sysUserPostService.deleteUserPost(userId);
+        // 新增用户岗位关联
+        sysUserPostService.insertUserPost(user);
+        // 删除用户与角色关联
+        sysUserRoleService.deleteUserRole(userId);
+        // 新增用户与角色管理
+        sysUserRoleService.insertUserRole(user);
+
+        return this.updateById(user);
     }
 
     /**

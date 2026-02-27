@@ -1,6 +1,7 @@
 package com.snail.sys.service.impl;
 
 import com.snail.common.core.constant.UserConstants;
+import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dao.SysUserRoleDao;
 import com.snail.sys.dto.SysUserRolePageDTO;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -126,6 +128,37 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
                 .eq(SysUserRole::getRoleId, roleId)
                 .in(SysUserRole::getUserId, Arrays.asList(userIds))
                 .remove();
+    }
+
+    /**
+     * 批量新增用户角色信息
+     *
+     * @param user user
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void insertUserRole(SysUser user) {
+        List<SysUserRole> list = Arrays.stream(user.getRoleIds()).map(roleId -> {
+            SysUserRole userRole = new SysUserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(roleId);
+            return userRole;
+        }).collect(Collectors.toList());
+        this.saveBatch(list);
+    }
+
+    /**
+     * 删除用户角色信息
+     *
+     * @param userId userId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public void deleteUserRole(Long userId) {
+        this.lambdaUpdate().eq(SysUserRole::getUserId, userId).remove();
     }
 
 

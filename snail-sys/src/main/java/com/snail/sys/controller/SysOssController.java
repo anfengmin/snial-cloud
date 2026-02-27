@@ -50,9 +50,9 @@ public class SysOssController {
         return R.ok(sysOssService.updateById(sysOss));
     }
 
-    @DeleteMapping
+    @PostMapping
     @ApiOperation(value = "删除数据")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysOssService.removeByIds(ids));
     }
 

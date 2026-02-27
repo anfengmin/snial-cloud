@@ -1,9 +1,6 @@
 package com.snail.sys.api.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -11,7 +8,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户信息表(User)实体类
@@ -38,15 +39,19 @@ public class SysUser extends BaseEntity {
     @ApiModelProperty(value = "用户账号")
     private String userCode;
 
+    @NotBlank(message = "用户名称不能为空")
     @ApiModelProperty(value = "用户名称")
     private String userName;
 
+    @NotBlank(message = "用户昵称不能为空")
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
     @ApiModelProperty(value = "用户类型（sys_user系统用户）")
     private String userType;
 
+    @Email(message = "邮箱格式不正确")
+    @Size(min = 0, max = 50, message = "邮箱长度不能超过50个字符")
     @ApiModelProperty(value = "用户邮箱")
     private String email;
 
@@ -90,6 +95,22 @@ public class SysUser extends BaseEntity {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+
+    @ApiModelProperty(value = "部门对象")
+    @TableField(exist = false)
+    private SysDept dept;
+
+    @ApiModelProperty(value = "角色对象")
+    @TableField(exist = false)
+    private List<SysRole> roles;
+
+    @ApiModelProperty(value = "角色组")
+    @TableField(exist = false)
+    private Long[] roleIds;
+
+    @ApiModelProperty(value = "岗位组")
+    @TableField(exist = false)
+    private Long[] postIds;
     /**
      * 是否管理员
      */

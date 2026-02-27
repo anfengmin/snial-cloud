@@ -47,7 +47,7 @@ public class SysDictTypeController {
     @SaCheckPermission("system:dict:add")
     @PostMapping
     @ApiOperation(value = "新增字典类型")
-    public R<Boolean> add(SysDictType sysDictType) {
+    public R<Boolean> add(@RequestBody SysDictType sysDictType) {
         if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
             return R.fail("新增字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
         }
@@ -57,7 +57,7 @@ public class SysDictTypeController {
     @SaCheckPermission("system:dict:edit")
     @PutMapping
     @ApiOperation(value = "编辑字典类型")
-    public R<Boolean> edit(SysDictType sysDictType) {
+    public R<Boolean> edit(@RequestBody SysDictType sysDictType) {
         if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
             return R.fail("修改字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
         }
@@ -65,9 +65,9 @@ public class SysDictTypeController {
     }
 
     @SaCheckPermission("system:dict:remove")
-    @DeleteMapping("/{ids}")
+    @PostMapping
     @ApiOperation(value = "删除数据")
-    public R<Boolean> deleteById(@PathVariable("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysDictTypeService.removeByIds(ids));
     }
 

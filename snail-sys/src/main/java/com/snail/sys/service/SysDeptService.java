@@ -1,7 +1,7 @@
 package com.snail.sys.service;
 
 import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysDept;
+import com.snail.sys.api.domain.SysDept;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface SysDeptService extends IService<SysDept> {
      * 获取部门列表
      *
      * @param dept dept
-     * @return java.util.List<com.snail.sys.domain.SysDept>
+     * @return java.util.List<com.snail.sys.api.domain.SysDept>
      * @since 1.0
      */
     List<SysDept> queryDeptList(SysDept dept);

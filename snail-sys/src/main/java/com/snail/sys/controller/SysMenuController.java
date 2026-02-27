@@ -95,9 +95,9 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:remove")
-    @DeleteMapping
+    @PostMapping
     @ApiOperation(value = "删除菜单")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         if (sysMenuService.hasChildByMenuIds(ids)) {
             return R.warn("存在子菜单，不允许删除");
         } else if (sysRoleMenuService.checkMenuExistRole(ids)) {

@@ -2,8 +2,8 @@ package com.snail.sys.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.snail.common.core.domain.PageBaseEntity;
-import com.snail.sys.domain.SysDept;
-import com.snail.sys.domain.SysRole;
+import com.snail.sys.api.domain.SysDept;
+import com.snail.sys.api.domain.SysRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

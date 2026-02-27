@@ -7,7 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
-import com.snail.sys.domain.SysDept;
+import com.snail.sys.api.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -69,9 +69,9 @@ public class SysDictDataController {
     }
 
     @SaCheckPermission("system:dept:remove")
-    @DeleteMapping
+    @PostMapping
     @ApiOperation(value = "删除字典类型")
-    public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
+    public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysDictDataService.removeByIds(ids));
     }
 

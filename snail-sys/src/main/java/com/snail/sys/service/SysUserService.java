@@ -24,7 +24,7 @@ public interface SysUserService extends IService<SysUser> {
      * @return 分页结果
      * @since 1.0
      */
-    R<Page<SysUser>> queryByPage(SysUserPageDTO dto);
+    Page<SysUser> queryByPage(SysUserPageDTO dto);
 
     /**
      * getUserInfo
@@ -71,14 +71,14 @@ public interface SysUserService extends IService<SysUser> {
     SysUserVo getInfo(Long userId);
 
     /**
-     * add
+     * insertUser
      *
-     * @param sysUser sysUser
-     * @return com.snail.common.core.utils.R<java.lang.Boolean>
+     * @param user user
+     * @return boolean
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
-    R<Boolean> add(SysUser sysUser);
+    boolean insertUser(SysUser user);
 
     /**
      * checkUserCodeUnique
@@ -129,4 +129,35 @@ public interface SysUserService extends IService<SysUser> {
      * @since 1.0
      */
     Page<SysUser> selectUnallocatedList(SysUserPageDTO dto);
+
+    /**
+     * 校验手机号码是否唯一
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkPhoneExists(SysUser user);
+
+    /**
+     * 校验邮箱是否唯一
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean checkEmailExists(SysUser user);
+
+    /**
+     * 更新用户信息
+     *
+     * @param user user
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean updateUser(SysUser user);
+
 }

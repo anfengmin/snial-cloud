@@ -1,5 +1,6 @@
 package com.snail.sys.service;
 
+import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserRolePageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -85,4 +86,22 @@ public interface SysUserRoleService extends IService<SysUserRole> {
      * <p>1.0 Initialization method </p>
      */
     boolean deleteAuthUsers(Long roleId, Long[] userIds);
+
+    /**
+     * 新增用户角色关联
+     *
+     * @param user user
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void insertUserRole(SysUser user);
+
+    /**
+     * 删除用户角色关联
+     *
+     * @param userId userId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void deleteUserRole(Long userId);
 }
