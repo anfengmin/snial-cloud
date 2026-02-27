@@ -1,5 +1,6 @@
 package com.snail.sys.service.impl;
 
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysRoleDept;
 import com.snail.sys.dao.SysRoleDeptDao;
 import com.snail.sys.dto.SysRoleDeptPageDTO;
@@ -8,6 +9,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -31,5 +37,34 @@ public class SysRoleDeptServiceImpl extends ServiceImpl<SysRoleDeptDao, SysRoleD
         Page<SysRoleDept> page = new Page<>(dto.getCurrent(), dto.getSize());
         Page<SysRoleDept> result = this.lambdaQuery().page(page);
         return R.ok(result);
+    }
+
+    /**
+     * 删除角色部门关联
+     *
+     * @param roleId 角色ID
+     */
+    @Override
+    public void deleteRoleDeptByRoleId(Long roleId) {
+        this.lambdaUpdate().eq(SysRoleDept::getRoleId, roleId).remove();
+    }
+
+    /**
+     * 新增角色部门关联
+     *
+     * @param role 角色信息
+     * @return 新增结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean insertRoleDept(SysRole role) {
+        // 新增角色与部门（数据权限）管理
+        List<SysRoleDept> list = Arrays.stream(role.getDeptIds()).map(deptId -> {
+            SysRoleDept roleDept = new SysRoleDept();
+            roleDept.setRoleId(role.getId());
+            roleDept.setDeptId(deptId);
+            return roleDept;
+        }).collect(Collectors.toList());
+        return this.saveBatch(list);
     }
 }
