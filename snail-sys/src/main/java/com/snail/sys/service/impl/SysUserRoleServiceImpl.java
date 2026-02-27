@@ -10,6 +10,7 @@ import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,9 +48,7 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
      */
     @Override
     public boolean checkAdminRole(Long userId) {
-        return this.lambdaQuery()
-                .eq(SysUserRole::getUserId, userId)
-                .eq(SysUserRole::getRoleId, UserConstants.ADMIN_ID).exists();
+        return this.lambdaQuery().eq(SysUserRole::getUserId, userId).eq(SysUserRole::getRoleId, UserConstants.ADMIN_ID).exists();
     }
 
     /**
@@ -88,11 +87,45 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
      */
     @Override
     public List<Long> selectUserIdsByRoleId(Long roleId) {
-        return this.lambdaQuery().eq(SysUserRole::getRoleId, roleId)
+        return this.lambdaQuery()
+                .eq(SysUserRole::getRoleId, roleId)
                 .select(SysUserRole::getUserId)
-                .list()
-                .stream().map(SysUserRole::getUserId)
+                .list().stream()
+                .map(SysUserRole::getUserId)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 删除用户角色
+     *
+     * @param userRole userRole
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean deleteAuthUser(SysUserRole userRole) {
+        return this.lambdaUpdate()
+                .eq(SysUserRole::getUserId, userRole.getUserId())
+                .eq(SysUserRole::getRoleId, userRole.getRoleId())
+                .remove();
+    }
+
+    /**
+     * 批量删除用户角色
+     *
+     * @param roleId  roleId
+     * @param userIds userIds
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean deleteAuthUsers(Long roleId, Long[] userIds) {
+        return this.lambdaUpdate()
+                .eq(SysUserRole::getRoleId, roleId)
+                .in(SysUserRole::getUserId, Arrays.asList(userIds))
+                .remove();
     }
 
 
