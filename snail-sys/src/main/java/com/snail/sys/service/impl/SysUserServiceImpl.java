@@ -1,17 +1,23 @@
 package com.snail.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
+import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
+import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
@@ -22,6 +28,8 @@ import com.snail.sys.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -54,7 +62,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
                 .eq(StrUtil.isNotEmpty(dto.getUserCode()), SysUser::getUserCode, dto.getUserCode())
                 .like(StrUtil.isNotEmpty(dto.getUserName()), SysUser::getUserName, dto.getUserName())
-                .eq(StrUtil.isNotEmpty(dto.getStatus()), SysUser::getStatus, dto.getStatus())
+                .eq(ObjectUtil.isNotEmpty(dto.getStatus()), SysUser::getStatus, dto.getStatus())
                 .like(StrUtil.isNotEmpty(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo())
                 .between(StrUtil.isNotEmpty(dto.getBeginTime()) && StrUtil.isNotEmpty(dto.getEndTime()),
                         SysUser::getCreateTime, dto.getBeginTime(), dto.getEndTime())
@@ -206,5 +214,74 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         if (StrUtil.isNotBlank(user.getUserCode()) && user.isAdmin()) {
             throw new ServiceException("不允许操作超级管理员用户");
         }
+    }
+
+
+
+    /**
+     * 查询已分配用户角色列表
+     *
+     * @param dto dto
+     * @return Page<SysUser>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public Page<SysUser> selectAllocatedList(SysUserPageDTO dto) {
+        Page<SysUser> page = new Page<>(dto.getCurrent(), dto.getSize());
+
+        MPJLambdaWrapper<SysUser> wrapper = getUserEq()
+                .eq(ObjectUtil.isNotNull(dto.getRoleId()), SysRole::getId, dto.getRoleId())
+                .like(StrUtil.isNotBlank(dto.getUserName()), SysUser::getUserName, dto.getUserName())
+                .eq(ObjectUtil.isNotNull(dto.getStatus()), SysUser::getStatus, dto.getStatus())
+                .like(StrUtil.isNotBlank(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo());
+
+        return baseMapper.selectJoinPage(page, SysUser.class, wrapper);
+    }
+
+
+    /**
+     * 查询未分配用户角色列表
+     *
+     * @param dto dto
+     * @return Page<SysUser>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public Page<SysUser> selectUnallocatedList(SysUserPageDTO dto) {
+        List<Long> userIds = sysUserRoleService.selectUserIdsByRoleId(dto.getRoleId());
+        Page<SysUser> page = new Page<>(dto.getCurrent(), dto.getSize());
+        MPJLambdaWrapper<SysUser> wrapper = getUserEq()
+                .and(w -> w.ne(SysRole::getId, dto.getRoleId()).or().isNull(SysRole::getId))
+                .notIn(CollUtil.isNotEmpty(userIds), SysUser::getId, userIds)
+                .like(StrUtil.isNotBlank(dto.getUserName()), SysUser::getUserName, dto.getUserName())
+                .like(StrUtil.isNotBlank(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo());
+        return baseMapper.selectJoinPage(page, SysUser.class, wrapper);
+
+    }
+
+    /**
+     * getUserEq
+     *
+     * @return com.github.yulichang.wrapper.MPJLambdaWrapper<com.snail.sys.api.domain.SysUser>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    private static MPJLambdaWrapper<SysUser> getUserEq() {
+        return new MPJLambdaWrapper<SysUser>()
+                .select(SysUser::getId,
+                        SysUser::getDeptId,
+                        SysUser::getUserName,
+                        SysUser::getNickName,
+                        SysUser::getEmail,
+                        SysUser::getPhoneNo,
+                        SysUser::getStatus,
+                        SysUser::getCreateTime)
+                .leftJoin(SysDept.class, SysDept::getId, SysUser::getDeptId)
+                .leftJoin(SysUserRole.class, SysUserRole::getUserId, SysUser::getId)
+                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
+
+                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL);
     }
 }
