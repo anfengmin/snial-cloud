@@ -64,4 +64,25 @@ public interface SysUserRoleService extends IService<SysUserRole> {
      * <p>1.0 Initialization method </p>
      */
     List<Long> selectUserIdsByRoleId(Long roleId);
+
+    /**
+     * 删除用户角色关联
+     *
+     * @param userRole userRole
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean deleteAuthUser(SysUserRole userRole);
+
+    /**
+     * 批量删除用户角色关联
+     *
+     * @param roleId   roleId
+     * @param userIds userIds
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean deleteAuthUsers(Long roleId, Long[] userIds);
 }
