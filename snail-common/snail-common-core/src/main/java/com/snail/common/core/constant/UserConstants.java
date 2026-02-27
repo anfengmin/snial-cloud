@@ -24,7 +24,7 @@ public interface UserConstants {
     /**
      * 用户正常状态
      */
-    String USER_NORMAL = "0";
+    Integer USER_NORMAL = 0;
 
     /**
      * 用户封禁状态
@@ -39,7 +39,7 @@ public interface UserConstants {
     /**
      * 角色封禁状态
      */
-    String ROLE_DISABLE = "1";
+    Integer ROLE_DISABLE = 1;
 
     /**
      * 部门正常状态
