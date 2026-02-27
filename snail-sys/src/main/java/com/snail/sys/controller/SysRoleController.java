@@ -5,14 +5,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.common.log.annotation.Log;
+import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.dto.SysRolePageDTO;
+import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysRoleService;
+import com.snail.sys.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -28,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 public class SysRoleController {
 
     private final SysRoleService sysRoleService;
+    private final SysUserService sysUserService;
 
     @SaCheckPermission("system:role:list")
     @PostMapping("queryByPage")
@@ -77,5 +84,56 @@ public class SysRoleController {
         }
         return R.fail("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
     }
+
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/dataScope")
+    @ApiOperation(value = "修改角色数据权限")
+    public R<Boolean> dataScope(@RequestBody SysRole role) {
+        sysRoleService.checkRoleAllowed(role);
+        sysRoleService.checkRoleDataScope(role.getId());
+        return R.ok(sysRoleService.authDataScope(role));
+    }
+
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    @ApiOperation(value = "修改角色状态")
+    public R<Boolean> changeStatus(@RequestBody SysRole role) {
+        sysRoleService.checkRoleAllowed(role);
+        sysRoleService.checkRoleDataScope(role.getId());
+        return R.ok(sysRoleService.updateRoleStatus(role));
+    }
+
+    @SaCheckPermission("system:role:remove")
+    @Log(title = "角色管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{roleIds}")
+    @ApiOperation(value = "删除角色")
+    public R<Boolean> remove(@PathVariable("roleIds") List<Long> roleIds) {
+        return R.ok(sysRoleService.removeBatchByIds(roleIds));
+    }
+
+    @SaCheckPermission("system:role:query")
+    @GetMapping("/optionSelect")
+    @ApiOperation(value = "角色下拉列表")
+    public R<List<OptionVO>> optionSelect() {
+        return R.ok(sysRoleService.selectRoleAll());
+    }
+
+
+    @SaCheckPermission("system:role:list")
+    @PostMapping("/authUser/allocatedList")
+    @ApiOperation(value = "已分配用户列表")
+    public R<Page<SysUser>> allocatedList(@RequestBody SysUserPageDTO dto) {
+        return R.ok(sysUserService.selectAllocatedList(dto));
+    }
+
+    @SaCheckPermission("system:role:list")
+    @PostMapping("/authUser/unallocatedList")
+    @ApiOperation(value = "未分配用户列表")
+    public R<Page<SysUser>> unallocatedList(@RequestBody SysUserPageDTO dto) {
+        return R.ok(sysUserService.selectUnallocatedList(dto));
+    }
+
 }
 
