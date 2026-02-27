@@ -1,6 +1,7 @@
 package com.snail.sys.service;
 
 
+import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
@@ -107,4 +108,25 @@ public interface SysUserService extends IService<SysUser> {
      * <p>1.0 Initialization method </p>
      */
     void checkUserAllowed(SysUser user);
+
+
+    /**
+     * 获取已分配用户角色列表
+     *
+     * @param dto dto
+     * @return 分页结果
+     * @since 1.0
+     */
+    Page<SysUser> selectAllocatedList(SysUserPageDTO dto);
+
+
+
+    /**
+     * 获取未分配用户角色列表
+     *
+     * @param dto dto
+     * @return 分页结果
+     * @since 1.0
+     */
+    Page<SysUser> selectUnallocatedList(SysUserPageDTO dto);
 }
