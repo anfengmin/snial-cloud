@@ -1,5 +1,6 @@
 package com.snail.sys.service;
 
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.dto.SysRoleMenuPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -44,4 +45,23 @@ public interface SysRoleMenuService extends IService<SysRoleMenu> {
      * <p>1.0 Initialization method </p>
      */
     boolean checkMenuExistRole(List<Long> ids);
+
+    /**
+     * 根据角色id删除角色菜单
+     *
+     * @param id id
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void deleteRoleMenuByRoleId(Long id);
+
+    /**
+     * 添加角色菜单
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean insertRoleMenu(SysRole role);
 }
