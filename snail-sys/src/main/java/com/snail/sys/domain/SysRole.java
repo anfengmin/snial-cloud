@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * 角色信息(SysRole)实体类
  *
@@ -29,12 +32,15 @@ public class SysRole extends Model<SysRole> {
     @ApiModelProperty(value = "角色ID")
     private Long id;
 
+    @NotBlank(message = "角色名称不能为空")
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 
+    @NotBlank(message = "权限字符不能为空")
     @ApiModelProperty(value = "角色权限字符串")
     private String roleKey;
 
+    @NotNull(message = "显示顺序不能为空")
     @ApiModelProperty(value = "显示顺序")
     private Integer roleSort;
 
