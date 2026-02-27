@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -75,6 +76,23 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
     @Override
     public Long selectCount(Long roleId) {
         return this.lambdaQuery().eq(SysUserRole::getRoleId, roleId).count();
+    }
+
+    /**
+     * 获取角色用户ID
+     *
+     * @param roleId roleId
+     * @return java.util.List<java.lang.Long>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public List<Long> selectUserIdsByRoleId(Long roleId) {
+        return this.lambdaQuery().eq(SysUserRole::getRoleId, roleId)
+                .select(SysUserRole::getUserId)
+                .list()
+                .stream().map(SysUserRole::getUserId)
+                .collect(Collectors.toList());
     }
 
 
