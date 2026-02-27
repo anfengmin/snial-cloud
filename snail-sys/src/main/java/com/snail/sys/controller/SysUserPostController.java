@@ -50,7 +50,7 @@ public class SysUserPostController {
         return R.ok(sysUserPostService.updateById(sysUserPost));
     }
 
-    @PostMapping("delete")
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysUserPostService.removeByIds(ids));

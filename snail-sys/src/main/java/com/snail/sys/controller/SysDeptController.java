@@ -32,6 +32,7 @@ public class SysDeptController {
     private final SysDeptService sysDeptService;
 
 
+    @SaCheckPermission("system:dept:list")
     @PostMapping("/list")
     @ApiOperation(value = "获取部门列表")
     public R<List<SysDept>> list(@RequestBody SysDept dept) {

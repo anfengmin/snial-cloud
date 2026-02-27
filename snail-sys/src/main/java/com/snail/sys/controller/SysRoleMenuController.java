@@ -50,7 +50,7 @@ public class SysRoleMenuController {
         return R.ok(sysRoleMenuService.updateById(sysRoleMenu));
     }
 
-    @PostMapping("delete")
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysRoleMenuService.removeByIds(ids));

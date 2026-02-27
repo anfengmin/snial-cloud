@@ -50,7 +50,7 @@ public class SysRoleDeptController {
         return R.ok(sysRoleDeptService.updateById(sysRoleDept));
     }
 
-    @PostMapping("delete")
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysRoleDeptService.removeByIds(ids));
