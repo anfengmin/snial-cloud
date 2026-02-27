@@ -14,6 +14,7 @@ import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
 import com.snail.sys.service.SysRoleDeptService;
 import com.snail.sys.service.SysRoleMenuService;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -265,6 +267,64 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
         return list.stream()
                 .map(role -> new OptionVO(role.getId(), role.getRoleName()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 批量取消授权用户
+     *
+     * @param userRole userRole
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean deleteAuthUser(SysUserRole userRole) {
+        boolean flag = sysUserRoleService.deleteAuthUser(userRole);
+        if (flag) {
+            cleanOnlineUserByRole(userRole.getRoleId());
+        }
+        return flag;
+    }
+
+    /**
+     * 批量取消授权用户
+     *
+     * @param roleId   roleId
+     * @param userIds userIds
+     * @return java.lang.boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean deleteAuthUsers(Long roleId, Long[] userIds) {
+        boolean flag = sysUserRoleService.deleteAuthUsers(roleId, userIds);
+        if (flag) {
+            cleanOnlineUserByRole(roleId);
+        }
+        return flag;
+    }
+
+    /**
+     * 批量选择授权用户
+     *
+     * @param roleId   roleId
+     * @param userIds userIds
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public void insertAuthUsers(Long roleId, Long[] userIds) {
+        List<SysUserRole> list = Arrays.stream(userIds).map(userId -> {
+            SysUserRole userRole = new SysUserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(roleId);
+            return userRole;
+        }).collect(Collectors.toList());
+        sysUserRoleService.saveBatch(list);
+        Optional.of(list)
+                .filter(CollUtil::isNotEmpty)
+                .ifPresent(l -> cleanOnlineUserByRole(roleId));
+
     }
 
 }
