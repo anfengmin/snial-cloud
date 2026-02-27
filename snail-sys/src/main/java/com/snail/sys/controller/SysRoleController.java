@@ -8,6 +8,7 @@ import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysRoleService;
@@ -135,5 +136,30 @@ public class SysRoleController {
         return R.ok(sysUserService.selectUnallocatedList(dto));
     }
 
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/cancel")
+    @ApiOperation(value = "取消授权用户")
+    public R<Boolean> cancelAuthUser(@RequestBody SysUserRole userRole) {
+        return R.ok(sysRoleService.deleteAuthUser(userRole));
+    }
+
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/cancelAll")
+    @ApiOperation(value = "批量取消授权用户")
+    public R<Boolean> cancelAuthUserAll(Long roleId, Long[] userIds) {
+        return R.ok(sysRoleService.deleteAuthUsers(roleId, userIds));
+    }
+
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/selectAll")
+    @ApiOperation(value = "批量选择用户授权")
+    public R<Void> selectAuthUserAll(Long roleId, Long[] userIds) {
+        sysRoleService.checkRoleDataScope(roleId);
+        sysRoleService.insertAuthUsers(roleId, userIds);
+        return R.ok();
+    }
 }
 
