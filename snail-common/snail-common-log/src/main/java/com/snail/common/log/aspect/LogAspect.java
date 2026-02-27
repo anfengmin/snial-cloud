@@ -7,7 +7,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.common.core.enums.BusinessStatus;
 import com.snail.common.core.utils.ServletUtils;
 import com.snail.common.core.utils.SpringUtils;
