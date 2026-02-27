@@ -64,5 +64,18 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleDao, SysUserR
         return this.lambdaQuery().eq(SysUserRole::getUserId, userId).list();
     }
 
+    /**
+     * 获取角色数量
+     *
+     * @param roleId roleId
+     * @return java.lang.Long
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public Long selectCount(Long roleId) {
+        return this.lambdaQuery().eq(SysUserRole::getRoleId, roleId).count();
+    }
+
 
 }
