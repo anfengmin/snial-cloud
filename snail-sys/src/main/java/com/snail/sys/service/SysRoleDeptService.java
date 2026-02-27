@@ -1,5 +1,6 @@
 package com.snail.sys.service;
 
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysRoleDept;
 import com.snail.sys.dto.SysRoleDeptPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -23,5 +24,20 @@ public interface SysRoleDeptService extends IService<SysRoleDept> {
      */
     R<Page<SysRoleDept>> queryByPage(SysRoleDeptPageDTO dto);
 
+    /**
+     * 根据角色id删除角色部门关联
+     *
+     * @param roleId 角色id
+     * @since 1.0
+     */
+    void deleteRoleDeptByRoleId(Long roleId);
 
+    /**
+     * 新增角色部门关联
+     *
+     * @param role 角色
+     * @return 角色部门关联id
+     * @since 1.0
+     */
+    boolean insertRoleDept(SysRole role);
 }
