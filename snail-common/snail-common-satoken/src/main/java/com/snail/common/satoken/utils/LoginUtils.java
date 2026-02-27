@@ -2,10 +2,11 @@ package com.snail.common.satoken.utils;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.context.model.SaStorage;
+import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
-import com.snail.common.satoken.vo.LoginUser;
+import com.snail.sys.api.domain.LoginUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -81,6 +82,17 @@ public class LoginUtils {
         }
 
         return loginUser;
+    }
+
+    /**
+     * 获取用户基于token
+     */
+    public static LoginUser getLoginUser(String token) {
+        SaSession session = StpUtil.getTokenSessionByToken(token);
+        if (ObjectUtil.isNull(session)) {
+            return null;
+        }
+        return (LoginUser) session.get(LOGIN_USER_KEY);
     }
 
     /**
