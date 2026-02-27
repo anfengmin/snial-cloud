@@ -62,14 +62,14 @@ public class SysDictDataController {
 
 
     @SaCheckPermission("system:dept:edit")
-    @PutMapping
+    @PostMapping(value = "/edit")
     @ApiOperation(value = "编辑字典类型")
     public R<Boolean> edit(SysDictData sysDictData) {
         return R.ok(sysDictDataService.updateById(sysDictData));
     }
 
     @SaCheckPermission("system:dept:remove")
-    @PostMapping
+    @PostMapping(value = "/remove")
     @ApiOperation(value = "删除字典类型")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysDictDataService.removeByIds(ids));

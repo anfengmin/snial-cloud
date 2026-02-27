@@ -38,19 +38,19 @@ public class SysUserRoleController {
         return R.ok(sysUserRoleService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysUserRole sysUserRole) {
         return R.ok(sysUserRoleService.save(sysUserRole));
     }
 
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysUserRole sysUserRole) {
         return R.ok(sysUserRoleService.updateById(sysUserRole));
     }
 
-    @PostMapping
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysUserRoleService.removeByIds(ids));

@@ -77,7 +77,7 @@ public class SysUserController {
 
     @SaCheckPermission("system:user:add")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增用户")
     public R<Boolean> add(@Validated @RequestBody SysUser user) {
         sysDeptService.checkDeptDataScope(user.getDeptId());
@@ -95,7 +95,7 @@ public class SysUserController {
 
     @SaCheckPermission("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑用户")
     public R<Boolean> edit(@Validated @RequestBody SysUser user) {
         sysUserService.checkUserAllowed(user);
@@ -115,7 +115,7 @@ public class SysUserController {
 
     @SaCheckPermission("system:user:remove")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
-    @DeleteMapping
+    @DeleteMapping("remove")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
         return R.ok(sysUserService.removeByIds(ids));

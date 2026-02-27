@@ -65,7 +65,7 @@ public class SysDictTypeController {
     }
 
     @SaCheckPermission("system:dict:remove")
-    @PostMapping
+    @DeleteMapping
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysDictTypeService.removeByIds(ids));

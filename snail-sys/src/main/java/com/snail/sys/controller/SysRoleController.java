@@ -54,7 +54,7 @@ public class SysRoleController {
 
     @SaCheckPermission("system:role:add")
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增角色")
     public R<Boolean> add(@Validated @RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);
@@ -69,7 +69,7 @@ public class SysRoleController {
 
     @SaCheckPermission("system:role:edit")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑角色")
     public R<Void> edit(@Validated @RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);

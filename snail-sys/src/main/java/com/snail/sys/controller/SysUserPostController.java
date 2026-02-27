@@ -38,19 +38,19 @@ public class SysUserPostController {
         return R.ok(sysUserPostService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysUserPost sysUserPost) {
         return R.ok(sysUserPostService.save(sysUserPost));
     }
 
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysUserPost sysUserPost) {
         return R.ok(sysUserPostService.updateById(sysUserPost));
     }
 
-    @PostMapping
+    @PostMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysUserPostService.removeByIds(ids));

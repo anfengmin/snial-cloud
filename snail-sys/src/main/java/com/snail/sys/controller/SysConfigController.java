@@ -56,7 +56,7 @@ public class SysConfigController {
 
     @SaCheckPermission("system:config:add")
     @Log(title = "参数管理", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
     @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(@Validated @RequestBody SysConfig config) {
@@ -65,7 +65,7 @@ public class SysConfigController {
 
     @SaCheckPermission("system:config:edit")
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PostMapping("/edit")
     @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(@Validated @RequestBody SysConfig config) {
@@ -77,7 +77,7 @@ public class SysConfigController {
 
     @SaCheckPermission("system:config:remove")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
-    @PostMapping
+    @PostMapping("/remove")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysConfigService.removeByIds(ids));

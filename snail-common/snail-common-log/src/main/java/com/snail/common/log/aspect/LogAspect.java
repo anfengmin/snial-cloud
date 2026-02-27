@@ -13,6 +13,7 @@ import com.snail.common.core.utils.SpringUtils;
 import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.log.annotation.Log;
 import com.snail.common.log.event.OperateLogEvent;
+import com.snail.sys.api.domain.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;

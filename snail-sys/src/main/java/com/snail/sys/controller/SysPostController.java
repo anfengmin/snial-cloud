@@ -44,9 +44,9 @@ public class SysPostController {
 
     @SaCheckPermission("system:post:add")
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
-    public R<Boolean> add(SysPost sysPost) {
+    public R<Boolean> add(@RequestBody SysPost sysPost) {
         if (sysPostService.checkPostNameExists(sysPost)) {
             return R.fail("新增岗位'" + sysPost.getPostName() + "'失败，岗位名称已存在");
         } else if (sysPostService.checkPostCodeExists(sysPost)) {
@@ -57,9 +57,9 @@ public class SysPostController {
 
     @SaCheckPermission("system:post:edit")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑数据")
-    public R<Boolean> edit(SysPost sysPost) {
+    public R<Boolean> edit(@RequestBody SysPost sysPost) {
         if (sysPostService.checkPostNameExists(sysPost)) {
             return R.fail("修改岗位'" + sysPost.getPostName() + "'失败，岗位名称已存在");
         } else if (sysPostService.checkPostCodeExists(sysPost)) {
@@ -70,7 +70,7 @@ public class SysPostController {
 
     @SaCheckPermission("system:post:remove")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
-    @PostMapping
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysPostService.removeByIds(ids));

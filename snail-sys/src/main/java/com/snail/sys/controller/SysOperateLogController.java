@@ -40,7 +40,7 @@ public class SysOperateLogController {
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @SaCheckPermission("system:operatelog:remove")
-    @PostMapping
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysOperateLogService.removeByIds(ids));

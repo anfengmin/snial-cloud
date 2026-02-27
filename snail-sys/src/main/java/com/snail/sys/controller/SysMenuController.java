@@ -67,7 +67,7 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:add")
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增菜单")
     public R<Boolean> add(@Validated @RequestBody SysMenu sysMenu) {
         if (sysMenuService.checkMenuNameExists(sysMenu)) {
@@ -80,7 +80,7 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:edit")
-    @PutMapping
+    @PostMapping("edit")
     @ApiOperation(value = "编辑菜单")
     public R<Boolean> edit(@Validated @RequestBody SysMenu sysMenu) {
         if (sysMenuService.checkMenuNameExists(sysMenu)) {
@@ -95,7 +95,7 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:remove")
-    @PostMapping
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除菜单")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         if (sysMenuService.hasChildByMenuIds(ids)) {

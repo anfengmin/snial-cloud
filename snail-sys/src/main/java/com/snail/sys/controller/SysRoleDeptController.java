@@ -38,19 +38,19 @@ public class SysRoleDeptController {
         return R.ok(sysRoleDeptService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysRoleDept sysRoleDept) {
         return R.ok(sysRoleDeptService.save(sysRoleDept));
     }
 
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysRoleDept sysRoleDept) {
         return R.ok(sysRoleDeptService.updateById(sysRoleDept));
     }
 
-    @PostMapping
+    @PostMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysRoleDeptService.removeByIds(ids));

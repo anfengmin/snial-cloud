@@ -2,6 +2,7 @@ package com.snail.common.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.api.domain.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 

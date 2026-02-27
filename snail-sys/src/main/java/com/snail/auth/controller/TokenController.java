@@ -8,6 +8,7 @@ import com.snail.auth.service.SysLoginService;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.api.domain.LoginUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;

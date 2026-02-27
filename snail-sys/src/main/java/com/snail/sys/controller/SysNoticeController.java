@@ -43,7 +43,7 @@ public class SysNoticeController {
 
     @SaCheckPermission("system:notice:add")
     @Log(title = "通知公告", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysNotice sysNotice) {
         return R.ok(sysNoticeService.save(sysNotice));
@@ -51,7 +51,7 @@ public class SysNoticeController {
 
     @SaCheckPermission("system:notice:edit")
     @Log(title = "通知公告", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PostMapping("edit")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysNotice sysNotice) {
         return R.ok(sysNoticeService.updateById(sysNotice));
@@ -59,7 +59,7 @@ public class SysNoticeController {
 
     @SaCheckPermission("system:notice:remove")
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @PostMapping
+    @DeleteMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysNoticeService.removeByIds(ids));

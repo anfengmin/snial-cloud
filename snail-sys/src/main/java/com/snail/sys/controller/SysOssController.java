@@ -38,19 +38,19 @@ public class SysOssController {
         return R.ok(sysOssService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("add")
     @ApiOperation(value = "新增数据")
     public R<Boolean> add(SysOss sysOss) {
         return R.ok(sysOssService.save(sysOss));
     }
 
-    @PutMapping
+    @PutMapping("edit")
     @ApiOperation(value = "编辑数据")
     public R<Boolean> edit(SysOss sysOss) {
         return R.ok(sysOssService.updateById(sysOss));
     }
 
-    @PostMapping
+    @PostMapping("delete")
     @ApiOperation(value = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysOssService.removeByIds(ids));
