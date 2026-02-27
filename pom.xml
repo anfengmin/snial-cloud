@@ -171,6 +171,13 @@
                 <version>${satoken.version}</version>
             </dependency>
 
+            <!-- Sa-Token 整合 JWT -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+
 <!--            <dependency>-->
 <!--                <groupId>cn.dev33</groupId>-->
 <!--                <artifactId>sa-token-alone-redis</artifactId>-->

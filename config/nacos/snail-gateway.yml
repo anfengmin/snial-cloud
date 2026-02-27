@@ -45,7 +45,6 @@ spring:
         - id: snail-sys
           uri: lb://snail-sys
           predicates:
-            - Path=/auth/**
             - Path=/sys/**
           filters:
             # 验证码处理

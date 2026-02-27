@@ -20,6 +20,11 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
         <!-- SpringCloud Alibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -39,12 +44,13 @@
             <version>${satoken.version}</version>
         </dependency>
 
-        <!-- Sa-Token 整合 JWT -->
+        <!-- SpringCloud Loadbalancer -->
         <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-jwt</artifactId>
-            <version>${satoken.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
+
+
 
         <!-- Redis -->
         <dependency>

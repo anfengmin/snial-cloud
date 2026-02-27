@@ -1,6 +1,10 @@
 package com.snail.common.satoken.config;
 
+import cn.dev33.satoken.dao.SaTokenDao;
+import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
 import cn.dev33.satoken.stp.StpInterface;
+import cn.dev33.satoken.stp.StpLogic;
+import com.snail.common.satoken.core.dao.PlusSaTokenDao;
 import com.snail.common.satoken.core.service.SaPermissionImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +25,11 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 public class SaTokenConfiguration {
 
+
+    @Bean
+    public StpLogic getStpLogicJwt() {
+        return new StpLogicJwtForSimple();
+    }
     /**
      * 权限接口实现
      * <p>
@@ -32,5 +41,14 @@ public class SaTokenConfiguration {
     @Bean
     public StpInterface stpInterface() {
         return new SaPermissionImpl();
+    }
+
+
+    /**
+     * 自定义dao层存储
+     */
+    @Bean
+    public SaTokenDao saTokenDao() {
+        return new PlusSaTokenDao();
     }
 }
