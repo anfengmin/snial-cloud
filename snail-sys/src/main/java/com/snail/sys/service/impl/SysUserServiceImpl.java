@@ -10,7 +10,6 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.vo.SysUserVo;
@@ -23,9 +22,6 @@ import com.snail.sys.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
