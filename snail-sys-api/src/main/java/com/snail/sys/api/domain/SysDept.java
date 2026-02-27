@@ -1,13 +1,12 @@
-package com.snail.sys.domain;
-
-import java.util.Date;
+package com.snail.sys.api.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 部门(SysDept)实体类
@@ -16,10 +15,9 @@ import lombok.EqualsAndHashCode;
  * @since 2025-05-21 21:46:51
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_dept")
 @ApiModel(value = "部门")
-public class SysDept extends Model<SysDept> {
+public class SysDept implements Serializable {
 
     private static final long serialVersionUID = -96652055306476181L;
 
