@@ -1,6 +1,6 @@
 package com.snail.sys.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.snail.sys.api.domain.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2025-05-11 20:30:04
  */
 @Mapper
-public interface SysUserDao extends BaseMapper<SysUser> {
+public interface SysUserDao extends MPJBaseMapper<SysUser> {
 
 }
 
