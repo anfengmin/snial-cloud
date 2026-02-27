@@ -44,4 +44,14 @@ public interface SysUserRoleService extends IService<SysUserRole> {
      * <p>1.0 Initialization method </p>
      */
     List<SysUserRole> queryRoleListByUserId(Long userId);
+
+    /**
+     * 角色ID获取用户数量
+     *
+     * @param roleId roleId
+     * @return java.lang.Long
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    Long selectCount(Long roleId);
 }
