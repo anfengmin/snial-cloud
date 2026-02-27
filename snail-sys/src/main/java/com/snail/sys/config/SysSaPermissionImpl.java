@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.collection.CollUtil;
 import com.snail.common.satoken.core.service.SaPermissionImpl;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.domain.SysMenu;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysUserRole;
