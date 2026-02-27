@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
 
 import java.util.List;
@@ -121,5 +122,34 @@ public interface SysRoleService extends IService<SysRole> {
      */
     List<OptionVO> selectRoleAll();
 
+    /**
+     * 取消授权用户
+     *
+     * @param userRole userRole
+     * @return java.lang.boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean deleteAuthUser(SysUserRole userRole);
 
+    /**
+     * 批量取消授权用户
+     *
+     * @param roleId   roleId
+     * @param userIds userIds
+     * @return java.lang.boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean deleteAuthUsers(Long roleId, Long[] userIds);
+
+    /**
+     * 批量授权用户
+     *
+     * @param roleId   roleId
+     * @param userIds userIds
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void insertAuthUsers(Long roleId, Long[] userIds);
 }
