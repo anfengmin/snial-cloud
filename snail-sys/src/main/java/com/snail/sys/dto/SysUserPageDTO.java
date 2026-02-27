@@ -1,12 +1,16 @@
 package com.snail.sys.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.snail.common.core.domain.PageBaseEntity;
+import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户(SysUser)
@@ -55,7 +59,7 @@ public class SysUserPageDTO extends PageBaseEntity {
     private String passWord;
 
     @ApiModelProperty(value = "帐号状态（0:正常 1:停用）")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "删除标志（0:存在 1:删除）")
     private String deleted;
@@ -80,6 +84,27 @@ public class SysUserPageDTO extends PageBaseEntity {
 
     @ApiModelProperty(value = "备注")
     private String remark;
+
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "部门对象")
+    private SysDept dept;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "角色对象")
+    private List<SysRole> roles;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "角色组")
+    private Long[] roleIds;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "岗位组")
+    private Long[] postIds;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "数据权限 当前角色ID")
+    private Long roleId;
 
 
 }
