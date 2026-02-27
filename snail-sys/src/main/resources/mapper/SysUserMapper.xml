@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.snail.sys.dao.SysRoleDao">
+
+
+    <select id="selectAllocatedList" resultType="com.snail.sys.api.domain.SysUser">
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phone_no, u.status, u.create_time
+        from sys_user u
+                 left join sys_dept d on u.dept_id = d.dept_id
+                 left join sys_user_role sur on u.user_id = sur.user_id
+                 left join sys_role r on r.role_id = sur.role_id
+            ${ew.getCustomSqlSegment}
+    </select>
+</mapper>
