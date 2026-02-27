@@ -69,4 +69,23 @@ public interface SysRoleService extends IService<SysRole> {
      * <p>1.0 Initialization method </p>
      */
     boolean checkRoleKeyExists(SysRole role);
+
+    /**
+     * 修改角色信息
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean updateRole(SysRole role);
+
+    /**
+     * 清除角色在线用户缓存
+     *
+     * @param roleId roleId
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    void cleanOnlineUserByRole(Long roleId);
 }
