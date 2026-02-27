@@ -3,7 +3,7 @@ package com.snail.sys.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.satoken.vo.LoginUser;
+import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
