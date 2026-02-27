@@ -1,8 +1,6 @@
 package com.snail.common.satoken.core.service;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.satoken.vo.LoginUser;
 
 import java.util.ArrayList;
 import java.util.List;
