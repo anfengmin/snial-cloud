@@ -1,4 +1,4 @@
-package com.snail.common.satoken.vo;
+package com.snail.sys.api.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 登录用户信息
@@ -75,4 +77,16 @@ public class LoginUser implements Serializable {
 
     @ApiModelProperty(value = "操作系统")
     private String os;
+
+    @ApiModelProperty(value = "菜单权限")
+    private Set<String> menuPermission;
+
+    @ApiModelProperty(value = "角色权限")
+    private Set<String> rolePermission;
+
+    @ApiModelProperty(value = "角色对象")
+    private List<RoleDTO> roles;
+
+    @ApiModelProperty(value = "数据权限 当前角色ID")
+    private Long roleId;
 }
