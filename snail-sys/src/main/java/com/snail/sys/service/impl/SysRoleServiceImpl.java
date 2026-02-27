@@ -11,9 +11,11 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.dto.SysRolePageDTO;
+import com.snail.sys.service.SysRoleDeptService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysRoleService;
 import com.snail.sys.service.SysUserRoleService;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,8 +39,8 @@ import java.util.Optional;
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> implements SysRoleService {
 
     private final SysRoleMenuService sysRoleMenuService;
-
     private final SysUserRoleService sysUserRoleService;
+    private final SysRoleDeptService sysRoleDeptService;
 
     /**
      * 分页查询
@@ -211,4 +214,57 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
             }
         });
     }
+
+    /**
+     * 修改角色数据权限
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean authDataScope(SysRole role) {
+        // 修改角色信息
+        this.updateById(role);
+        // 删除角色与部门关联
+        sysRoleDeptService.deleteRoleDeptByRoleId(role.getId());
+        // 新增角色和部门信息（数据权限）
+        return sysRoleDeptService.insertRoleDept(role);
+    }
+
+    /**
+     * 修改角色状态
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public boolean updateRoleStatus(SysRole role) {
+        if (UserConstants.ROLE_DISABLE.equals(role.getStatus()) && sysUserRoleService.selectCount(role.getId()) > 0) {
+            throw new ServiceException("角色已分配，不能禁用!");
+        }
+        return this.updateById(role);
+    }
+
+    /**
+     * 查询所有角色
+     *
+     * @return List<OptionVO>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public List<OptionVO> selectRoleAll() {
+        List<SysRole> list = this.lambdaQuery()
+                .select(SysRole::getId, SysRole::getRoleName).orderByAsc(SysRole::getRoleSort)
+                .list();
+        return list.stream()
+                .map(role -> new OptionVO(role.getId(), role.getRoleName()))
+                .collect(Collectors.toList());
+    }
+
 }
