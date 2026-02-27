@@ -90,6 +90,11 @@
             <artifactId>snail-common-mybatis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.yulichang</groupId>
+            <artifactId>mybatis-plus-join-boot-starter</artifactId>
+        </dependency>
+
         <!-- Dynamic DataSource -->
         <dependency>
             <groupId>com.baomidou</groupId>
