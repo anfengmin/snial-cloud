@@ -19,7 +19,6 @@ import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.log.event.LoginInfoEvent;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
