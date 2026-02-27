@@ -1,7 +1,6 @@
 package com.snail.sys.service;
 
 
-import com.snail.common.satoken.vo.LoginUser;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
