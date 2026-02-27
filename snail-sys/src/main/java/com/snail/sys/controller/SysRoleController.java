@@ -47,6 +47,7 @@ public class SysRoleController {
     @SaCheckPermission("system:role:add")
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping
+    @ApiOperation(value = "新增角色")
     public R<Boolean> add(@Validated @RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);
         if (sysRoleService.checkRoleNameExists(role)) {
@@ -56,6 +57,25 @@ public class SysRoleController {
         }
         return R.ok(sysRoleService.save(role));
 
+    }
+
+    @SaCheckPermission("system:role:edit")
+    @Log(title = "角色管理", businessType = BusinessType.UPDATE)
+    @PutMapping
+    @ApiOperation(value = "编辑角色")
+    public R<Void> edit(@Validated @RequestBody SysRole role) {
+        sysRoleService.checkRoleAllowed(role);
+        sysRoleService.checkRoleDataScope(role.getId());
+        if (sysRoleService.checkRoleNameExists(role)) {
+            return R.fail("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
+        } else if (sysRoleService.checkRoleKeyExists(role)) {
+            return R.fail("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
+        }
+        if (sysRoleService.updateRole(role)) {
+            sysRoleService.cleanOnlineUserByRole(role.getId());
+            return R.ok();
+        }
+        return R.fail("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
     }
 }
 
