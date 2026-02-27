@@ -2,8 +2,11 @@ package com.snail.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.dto.SysRolePageDTO;
+
+import java.util.List;
 
 /**
  * 角色信息
@@ -88,4 +91,35 @@ public interface SysRoleService extends IService<SysRole> {
      * <p>1.0 Initialization method </p>
      */
     void cleanOnlineUserByRole(Long roleId);
+
+    /**
+     * 授权数据权限
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean authDataScope(SysRole role);
+
+    /**
+     * 修改角色状态
+     *
+     * @param role role
+     * @return boolean
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    boolean updateRoleStatus(SysRole role);
+
+    /**
+     * 获取所有角色
+     *
+     * @return java.util.List<com.snail.sys.vo.OptionVO>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    List<OptionVO> selectRoleAll();
+
+
 }
