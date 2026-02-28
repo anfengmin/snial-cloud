@@ -27,6 +27,6 @@ public interface SysRoleDao extends BaseMapper<SysRole> {
      * @param wrapper   查询条件
      * @return 对象列表
      */
-    Page<SysUser> selectAllocatedList(@Param("page") Page<SysNotice> page,@Param(Constants.WRAPPER) QueryWrapper<SysUser> wrapper);
+    Page<SysUser> selectAllocatedList(@Param("page") Page<SysNotice> page, @Param(Constants.WRAPPER) QueryWrapper<SysUser> wrapper);
 }
 

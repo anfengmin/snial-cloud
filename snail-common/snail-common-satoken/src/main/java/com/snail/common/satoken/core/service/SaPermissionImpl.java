@@ -1,6 +1,9 @@
 package com.snail.common.satoken.core.service;
 
 import cn.dev33.satoken.stp.StpInterface;
+import com.snail.common.core.enums.UserType;
+import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.api.domain.LoginUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,13 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        // 权限信息由各业务服务通过重写此方法从数据库获取
-        // 示例：调用权限服务获取用户权限
+        LoginUser loginUser = LoginUtils.getLoginUser();
+        UserType userType = UserType.getUserType(loginUser.getUserType());
+        if (userType == UserType.SYS_USER) {
+            return new ArrayList<>(loginUser.getMenuPermission());
+        } else if (userType == UserType.APP_USER) {
+            // 其他端 自行根据业务编写
+        }
         return new ArrayList<>();
     }
 
@@ -36,8 +44,13 @@ public class SaPermissionImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        // 权限信息由各业务服务通过重写此方法从数据库获取
-        // 示例：调用角色服务获取用户角色
+        LoginUser loginUser = LoginUtils.getLoginUser();
+        UserType userType = UserType.getUserType(loginUser.getUserType());
+        if (userType == UserType.SYS_USER) {
+            return new ArrayList<>(loginUser.getRolePermission());
+        } else if (userType == UserType.APP_USER) {
+            // 其他端 自行根据业务编写
+        }
         return new ArrayList<>();
     }
 }

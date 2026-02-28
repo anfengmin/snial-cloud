@@ -1,13 +1,13 @@
 package com.snail.sys.controller;
 
+import com.snail.common.core.utils.R;
+import com.snail.sys.service.SysOssConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.snail.sys.domain.SysOssConfig;
-import com.snail.sys.service.SysOssConfigService;
 import com.snail.sys.dto.SysOssConfigPageDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
-import com.snail.common.core.utils.R;
 
 import javax.annotation.Resource;
 import java.util.List;

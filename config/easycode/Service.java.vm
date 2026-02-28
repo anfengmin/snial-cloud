@@ -15,7 +15,7 @@ import $!{tableInfo.savePackageName}.domain.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.dto.$!{tableInfo.name}PageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
+import utils.core.common.com.snail.common.R;
 
 /**
  * $!{tableInfo.comment}

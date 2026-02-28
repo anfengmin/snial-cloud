@@ -1,5 +1,6 @@
 package com.snail.sys.dto;
 import java.util.Date;
+
 import com.snail.sys.domain.SysPost;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

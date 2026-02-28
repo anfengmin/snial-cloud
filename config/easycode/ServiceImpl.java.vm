@@ -16,7 +16,7 @@ import $!{tableInfo.savePackageName}.dao.$!{tableInfo.name}Dao;
 import $!{tableInfo.savePackageName}.dto.$!{tableInfo.name}PageDTO;
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
+import utils.core.common.com.snail.common.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 

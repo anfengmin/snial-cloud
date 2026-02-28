@@ -1,11 +1,11 @@
 package com.snail.sys.service;
 
+import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.dto.SysUserPostPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 
 /**
  * 用户与岗位关联表

@@ -2,13 +2,12 @@ package com.snail.common.redis.config;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snail.common.redis.config.properties.RedissonProperties;
 import com.snail.common.redis.handler.KeyPrefixHandler;
 import com.snail.common.redis.manager.PlusSpringCacheManager;
+import com.snail.common.redis.config.properties.RedissonProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;

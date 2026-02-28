@@ -33,6 +33,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- 安全服务 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- web服务 -->
             <dependency>
                 <groupId>com.snail</groupId>

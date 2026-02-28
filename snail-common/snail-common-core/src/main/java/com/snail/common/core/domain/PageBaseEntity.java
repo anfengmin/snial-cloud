@@ -1,6 +1,5 @@
 package com.snail.common.core.domain;
 
-import com.snail.common.core.domain.SearchBaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

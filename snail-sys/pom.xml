@@ -72,6 +72,11 @@
 
         <dependency>
             <groupId>com.snail</groupId>
+            <artifactId>snail-common-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.snail</groupId>
             <artifactId>snail-common-web</artifactId>
         </dependency>
 

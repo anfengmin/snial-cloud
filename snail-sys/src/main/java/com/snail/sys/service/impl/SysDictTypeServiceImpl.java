@@ -9,12 +9,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.redis.utils.CacheUtils;
+import com.snail.sys.service.SysDictTypeService;
 import com.snail.sys.dao.SysDictTypeDao;
 import com.snail.sys.domain.SysDictData;
 import com.snail.sys.domain.SysDictType;
 import com.snail.sys.dto.SysDictTypePageDTO;
 import com.snail.sys.service.SysDictDataService;
-import com.snail.sys.service.SysDictTypeService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

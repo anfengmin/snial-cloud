@@ -2,9 +2,8 @@ package com.snail.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.snail.sys.domain.SysConfig;
 import com.snail.sys.dto.SysConfigPageDTO;
-
+import com.snail.sys.domain.SysConfig;
 
 
 /**

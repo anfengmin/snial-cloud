@@ -1,11 +1,9 @@
 package com.snail.sys.service.impl;
 
-import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.constant.UserConstants;
+import com.snail.sys.service.SysDictDataService;
 import com.snail.sys.domain.SysDictData;
 import com.snail.sys.dao.SysDictDataDao;
-import com.snail.sys.service.SysDictDataService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 

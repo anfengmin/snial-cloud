@@ -1,10 +1,10 @@
 package com.snail.sys.service;
 
+import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysOss;
 import com.snail.sys.dto.SysOssPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 
 /**
  * OSS对象存储

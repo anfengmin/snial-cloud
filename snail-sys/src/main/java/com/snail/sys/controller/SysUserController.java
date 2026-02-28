@@ -1,19 +1,18 @@
 package com.snail.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
-import com.snail.common.log.annotation.Log;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.service.SysDeptService;
-import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
+import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
+import com.snail.sys.vo.SysUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,12 @@
 package com.snail.sys.service.impl;
 
+import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.domain.SysRoleDept;
 import com.snail.sys.dao.SysRoleDeptDao;
 import com.snail.sys.dto.SysRoleDeptPageDTO;
 import com.snail.sys.service.SysRoleDeptService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;

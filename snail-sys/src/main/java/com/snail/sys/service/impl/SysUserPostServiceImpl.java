@@ -1,12 +1,12 @@
 package com.snail.sys.service.impl;
 
+import com.snail.common.core.utils.R;
+import com.snail.sys.service.SysUserPostService;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.dao.SysUserPostDao;
 import com.snail.sys.dto.SysUserPostPageDTO;
-import com.snail.sys.service.SysUserPostService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;

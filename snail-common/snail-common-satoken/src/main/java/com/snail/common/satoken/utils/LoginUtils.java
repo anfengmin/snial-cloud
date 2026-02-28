@@ -6,6 +6,7 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import com.snail.common.core.enums.UserType;
 import com.snail.sys.api.domain.LoginUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -55,32 +56,20 @@ public class LoginUtils {
 
     /**
      * 获取当前登录用户（多级缓存）
-     * <p>
-     * 优先从ThreadLocal获取，再从Session获取
      *
      * @return 登录用户信息
      */
     public static LoginUser getLoginUser() {
-        // 1. 先从ThreadLocal存储获取（最高优先级）
         LoginUser loginUser = (LoginUser) SaHolder.getStorage().get(LOGIN_USER_KEY);
         if (loginUser != null) {
             return loginUser;
         }
-
-        // 2. 从Session获取
-        try {
-            Object sessionObj = StpUtil.getTokenSession();
-            if (sessionObj != null) {
-                loginUser = (LoginUser) StpUtil.getTokenSession().get(LOGIN_USER_KEY);
-                if (loginUser != null) {
-                    // 存入ThreadLocal缓存
-                    SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
-                }
-            }
-        } catch (Exception e) {
-            // 忽略异常
+        SaSession session = StpUtil.getTokenSession();
+        if (ObjectUtil.isNull(session)) {
+            return null;
         }
-
+        loginUser = (LoginUser) session.get(LOGIN_USER_KEY);
+        SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
         return loginUser;
     }
 
@@ -103,16 +92,9 @@ public class LoginUtils {
     public static Long getUserId() {
         Long userId;
         try {
-            // 1. 先从ThreadLocal获取
             userId = Convert.toLong(SaHolder.getStorage().get(USER_KEY));
             if (ObjectUtil.isNull(userId)) {
-                // 2. 从Token extra中获取
-                Object extra = StpUtil.getExtra(USER_KEY);
-                if (extra != null) {
-                    userId = Convert.toLong(extra);
-                }
-            }
-            if (ObjectUtil.isNotNull(userId)) {
+                userId = Convert.toLong(StpUtil.getExtra(USER_KEY));
                 SaHolder.getStorage().set(USER_KEY, userId);
             }
         } catch (Exception e) {
@@ -156,9 +138,9 @@ public class LoginUtils {
      *
      * @return 用户类型
      */
-    public static String getUserType() {
-        LoginUser loginUser = getLoginUser();
-        return loginUser != null ? loginUser.getUserType() : null;
+    public static UserType getUserType() {
+        String loginId = StpUtil.getLoginIdAsString();
+        return UserType.getUserType(loginId);
     }
 
     /**

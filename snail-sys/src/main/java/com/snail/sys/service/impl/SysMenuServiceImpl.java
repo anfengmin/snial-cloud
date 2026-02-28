@@ -13,9 +13,9 @@ import com.snail.sys.domain.SysMenu;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysMenuPageDTO;
-import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysUserRoleService;
+import com.snail.sys.service.SysMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> implements SysMenuService {
 
     private final SysUserRoleService sysUserRoleService;
-    private final SysRoleMenuService  sysRoleMenuService;
+    private final SysRoleMenuService sysRoleMenuService;
 
     /**
      * 分页查询

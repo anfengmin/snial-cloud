@@ -1,9 +1,9 @@
 package com.snail.gateway.handler;
 
+import com.snail.common.core.utils.R;
 import com.snail.gateway.service.ValidateCodeService;
 import com.snail.gateway.vo.CaptchaVo;
 import com.snail.common.core.exception.CaptchaException;
-import com.snail.common.core.utils.R;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 验证码获取

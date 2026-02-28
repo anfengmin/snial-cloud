@@ -1,11 +1,11 @@
 package com.snail.sys.service.impl;
 
+import com.snail.common.core.utils.R;
+import com.snail.sys.service.SysOssConfigService;
 import com.snail.sys.domain.SysOssConfig;
 import com.snail.sys.dao.SysOssConfigDao;
 import com.snail.sys.dto.SysOssConfigPageDTO;
-import com.snail.sys.service.SysOssConfigService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.snail.common.core.utils.R;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
