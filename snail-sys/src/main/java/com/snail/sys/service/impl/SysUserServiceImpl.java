@@ -88,22 +88,25 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     private SysUser selectUserByUserName(SysUser user) {
         MPJLambdaWrapper<SysUser> wrapper = new MPJLambdaWrapper<SysUser>()
-                .distinct()
-                // 主表用户字段
-                .selectAll(SysUser.class)
-                // 关联部门、角色字段，自动映射到 SysUser.dept、SysUser.roles
-                .selectAll(SysDept.class)
-                .selectAll(SysRole.class)
+//                .distinct()
+                .selectAll(SysUser.class) // 查询用户表所有字段
+                // 1. 映射一对一：部门 (SysUser.dept)
+                .selectAssociation(SysDept.class, SysUser::getDept)
+                // 2. 映射一对多：角色 (SysUser.roles)
+                .selectCollection(SysRole.class, SysUser::getRoles)
+                // 连表逻辑保持不变
                 .leftJoin(SysDept.class, SysDept::getId, SysUser::getDeptId)
                 .leftJoin(SysUserRole.class, SysUserRole::getUserId, SysUser::getId)
                 .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
                 .eq(SysUser::getUserCode, user.getUserCode());
 
-        List<SysUserRole> sysUserRoles = sysUserRoleService.queryRoleListByUserId(user.getId());
-        SysDept sysDept = sysDeptService.queryDeptByDeptId(user.getDeptId());
+
         // 一个用户可能有多个角色，MPJ 会自动将多条记录折叠到 SysUser.roles 集合中
         List<SysUser> list = baseMapper.selectJoinList(SysUser.class, wrapper);
+
+//        List<SysUserRole> sysUserRoles = sysUserRoleService.queryRoleListByUserId(user.getId());
+//        SysDept sysDept = sysDeptService.queryDeptByDeptId(user.getDeptId());
         return CollUtil.isNotEmpty(list) ? list.get(0) : null;
     }
 
