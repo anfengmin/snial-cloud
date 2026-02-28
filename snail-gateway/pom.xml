@@ -44,6 +44,13 @@
             <version>${satoken.version}</version>
         </dependency>
 
+        <!-- Sa-Token 整合 JWT（网关需要解析JWT token） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-jwt</artifactId>
+            <version>${satoken.version}</version>
+        </dependency>
+
         <!-- SpringCloud Loadbalancer -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
