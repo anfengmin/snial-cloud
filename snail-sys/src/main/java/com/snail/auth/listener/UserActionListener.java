@@ -7,7 +7,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.common.core.constant.CacheConstants;
-import com.snail.common.core.enums.UserType;
 import com.snail.common.core.utils.ServletUtils;
 import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.redis.utils.RedisUtils;
@@ -44,32 +43,29 @@ public class UserActionListener implements SaTokenListener {
      */
     @Override
     public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginParameter loginParameter) {
-        UserType userType = UserType.getUserType(loginId.toString());
-        if (userType == UserType.SYS_USER) {
-            UserAgent userAgent = UserAgentUtil.parse(ServletUtils.getRequest().getHeader("User-Agent"));
-            String ip = ServletUtils.getClientIP();
-            LoginUser user = LoginUtils.getLoginUser();
-            SysUserOnline userOnline = new SysUserOnline();
-            userOnline.setIpaddr(ip);
-            userOnline.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
-            userOnline.setBrowser(userAgent.getBrowser().getName());
-            userOnline.setOs(userAgent.getOs().getName());
-            userOnline.setLoginTime(System.currentTimeMillis());
-            userOnline.setTokenId(tokenValue);
-            userOnline.setUserName(user.getUserName());
-            userOnline.setUserCode(user.getUserCode());
-            if (ObjectUtil.isNotNull(user.getDeptName())) {
-                userOnline.setDeptName(user.getDeptName());
-            }
-            if(tokenConfig.getTimeout() == -1) {
-                RedisUtils.setCacheObject(CacheConstants.ONLINE_TOKEN_KEY + tokenValue, userOnline);
-            } else {
-                RedisUtils.setCacheObject(CacheConstants.ONLINE_TOKEN_KEY + tokenValue, userOnline, Duration.ofSeconds(tokenConfig.getTimeout()));
-            }
-            log.info("user doLogin, useId:{}, token:{}", loginId, tokenValue);
-        } else if (userType == UserType.APP_USER) {
-            // app端 自行根据业务编写
+        // 注意：loginId 当前实现使用的是 userCode（如 admin），不包含 sys_user/app_user 前缀，
+        // 因此不能从 loginId 解析 UserType。应以登录态中的 LoginUser.userType 为准，并提供兜底。
+        UserAgent userAgent = UserAgentUtil.parse(ServletUtils.getRequest().getHeader("User-Agent"));
+        String ip = ServletUtils.getClientIP();
+        LoginUser user = LoginUtils.getLoginUser();
+        SysUserOnline userOnline = new SysUserOnline();
+        userOnline.setIpaddr(ip);
+        userOnline.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+        userOnline.setBrowser(userAgent.getBrowser().getName());
+        userOnline.setOs(userAgent.getOs().getName());
+        userOnline.setLoginTime(System.currentTimeMillis());
+        userOnline.setTokenId(tokenValue);
+        userOnline.setUserName(user.getUserName());
+        userOnline.setUserCode(user.getUserCode());
+        if (ObjectUtil.isNotNull(user.getDeptName())) {
+            userOnline.setDeptName(user.getDeptName());
         }
+        if(tokenConfig.getTimeout() == -1) {
+            RedisUtils.setCacheObject(CacheConstants.ONLINE_TOKEN_KEY + tokenValue, userOnline);
+        } else {
+            RedisUtils.setCacheObject(CacheConstants.ONLINE_TOKEN_KEY + tokenValue, userOnline, Duration.ofSeconds(tokenConfig.getTimeout()));
+        }
+        log.info("user doLogin, useId:{}, token:{}", loginId, tokenValue);
     }
 
     /**

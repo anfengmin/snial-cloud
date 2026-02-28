@@ -7,20 +7,23 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.snail.common.core.utils.R;
+import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.dao.SysMenuDao;
 import com.snail.sys.domain.SysMenu;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysMenuPageDTO;
+import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysUserRoleService;
-import com.snail.sys.service.SysMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -154,6 +157,25 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
     @Override
     public boolean hasChildByMenuIds(List<Long> ids) {
         return this.lambdaQuery().in(SysMenu::getParentId, ids).exists();
+    }
+
+    @Override
+    public Set<String> selectMenuPermsByUserId(Long userId) {
+        MPJLambdaWrapper<SysMenu> wrapper = new MPJLambdaWrapper<SysMenu>()
+                .distinct()
+                .select(SysMenu::getPerms)
+                .leftJoin(SysRoleMenu.class, SysRoleMenu::getMenuId, SysMenu::getId)
+                .leftJoin(SysUserRole.class, SysUserRole::getRoleId, SysRoleMenu::getRoleId)
+                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
+                .eq(SysMenu::getStatus, 0)
+                .eq(SysRole::getStatus, 0)
+                .eq(SysUserRole::getUserId, userId);
+
+        List<SysMenu> menus = baseMapper.selectJoinList(SysMenu.class, wrapper);
+        return menus.stream()
+                .map(SysMenu::getPerms)
+                .filter(StrUtil::isNotBlank)
+                .collect(Collectors.toSet());
     }
 
 }

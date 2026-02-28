@@ -95,7 +95,6 @@ public class SysUser extends BaseEntity {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-
     @ApiModelProperty(value = "部门对象")
     @TableField(exist = false)
     private SysDept dept;
@@ -111,6 +110,11 @@ public class SysUser extends BaseEntity {
     @ApiModelProperty(value = "岗位组")
     @TableField(exist = false)
     private Long[] postIds;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "数据权限 当前角色ID")
+    private Long roleId;
+
     /**
      * 是否管理员
      */

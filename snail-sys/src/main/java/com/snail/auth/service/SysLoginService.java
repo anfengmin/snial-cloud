@@ -66,7 +66,7 @@ public class SysLoginService {
      */
     public String login(String userCode, String passWord) {
         // 使用buildLoginUser获取完整的用户信息（包含权限）
-        LoginUser userInfo = sysUserService.buildLoginUser(userCode);
+        LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
         LoginUtils.login(userInfo);
         recordLoginInfo(userInfo.getUserCode(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));

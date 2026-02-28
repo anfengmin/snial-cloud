@@ -2,12 +2,13 @@ package com.snail.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
-import com.snail.sys.api.domain.SysRole;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色信息
@@ -152,4 +153,14 @@ public interface SysRoleService extends IService<SysRole> {
      * <p>1.0 Initialization method </p>
      */
     void insertAuthUsers(Long roleId, Long[] userIds);
+
+    /**
+     * 获取角色权限
+     *
+     * @param id id
+     * @return java.util.Set<java.lang.String>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    Set<String> selectRolePermissionByUserId(Long id);
 }

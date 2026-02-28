@@ -12,16 +12,11 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.utils.R;
 import com.snail.common.core.exception.user.UserException;
-import com.snail.sys.api.domain.SysDept;
-import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysRole;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.domain.*;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserPageDTO;
-import com.snail.sys.service.SysUserPostService;
-import com.snail.sys.service.SysUserRoleService;
-import com.snail.sys.service.SysUserService;
+import com.snail.sys.service.*;
 import com.snail.sys.vo.SysUserVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +40,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     private final SysUserRoleService sysUserRoleService;
     private final SysUserPostService sysUserPostService;
+    private final SysPermissionService sysPermissionService;
+    private final SysDeptService sysDeptService;
 
     /**
      * 分页查询
@@ -75,6 +72,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
      */
     @Override
     public LoginUser getUserInfo(String userCode) {
+        // 使用 MPJ 关联查询用户、部门、角色信息
         SysUser sysUserInfo = this.lambdaQuery().eq(SysUser::getUserCode, userCode).one();
         if (ObjectUtil.isEmpty(sysUserInfo)) {
             throw new UserException("user.not.exists", userCode);
@@ -82,10 +80,31 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         if (UserConstants.USER_DISABLE.equals(sysUserInfo.getStatus())) {
             throw new UserException("user.blocked", userCode);
         }
-        LoginUser loginUser = BeanUtil.copyProperties(sysUserInfo, LoginUser.class);
+//        LoginUser loginUser = BeanUtil.copyProperties(sysUserInfo, LoginUser.class);
 
         log.info("userInfo:{}", sysUserInfo);
-        return loginUser;
+        return buildLoginUser(sysUserInfo);
+    }
+
+    private SysUser selectUserByUserName(SysUser user) {
+        MPJLambdaWrapper<SysUser> wrapper = new MPJLambdaWrapper<SysUser>()
+                .distinct()
+                // 主表用户字段
+                .selectAll(SysUser.class)
+                // 关联部门、角色字段，自动映射到 SysUser.dept、SysUser.roles
+                .selectAll(SysDept.class)
+                .selectAll(SysRole.class)
+                .leftJoin(SysDept.class, SysDept::getId, SysUser::getDeptId)
+                .leftJoin(SysUserRole.class, SysUserRole::getUserId, SysUser::getId)
+                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
+                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
+                .eq(SysUser::getUserCode, user.getUserCode());
+
+        List<SysUserRole> sysUserRoles = sysUserRoleService.queryRoleListByUserId(user.getId());
+        SysDept sysDept = sysDeptService.queryDeptByDeptId(user.getDeptId());
+        // 一个用户可能有多个角色，MPJ 会自动将多条记录折叠到 SysUser.roles 集合中
+        List<SysUser> list = baseMapper.selectJoinList(SysUser.class, wrapper);
+        return CollUtil.isNotEmpty(list) ? list.get(0) : null;
     }
 
     /**
@@ -95,10 +114,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
      * @return 登录用户信息
      */
     @Override
-    public LoginUser buildLoginUser(String userCode) {
+    public LoginUser buildLoginUser(SysUser user) {
         // 权限信息现在通过 SysSaPermissionImpl 从数据库动态获取
-        // 此方法保留用于兼容，返回基本的用户信息
-        return getUserInfo(userCode);
+        LoginUser loginUser = new LoginUser();
+        loginUser.setId(user.getId());
+        loginUser.setDeptId(user.getDeptId());
+        loginUser.setUserCode(user.getUserCode());
+        loginUser.setUserName(user.getUserName());
+        loginUser.setPassWord(user.getPassWord());
+        loginUser.setUserType(user.getUserType());
+        loginUser.setMenuPermission(sysPermissionService.getMenuPermission(user));
+        loginUser.setRolePermission(sysPermissionService.getRolePermission(user));
+        loginUser.setDeptName(ObjectUtil.isNull(user.getDept()) ? StrUtil.EMPTY : user.getDept().getDeptName());
+        List<RoleDTO> roles = BeanUtil.copyToList(user.getRoles(), RoleDTO.class);
+        loginUser.setRoles(roles);
+        return loginUser;
     }
 
     /**

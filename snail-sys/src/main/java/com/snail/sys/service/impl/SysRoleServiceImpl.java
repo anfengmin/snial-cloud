@@ -7,18 +7,21 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.domain.SysDept;
+import com.snail.sys.api.domain.SysRole;
+import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.api.vo.OptionVO;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
 import com.snail.sys.service.SysRoleDeptService;
-import com.snail.sys.service.SysRoleService;
-import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.service.SysRoleMenuService;
+import com.snail.sys.service.SysRoleService;
 import com.snail.sys.service.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -325,6 +329,23 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
                 .filter(CollUtil::isNotEmpty)
                 .ifPresent(l -> cleanOnlineUserByRole(roleId));
 
+    }
+
+    @Override
+    public Set<String> selectRolePermissionByUserId(Long userId) {
+        MPJLambdaWrapper<SysRole> wrapper = new MPJLambdaWrapper<SysRole>()
+                .distinct()
+                .select(SysRole::getRoleKey)
+                .leftJoin(SysUserRole.class, SysUserRole::getRoleId, SysRole::getId)
+                .leftJoin(SysUser.class, SysUser::getId, SysUserRole::getUserId)
+                .leftJoin(SysDept.class, SysDept::getId, SysUser::getDeptId)
+                .eq(SysUser::getId, userId)
+                .ne(SysRole::getStatus, UserConstants.ROLE_DISABLE);
+
+        List<SysRole> roleList = baseMapper.selectJoinList(SysRole.class, wrapper);
+        return roleList.stream()
+                .map(SysRole::getRoleKey)
+                .collect(Collectors.toSet());
     }
 
 }

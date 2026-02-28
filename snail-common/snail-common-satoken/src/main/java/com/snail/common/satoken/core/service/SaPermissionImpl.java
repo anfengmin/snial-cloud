@@ -1,7 +1,6 @@
 package com.snail.common.satoken.core.service;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.snail.common.core.enums.UserType;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
 
@@ -28,13 +27,11 @@ public class SaPermissionImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         LoginUser loginUser = LoginUtils.getLoginUser();
-        UserType userType = UserType.getUserType(loginUser.getUserType());
-        if (userType == UserType.SYS_USER) {
-            return new ArrayList<>(loginUser.getMenuPermission());
-        } else if (userType == UserType.APP_USER) {
-            // 其他端 自行根据业务编写
+        if (loginUser == null || loginUser.getMenuPermission() == null) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
+        return new ArrayList<>(loginUser.getMenuPermission());
+
     }
 
     /**
@@ -45,12 +42,9 @@ public class SaPermissionImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         LoginUser loginUser = LoginUtils.getLoginUser();
-        UserType userType = UserType.getUserType(loginUser.getUserType());
-        if (userType == UserType.SYS_USER) {
-            return new ArrayList<>(loginUser.getRolePermission());
-        } else if (userType == UserType.APP_USER) {
-            // 其他端 自行根据业务编写
+        if (loginUser == null || loginUser.getRolePermission() == null) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
+        return new ArrayList<>(loginUser.getRolePermission());
     }
 }

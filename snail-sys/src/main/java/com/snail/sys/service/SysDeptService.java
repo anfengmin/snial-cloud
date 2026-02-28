@@ -79,4 +79,14 @@ public interface SysDeptService extends IService<SysDept> {
      * <p>1.0 Initialization method </p>
      */
     R<Boolean> updateDept(SysDept dept);
+
+    /**
+     * 根据部门ID查询信息
+     *
+     * @param deptId deptId
+     * @return com.snail.sys.api.domain.SysDept
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    SysDept queryDeptByDeptId(Long deptId);
 }

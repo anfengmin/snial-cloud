@@ -55,10 +55,10 @@ public interface SysUserService extends IService<SysUser> {
     /**
      * 构建登录用户信息（包含权限）
      *
-     * @param userCode 用户账号
+     * @param user 用户账号
      * @return 登录用户信息
      */
-    LoginUser buildLoginUser(String userCode);
+    LoginUser buildLoginUser(SysUser user);
 
     /**
      * getInfo

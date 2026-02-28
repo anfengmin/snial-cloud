@@ -165,6 +165,19 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
     }
 
     /**
+     * 根据ID查询部门
+     *
+     * @param deptId deptId
+     * @return com.snail.sys.api.domain.SysDept
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    @Override
+    public SysDept queryDeptByDeptId(Long deptId) {
+        return this.lambdaQuery().eq(SysDept::getId, deptId).one();
+    }
+
+    /**
      * 修改该部门的父级部门状态
      *
      * @param dept 当前部门

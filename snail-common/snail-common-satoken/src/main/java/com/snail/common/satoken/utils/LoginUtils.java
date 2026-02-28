@@ -46,12 +46,21 @@ public class LoginUtils {
      * @param loginUser 登录用户信息
      */
     public static void login(LoginUser loginUser) {
+        // 1. 当前请求范围内缓存，方便后续代码直接从 SaHolder 读取
         SaStorage storage = SaHolder.getStorage();
         storage.set(LOGIN_USER_KEY, loginUser);
         storage.set(USER_KEY, loginUser.getId());
 
-        // 使用userCode作为登录ID
+        // 2. 使用 userCode 作为登录 ID 完成登录
         StpUtil.login(loginUser.getUserCode());
+
+        // 3. 将登录用户写入 Token-Session（Redis），用于后续请求反查
+        //    注意：之前只写在 SaStorage 中，请求结束后就丢了，导致下次请求拿不到 loginUser
+        SaSession tokenSession = StpUtil.getTokenSession();
+        if (tokenSession != null) {
+            tokenSession.set(LOGIN_USER_KEY, loginUser);
+            tokenSession.set(USER_KEY, loginUser.getId());
+        }
     }
 
     /**
@@ -139,8 +148,22 @@ public class LoginUtils {
      * @return 用户类型
      */
     public static UserType getUserType() {
-        String loginId = StpUtil.getLoginIdAsString();
-        return UserType.getUserType(loginId);
+        // 优先从当前登录态的 LoginUser.userType 获取（更可靠）
+        try {
+            LoginUser loginUser = getLoginUser();
+            if (loginUser != null && ObjectUtil.isNotEmpty(loginUser.getUserType())) {
+                return UserType.getUserType(loginUser.getUserType());
+            }
+        } catch (Exception ignored) {
+            // ignore
+        }
+        // 兼容兜底：历史实现可能将 userType 编码进 loginId
+        try {
+            String loginId = StpUtil.getLoginIdAsString();
+            return UserType.getUserType(loginId);
+        } catch (Exception ignored) {
+            return UserType.SYS_USER;
+        }
     }
 
     /**

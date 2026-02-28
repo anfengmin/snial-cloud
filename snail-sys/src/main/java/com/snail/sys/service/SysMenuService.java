@@ -8,6 +8,7 @@ import com.snail.sys.domain.SysMenu;
 import com.snail.sys.dto.SysMenuPageDTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单权限
@@ -75,4 +76,14 @@ public interface SysMenuService extends IService<SysMenu> {
      * <p>1.0 Initialization method </p>
      */
     boolean hasChildByMenuIds(List<Long> ids);
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId userId
+     * @return java.util.Set<java.lang.String>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    Set<String> selectMenuPermsByUserId(Long userId);
 }
