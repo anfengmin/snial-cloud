@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
  * 转发认证过滤器（内部服务外网隔离）
  * <p>
  * 下游服务若开启 sa-token.check-same-token=true，则需要网关为转发请求追加 Same-Token。
+ * @author ansir
  */
 @Component
 public class ForwardAuthFilter implements GlobalFilter, Ordered {
