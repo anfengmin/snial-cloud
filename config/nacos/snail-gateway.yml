@@ -42,6 +42,8 @@ security:
       - /code
       - /auth/logout
       - /auth/login
+      - /sys/auth/login
+      - /sys/auth/register
       - /auth/smsLogin
       - /auth/xcxLogin
       - /auth/register
