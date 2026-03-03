@@ -43,7 +43,7 @@ public class GlobalCorsFilter implements WebFilter, Ordered {
             headers.add("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
             headers.add("Access-Control-Expose-Headers", ALLOWED_EXPOSE);
             headers.add("Access-Control-Max-Age", MAX_AGE);
-//            headers.add("Access-Control-Allow-Credentials", "true");
+            headers.add("Access-Control-Allow-Credentials", "true");
             if (request.getMethod() == HttpMethod.OPTIONS) {
                 response.setStatusCode(HttpStatus.OK);
                 return Mono.empty();
