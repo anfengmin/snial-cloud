@@ -1,7 +1,7 @@
 package com.snail.sys.dao;
 
+import com.github.yulichang.base.MPJBaseMapper;
 import com.snail.sys.api.domain.SysDept;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2025-05-21 21:30:47
  */
 @Mapper
-public interface SysDeptDao extends BaseMapper<SysDept> {
+public interface SysDeptDao extends MPJBaseMapper<SysDept> {
 
 }
 
