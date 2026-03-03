@@ -51,8 +51,8 @@ public class OauthController {
         String accessToken = sysLoginService.login(form.getUserCode(), form.getPassWord());
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<>();
-        String token = Constants.BEARER + accessToken;
-        rspMap.put(Constants.ACCESS_TOKEN, token);
+//        String token = Constants.BEARER + accessToken;
+        rspMap.put(Constants.ACCESS_TOKEN, accessToken);
         return R.ok(rspMap);
     }
 
