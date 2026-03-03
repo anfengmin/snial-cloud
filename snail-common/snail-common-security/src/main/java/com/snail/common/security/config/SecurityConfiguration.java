@@ -1,4 +1,4 @@
-package com.snail.common.security;
+package com.snail.common.security.config;
 
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.filter.SaServletFilter;
@@ -7,7 +7,6 @@ import cn.dev33.satoken.same.SaSameUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.snail.common.core.constant.HttpStatus;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,7 +24,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @since 1.0
  */
 @AutoConfiguration
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfiguration implements WebMvcConfigurer {
 
     /**
