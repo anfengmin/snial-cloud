@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Api(tags = "操作日志记录")
 @RestController
-@RequestMapping("/v1/sysOperateLog")
+@RequestMapping("/sysOperateLog")
 public class SysOperateLogController {
     
     @Resource
