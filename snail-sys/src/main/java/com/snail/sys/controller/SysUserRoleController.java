@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "用户和角色关联表")
 @RestController
-@RequestMapping("/v1/sysUserRole")
+@RequestMapping("/sysUserRole")
 public class SysUserRoleController {
 
     @Resource
