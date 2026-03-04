@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "OSS对象存储")
 @RestController
-@RequestMapping("/v1/sysOss")
+@RequestMapping("/sysOss")
 public class SysOssController {
 
     @Resource
