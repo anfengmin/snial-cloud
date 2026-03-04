@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "对象存储配置表")
 @RestController
-@RequestMapping("/v1/sysOssConfig")
+@RequestMapping("/sysOssConfig")
 public class SysOssConfigController {
 
     @Resource
