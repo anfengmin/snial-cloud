@@ -101,15 +101,36 @@ public class LoginUtils {
     public static Long getUserId() {
         Long userId;
         try {
+            // 1. 优先从当前请求的 SaStorage 获取（登录时写入）
             userId = Convert.toLong(SaHolder.getStorage().get(USER_KEY));
-            if (ObjectUtil.isNull(userId)) {
-                userId = Convert.toLong(StpUtil.getExtra(USER_KEY));
-                SaHolder.getStorage().set(USER_KEY, userId);
+            if (ObjectUtil.isNotNull(userId)) {
+                return userId;
+            }
+
+            // 2. 从 SaSession（Redis）中获取 userId（登录时第62行写入的）
+            SaSession session = StpUtil.getTokenSession();
+            if (session != null) {
+                userId = Convert.toLong(session.get(USER_KEY));
+                if (ObjectUtil.isNotNull(userId)) {
+                    // 缓存到 SaStorage，避免后续重复查询
+                    SaHolder.getStorage().set(USER_KEY, userId);
+                    return userId;
+                }
+            }
+
+            // 3. 尝试从 Token 额外数据获取（需要在登录时调用 StpUtil.setExtra）
+            Object extra = StpUtil.getExtra(USER_KEY);
+            if (extra != null) {
+                userId = Convert.toLong(extra);
+                if (ObjectUtil.isNotNull(userId)) {
+                    SaHolder.getStorage().set(USER_KEY, userId);
+                    return userId;
+                }
             }
         } catch (Exception e) {
-            return null;
+            // 忽略所有异常，返回 null
         }
-        return userId;
+        return null;
     }
 
     /**
