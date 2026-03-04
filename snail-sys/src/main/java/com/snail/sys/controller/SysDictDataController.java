@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Api(tags = "字典数据")
 @RestController
-@RequestMapping("/v1/dict/data")
+@RequestMapping("/dict/data")
 public class SysDictDataController {
 
     @Resource
