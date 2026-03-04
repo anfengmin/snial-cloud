@@ -39,6 +39,8 @@ spring:
     deserialization:
       # 允许对象忽略json中不存在的属性
       fail_on_unknown_properties: false
+      # 将空数组视为 null
+      accept_empty_array_as_null_object: true
   # Redis配置
   redis:
     host: 127.0.0.1
