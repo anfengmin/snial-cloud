@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "角色和部门关联")
 @RestController
-@RequestMapping("/v1/sysRoleDept")
+@RequestMapping("/sysRoleDept")
 public class SysRoleDeptController {
 
     @Resource
