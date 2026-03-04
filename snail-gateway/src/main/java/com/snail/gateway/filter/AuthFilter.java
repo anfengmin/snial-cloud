@@ -38,7 +38,7 @@ public class AuthFilter {
                             });
                 })
                 // 异常处理方法：每次setAuth发生异常时进入
-                .setError(e -> SaResult.error("认证失败1，无法访问系统资源").setCode(HttpStatus.UNAUTHORIZED));
+                .setError(e -> SaResult.error("Gateway认证失败，无法访问系统资源").setCode(HttpStatus.UNAUTHORIZED));
 
     }
 }
