@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Api(tags = "系统访问记录")
 @RestController
-@RequestMapping("/v1/loginfo")
+@RequestMapping("/loginfo")
 public class SysLoginInfoController {
 
     @Resource
