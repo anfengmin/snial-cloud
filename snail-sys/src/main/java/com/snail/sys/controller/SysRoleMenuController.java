@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "角色和菜单关联")
 @RestController
-@RequestMapping("/v1/sysRoleMenu")
+@RequestMapping("/sysRoleMenu")
 public class SysRoleMenuController {
 
     @Resource
