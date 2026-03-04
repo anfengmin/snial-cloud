@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Api(tags = "参数配置表")
 @RequiredArgsConstructor
-@RequestMapping("/v1/sysConfig")
+@RequestMapping("/sysConfig")
 public class SysConfigController {
 
 
