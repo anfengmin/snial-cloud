@@ -1,6 +1,7 @@
 package com.snail.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.enums.BusinessType;
@@ -9,6 +10,7 @@ import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.vo.UserVO;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
@@ -31,7 +33,7 @@ import java.util.List;
 @Api(tags = "用户")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/sysUser")
+@RequestMapping("/sysUser")
 public class SysUserController {
 
     private final SysUserService sysUserService;
@@ -45,14 +47,15 @@ public class SysUserController {
     }
 
 
-    @GetMapping("getInfo")
+    @GetMapping("getUserInfo")
     @ApiOperation(value = "获取用户信息")
     public R<SysUserVo> getInfo() {
         LoginUser loginUser = LoginUtils.getLoginUser();
         assert loginUser != null;
         SysUser user = sysUserService.getById(loginUser.getId());
+        UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
         SysUserVo build = SysUserVo.builder()
-                .sysUser(user)
+                .user(userVO)
                 .rolePermission(loginUser.getRolePermission())
                 .menuPermission(loginUser.getMenuPermission())
                 .build();
