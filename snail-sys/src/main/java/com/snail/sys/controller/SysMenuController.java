@@ -26,7 +26,7 @@ import java.util.List;
 @Api(tags = "菜单权限")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/menu")
+@RequestMapping("/menu")
 public class SysMenuController {
 
     private final SysMenuService sysMenuService;
