@@ -26,7 +26,7 @@ import java.util.List;
 @Api(tags = "部门表")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/dept")
+@RequestMapping("/dept")
 public class SysDeptController {
 
     private final SysDeptService sysDeptService;
