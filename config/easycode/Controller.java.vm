@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Api(tags = "$!{tableInfo.comment}")
 @RestController
-@RequestMapping("/v1/$!tool.firstLowerCase($tableInfo.name)")
+@RequestMapping("/$!tool.firstLowerCase($tableInfo.name)")
 public class $!{tableName} {
 
 
