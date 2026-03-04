@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Api(tags = "岗位信息")
 @RestController
-@RequestMapping("/v1/sysPost")
+@RequestMapping("/sysPost")
 public class SysPostController {
     
     @Resource
