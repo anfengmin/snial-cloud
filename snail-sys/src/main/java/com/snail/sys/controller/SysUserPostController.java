@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "用户与岗位关联表")
 @RestController
-@RequestMapping("/v1/sysUserPost")
+@RequestMapping("/sysUserPost")
 public class SysUserPostController {
 
     @Resource
