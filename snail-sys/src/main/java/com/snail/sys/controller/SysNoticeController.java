@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Api(tags = "通知公告")
 @RestController
-@RequestMapping("/v1/sysNotice")
+@RequestMapping("/sysNotice")
 public class SysNoticeController {
     
     @Resource
