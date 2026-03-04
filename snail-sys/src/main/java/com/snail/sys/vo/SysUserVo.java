@@ -1,6 +1,6 @@
 package com.snail.sys.vo;
 
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.api.vo.UserVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ import java.util.Set;
 public class SysUserVo {
 
     @ApiModelProperty(value = "用户信息")
-    private SysUser sysUser;
+    private UserVO user;
 
     @ApiModelProperty(value = "菜单权限")
     private Set<String> menuPermission;
