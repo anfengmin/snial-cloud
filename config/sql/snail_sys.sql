@@ -137,6 +137,7 @@ create table sys_menu
     parent_id   bigint(20)   default 0 comment '父菜单ID',
     order_num   int(4)       default 0 comment '显示顺序',
     path        varchar(200) default '' comment '路由地址',
+    name_en     varchar(50)         null comment '英文',
     component   varchar(255) default null comment '组件路径',
     query_param varchar(255) default null comment '路由参数',
     is_frame    tinyint(1)   default 1 comment '是否为外链（0是 1否）',
