@@ -4,6 +4,8 @@ import com.github.yulichang.base.MPJBaseMapper;
 import com.snail.sys.domain.SysMenu;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 
 /**
  * 菜单权限表(SysMenu)表数据库访问层
