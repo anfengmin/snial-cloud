@@ -6,6 +6,8 @@ import cn.hutool.core.lang.tree.Tree;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.vo.RouterDataVO;
+import com.snail.sys.vo.RouterVO;
 import com.snail.sys.domain.SysMenu;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysMenuService;
@@ -106,7 +108,15 @@ public class SysMenuController {
         return R.ok(sysMenuService.removeBatchByIds(ids));
     }
 
-
+    @GetMapping("getRouters")
+    @ApiOperation(value = "获取路由信息")
+    public R<RouterDataVO> getRouters() {
+        Long userId = LoginUtils.getUserId();
+        List<RouterVO> menus = sysMenuService.selectMenuTreeByUserId(userId);
+        // 默认首页路由名称，可根据需要从配置或数据库中获取
+        RouterDataVO data = RouterDataVO.builder().home("home").routes(menus).build();
+        return R.ok(data);
+    }
 
 }
 
