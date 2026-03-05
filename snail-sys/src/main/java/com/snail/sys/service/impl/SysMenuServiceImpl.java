@@ -8,7 +8,9 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
+import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.dao.SysMenuDao;
 import com.snail.sys.domain.SysMenu;
@@ -18,10 +20,13 @@ import com.snail.sys.dto.SysMenuPageDTO;
 import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysUserRoleService;
+import com.snail.sys.vo.MetaVO;
+import com.snail.sys.vo.RouterVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -161,21 +166,105 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
 
     @Override
     public Set<String> selectMenuPermsByUserId(Long userId) {
-        MPJLambdaWrapper<SysMenu> wrapper = new MPJLambdaWrapper<SysMenu>()
-                .distinct()
-                .select(SysMenu::getPerms)
-                .leftJoin(SysRoleMenu.class, SysRoleMenu::getMenuId, SysMenu::getId)
-                .leftJoin(SysUserRole.class, SysUserRole::getRoleId, SysRoleMenu::getRoleId)
-                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
-                .eq(SysMenu::getStatus, 0)
-                .eq(SysRole::getStatus, 0)
-                .eq(SysUserRole::getUserId, userId);
-
-        List<SysMenu> menus = baseMapper.selectJoinList(SysMenu.class, wrapper);
+        List<SysMenu> menus = getSysMenusByUserId(userId);
         return menus.stream()
                 .map(SysMenu::getPerms)
                 .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId 用户ID
+     * @return 权限列表
+     */
+    private List<SysMenu> getSysMenusByUserId(Long userId) {
+        MPJLambdaWrapper<SysMenu> wrapper = new MPJLambdaWrapper<SysMenu>()
+                .distinct()
+                .leftJoin(SysRoleMenu.class, SysRoleMenu::getMenuId, SysMenu::getId)
+                .leftJoin(SysUserRole.class, SysUserRole::getRoleId, SysRoleMenu::getRoleId)
+                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
+                .eq(SysMenu::getStatus, UserConstants.MENU_NORMAL)
+                .eq(SysRole::getStatus, UserConstants.MENU_NORMAL)
+                .eq(SysUserRole::getUserId, userId)
+                .in(SysMenu::getMenuType, UserConstants.TYPE_MENU, UserConstants.TYPE_DIR);
+
+        List<SysMenu> menus = baseMapper.selectJoinList(SysMenu.class, wrapper);
+        return menus;
+    }
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId 用户ID
+     * @return 权限列表
+     */
+    @Override
+    public List<RouterVO> selectMenuTreeByUserId(Long userId) {
+        List<SysMenu> menus;
+        if (LoginUtils.isAdmin(userId)) {
+            menus = this.lambdaQuery()
+                    .eq(SysMenu::getStatus, UserConstants.MENU_NORMAL)
+                    .in(SysMenu::getMenuType, UserConstants.TYPE_MENU, UserConstants.TYPE_DIR)
+                    .orderByAsc(SysMenu::getParentId)
+                    .orderByAsc(SysMenu::getOrderNum)
+                    .list();
+        } else {
+            menus = getSysMenusByUserId(userId);
+        }
+
+        if (CollUtil.isEmpty(menus)) {
+            return Collections.emptyList();
+        }
+
+        // 递归构建路由树，从根节点（parentId = 0）开始
+        return buildRouters(menus, 0L);
+    }
+
+    /**
+     * 递归构建前端路由树
+     *
+     * @param menus    当前用户拥有的菜单集合
+     * @param parentId 父菜单ID
+     * @return 路由树
+     */
+    private List<RouterVO> buildRouters(List<SysMenu> menus, Long parentId) {
+        return menus.stream()
+                .filter(menu -> ObjectUtil.equal(menu.getParentId(), parentId))
+                .sorted(Comparator.comparing(SysMenu::getOrderNum))
+                .map(menu -> {
+                    RouterVO router = new RouterVO();
+                    router.setName(menu.getMenuName());
+                    router.setPath(menu.getPath());
+
+                    String component = menu.getComponent();
+                    // 目录默认使用 Layout 组件
+                    if (StrUtil.isBlank(component) && UserConstants.TYPE_DIR.equals(menu.getMenuType())) {
+                        component = UserConstants.LAYOUT;
+                    }
+                    router.setComponent(component);
+
+                    MetaVO meta = new MetaVO();
+                    meta.setTitle(menu.getMenuName());
+                    meta.setI18nKey(menu.getMenuName());
+                    meta.setIcon(menu.getIcon());
+                    meta.setKeepAlive(ObjectUtil.equal(menu.getIsCache(), 0));
+                    meta.setHideInMenu(ObjectUtil.equal(menu.getVisible(), 1));
+                    meta.setConstant(false);
+                    // 外链路由，记录链接地址
+                    if (ObjectUtil.equal(menu.getIsFrame(), UserConstants.YES_FRAME)) {
+                        meta.setLink(menu.getPath());
+                    }
+                    router.setMeta(meta);
+
+                    // 递归设置子路由
+                    List<RouterVO> childRouters = buildRouters(menus, menu.getId());
+                    router.setChildren(childRouters);
+
+                    return router;
+                })
+                .collect(Collectors.toList());
     }
 
 }
