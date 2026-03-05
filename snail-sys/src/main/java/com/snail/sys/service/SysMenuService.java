@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysMenu;
+import com.snail.sys.vo.RouterVO;
 import com.snail.sys.dto.SysMenuPageDTO;
 
 import java.util.List;
@@ -86,4 +87,14 @@ public interface SysMenuService extends IService<SysMenu> {
      * <p>1.0 Initialization method </p>
      */
     Set<String> selectMenuPermsByUserId(Long userId);
+
+    /**
+     * 根据用户ID查询菜单树信息
+     *
+     * @param userId userId
+     * @return java.util.List<com.snail.sys.api.vo.RouterVO>
+     * @since 1.0
+     * <p>1.0 Initialization method </p>
+     */
+    List<RouterVO> selectMenuTreeByUserId(Long userId);
 }
