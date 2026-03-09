@@ -23,10 +23,6 @@ public class MetaVO {
     @ApiModelProperty("设置该路由在侧边栏和面包屑中展示的名字")
     private String title;
 
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    @ApiModelProperty("设置该路由的i18nKey")
-    private String i18nKey;
-
     /**
      * 设置该路由的图标，对应路径src/assets/icons/svg
      */
