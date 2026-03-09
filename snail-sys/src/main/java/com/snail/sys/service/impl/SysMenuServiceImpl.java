@@ -247,7 +247,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenu> impleme
 
                     MetaVO meta = new MetaVO();
                     meta.setTitle(menu.getMenuName());
-                    meta.setI18nKey(menu.getMenuName());
                     meta.setIcon(menu.getIcon());
                     meta.setKeepAlive(ObjectUtil.equal(menu.getIsCache(), 0));
                     meta.setHideInMenu(ObjectUtil.equal(menu.getVisible(), 1));
