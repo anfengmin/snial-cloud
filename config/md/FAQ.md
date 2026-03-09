@@ -8,3 +8,6 @@
 4. 登录携带请求头
    Accept-Language: zh-CN,zh;q=0.9
    Accept-Language: en-US,en;q=0.9
+5.   alter table sys_menu
+   add name_en varchar(50) null comment '英文' after path;
+
