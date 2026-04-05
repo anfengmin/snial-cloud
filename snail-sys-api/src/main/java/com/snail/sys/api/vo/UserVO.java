@@ -24,6 +24,9 @@ import java.util.List;
 @ApiModel(value = "用户")
 public class UserVO {
 
+    @ApiModelProperty(value = "用户ID")
+    private Long id;
+
     @ApiModelProperty(value = "部门ID")
     private Long deptId;
 

@@ -13,7 +13,9 @@ import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.utils.R;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.sys.api.domain.*;
+import com.snail.sys.api.vo.UserVO;
 import com.snail.sys.dao.SysUserDao;
+import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.*;
@@ -176,8 +178,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     @Override
     public SysUserVo getInfo(Long userId) {
         this.checkUserDataScope(userId);
-        // TODO
-        return null;
+        SysUser user = this.getById(userId);
+        if (ObjectUtil.isEmpty(user)) {
+            throw new ServiceException("用户不存在");
+        }
+
+        UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
+        Long[] roleIds = sysUserRoleService.queryRoleListByUserId(userId)
+                .stream()
+                .map(SysUserRole::getRoleId)
+                .toArray(Long[]::new);
+        Long[] postIds = sysUserPostService.lambdaQuery()
+                .eq(SysUserPost::getUserId, userId)
+                .list()
+                .stream()
+                .map(SysUserPost::getPostId)
+                .toArray(Long[]::new);
+
+        userVO.setRoleIds(roleIds);
+        userVO.setPostIds(postIds);
+
+        return SysUserVo.builder()
+                .user(userVO)
+                .build();
     }
 
     /**

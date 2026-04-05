@@ -64,7 +64,7 @@ public class SysUserController {
 
 
     @SaCheckPermission("system:user:query")
-    @GetMapping(value = {"/", "/{userId}"})
+    @GetMapping("/info/{userId}")
     @ApiOperation(value = "用户id获取用户信息")
     public R<SysUserVo> getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         SysUserVo sysUserVo = sysUserService.getInfo(userId);
