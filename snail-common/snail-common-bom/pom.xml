@@ -10,6 +10,11 @@
     <packaging>pom</packaging>
     <description>common依赖项</description>
 
+    <properties>
+        <dubbo.version>3.1.3</dubbo.version>
+
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <!-- 核心模块 -->
@@ -30,6 +35,13 @@
             <dependency>
                 <groupId>com.snail</groupId>
                 <artifactId>snail-common-satoken</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Dubbo 公共配置 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-dubbo</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -62,6 +74,24 @@
             </dependency>
 
 
+            <!-- Apache Dubbo 配置 -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-actuator</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
