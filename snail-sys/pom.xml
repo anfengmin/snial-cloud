@@ -42,12 +42,6 @@
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Sa-Token 权限认证 -->
         <dependency>
             <groupId>cn.dev33</groupId>
@@ -68,6 +62,11 @@
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>snail-common-satoken</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-dubbo</artifactId>
         </dependency>
 
         <dependency>

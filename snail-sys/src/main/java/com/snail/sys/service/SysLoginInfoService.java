@@ -2,7 +2,7 @@ package com.snail.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.snail.sys.domain.SysLoginInfo;
+import com.snail.sys.api.domain.SysLoginInfo;
 import com.snail.sys.dto.SysLogPageDTO;
 
 
@@ -27,4 +27,12 @@ public interface SysLoginInfoService extends IService<SysLoginInfo> {
      * @return R
      */
     Page<SysLoginInfo> queryByPage(SysLogPageDTO dto);
+
+    /**
+     * 插入
+     *
+     * @param sysLoginInfo sysLoginInfo
+     * @return boolean
+     */
+    boolean insertLogininfor(SysLoginInfo sysLoginInfo);
 }

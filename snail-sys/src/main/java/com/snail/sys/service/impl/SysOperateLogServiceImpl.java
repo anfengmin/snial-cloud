@@ -8,11 +8,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.dto.SysOperateLogPageDTO;
 import com.snail.sys.dao.SysOperateLogDao;
-import com.snail.sys.domain.SysOperateLog;
+import com.snail.sys.api.domain.SysOperateLog;
 import com.snail.sys.service.SysOperateLogService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 
 
 /**
@@ -57,5 +58,18 @@ public class SysOperateLogServiceImpl extends ServiceImpl<SysOperateLogDao, SysO
     @Override
     public void cleanOperateLog() {
         this.remove(new QueryWrapper<>());
+    }
+
+    /**
+     * 新增操作日志
+     *
+     * @param sysOperateLog 操作日志
+     * @return 是否成功
+     * @since 1.0
+     */
+    @Override
+    public boolean insertOperlog(SysOperateLog sysOperateLog) {
+        sysOperateLog.setOperateTime(new Date());
+        return this.save(sysOperateLog);
     }
 }

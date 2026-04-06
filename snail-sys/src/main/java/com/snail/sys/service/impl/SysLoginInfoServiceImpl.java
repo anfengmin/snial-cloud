@@ -5,11 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.sys.dao.SysLoginInfoDao;
-import com.snail.sys.domain.SysLoginInfo;
+import com.snail.sys.api.domain.SysLoginInfo;
 import com.snail.sys.dto.SysLogPageDTO;
 import com.snail.sys.service.SysLoginInfoService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 
 
 /**
@@ -48,5 +49,17 @@ public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLog
                         , SysLoginInfo::getLoginTime, dto.getBeginTime(), dto.getEndTime())
                 .orderByDesc(SysLoginInfo::getId)
                 .page(new Page<>(dto.getCurrent(), dto.getSize()));
+    }
+
+    /**
+     * 新增系统登录日志
+     *
+     * @param sysLoginInfo 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public boolean insertLogininfor(SysLoginInfo sysLoginInfo) {
+        sysLoginInfo.setLoginTime(new Date());
+        return this.save(sysLoginInfo);
     }
 }

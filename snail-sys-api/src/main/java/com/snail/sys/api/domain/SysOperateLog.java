@@ -1,13 +1,13 @@
-package com.snail.sys.domain;
+package com.snail.sys.api.domain;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * 操作日志记录(SysOperateLog)实体类
@@ -16,10 +16,9 @@ import lombok.EqualsAndHashCode;
  * @since 2025-05-21 21:52:03
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_operate_log")
 @ApiModel(value = "操作日志记录")
-public class SysOperateLog extends Model<SysOperateLog> {
+public class SysOperateLog {
 
     private static final long serialVersionUID = 602922838570574584L;
 

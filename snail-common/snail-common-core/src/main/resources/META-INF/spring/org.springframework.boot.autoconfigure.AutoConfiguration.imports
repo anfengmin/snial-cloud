@@ -1,2 +1,3 @@
+com.snail.common.core.config.AsyncConfig
 com.snail.common.core.handler.GlobalExceptionHandler
 com.snail.common.core.utils.SpringUtils

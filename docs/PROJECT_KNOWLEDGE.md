@@ -3,6 +3,7 @@
 ## 1. 项目定位
 
 - 仓库路径：`/Users/ansir/work/project/gitee/snail-cloud`
+- 本地参考项目：`/Users/ansir/work/project/gitee/RuoYi-Cloud-Plus`
 - 当前联调重点模块：用户、角色、菜单、部门、岗位、字典、在线用户
 - 前端联调仓库对应：`/Users/ansir/work/project/gitee/snail-vue`
 
@@ -59,7 +60,11 @@
 
 - 新增了用户详情接口：`/sysUser/info/{userId}`
 - 编辑/新增用户时角色岗位空值做过防御处理
-- 用户头像支持自动生成 base64 默认头像
+- 用户头像支持自动生成默认头像
+- 默认头像格式已经从 PNG base64 调整为更短的 `data:image/svg+xml;charset=UTF-8,...`
+- 中文名规则：少于 3 个字显示全部，超过 2 个字取后 2 个字
+- 英文/数字规则：取 2 到 3 位缩写
+- 背景色按用户名稳定取色，不会覆盖用户自己上传的头像地址
 
 ### 4.2 角色模块
 
@@ -84,6 +89,30 @@
 - 查询改为模糊匹配
 - 结果按 `loginTime` 倒序
 
+### 4.6 Dubbo 与日志链路
+
+- 参考项目：`RuoYi-Cloud-Plus` 的 `ruoyi-common-dubbo`、`ruoyi-common-log`、`ruoyi-common-satoken`
+- 当前项目已新增公共模块：`snail-common/snail-common-dubbo`
+- `snail-sys` 已接入 `snail-common-dubbo`，启动类增加了 `@EnableDubbo`
+- 全局 Nacos 配置 `config/nacos/snail-global.yml` 已补齐 `dubbo` 配置块，核心包括：
+  - `metadataType: remote`
+  - `register-mode: instance`
+  - `service-discovery.migration: FORCE_APPLICATION`
+  - `consumer.check: false`
+  - `scan.base-packages: com.snail.**.dubbo`
+- 为适配当前项目使用的 `Sa-Token 1.42.0`，没有直接引入 `sa-token-context-dubbo`，而是在 `snail-common-dubbo` 中补了兼容过滤器：
+  - `cn.dev33.satoken.context.dubbo.filter.SaTokenDubboConsumerFilter`
+  - `cn.dev33.satoken.context.dubbo.filter.SaTokenDubboProviderFilter`
+- 这两个过滤器会提前触发 `SaBeanInject` 初始化，解决 Dubbo 内网调用时 Sa-Token 元数据加载报错
+- `snail-common-log` 已改成通过 `AsyncLogService + Dubbo RemoteLogService` 远程写日志，不再依赖本地 Spring 事件监听落库
+- `snail-common-log`、`snail-common-core`、`snail-common-dubbo` 都已补 `AutoConfiguration.imports`
+- 当前日志落库链路：
+  - `@Log` -> `LogAspect`
+  - `LogAspect` -> `AsyncLogService`
+  - `AsyncLogService` -> `RemoteLogService`
+  - `snail-sys` 中的 `RemoteLogServiceImpl` 写入 `sys_operate_log` / `sys_login_info`
+- `snail-sys-api` 中的 `SysOperateLog`、`SysLoginInfo` 已去掉 `Model` 继承，保持 API 模块轻量，避免额外依赖 `mybatis-plus-extension`
+
 ## 5. 用户头像默认生成规则
 
 ### 5.1 生效场景
@@ -95,10 +124,10 @@
 
 ### 5.2 生成规则
 
-- 头像格式：`data:image/png;base64,...`
+- 头像格式：`data:image/svg+xml;charset=UTF-8,...`
 - 文本来源：`userName`
 - 中文：
-  - 2 个字时显示全部
+  - 少于 3 个字时显示全部
   - 超过 2 个字时取最后 2 个字
 - 英文/数字：
   - 优先取 2 到 3 位缩写
@@ -125,11 +154,24 @@
 
 ## 8. 当前环境已知问题
 
-- 本地 Maven 全局 `settings.xml` 存在解析错误
-- 因此当前环境下后端经常无法稳定做完整 Maven 编译验证
-- 出问题时优先做代码级修正，再视情况单独处理 Maven 环境
+- Maven `settings.xml` 解析问题已修复
+- 2026-04-06 已完成一次完整验证：`mvn -pl snail-sys -am -DskipTests compile` 通过
+- `snail-sys/pom.xml` 中重复的 `spring-cloud-starter-alibaba-nacos-discovery` 依赖声明已清理
 
-## 9. 后续维护建议
+## 9. 关键模块与文件
+
+- Dubbo 公共模块：`snail-common/snail-common-dubbo`
+- Dubbo 自动配置：`snail-common/snail-common-dubbo/src/main/java/com/snail/common/dubbo/config/DubboConfiguration.java`
+- Sa-Token Dubbo 过滤器：
+  - `snail-common/snail-common-dubbo/src/main/java/cn/dev33/satoken/context/dubbo/filter/SaTokenDubboConsumerFilter.java`
+  - `snail-common/snail-common-dubbo/src/main/java/cn/dev33/satoken/context/dubbo/filter/SaTokenDubboProviderFilter.java`
+- Dubbo Filter SPI：`snail-common/snail-common-dubbo/src/main/resources/META-INF/dubbo/org.apache.dubbo.rpc.Filter`
+- 日志切面：`snail-common/snail-common-log/src/main/java/com/snail/common/log/aspect/LogAspect.java`
+- 异步日志服务：`snail-common/snail-common-log/src/main/java/com/snail/common/log/service/AsyncLogService.java`
+- 系统日志 Dubbo Provider：`snail-sys/src/main/java/com/snail/sys/dubbo/RemoteLogServiceImpl.java`
+- 系统启动类：`snail-sys/src/main/java/com/snail/SnailSysApplication.java`
+
+## 10. 后续维护建议
 
 - 每次完成一个模块联调后，把接口路径和关键文件补到本文件
 - 如果后端控制器请求方式有调整，优先在这里记录“前端当前依赖的请求方法”

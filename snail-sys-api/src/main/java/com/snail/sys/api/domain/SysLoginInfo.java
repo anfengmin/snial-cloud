@@ -1,13 +1,13 @@
-package com.snail.sys.domain;
+package com.snail.sys.api.domain;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * 系统访问记录(SysLoginInfo)实体类
@@ -16,10 +16,9 @@ import lombok.EqualsAndHashCode;
  * @since 2025-05-21 21:50:05
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_login_info")
 @ApiModel(value = "系统访问记录")
-public class SysLoginInfo extends Model<SysLoginInfo> {
+public class SysLoginInfo {
 
     private static final long serialVersionUID = 596901909022038380L;
 

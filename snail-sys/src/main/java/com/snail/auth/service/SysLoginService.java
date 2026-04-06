@@ -14,12 +14,12 @@ import com.snail.common.core.enums.LoginType;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.MessageUtils;
 import com.snail.common.core.utils.ServletUtils;
-import com.snail.common.core.utils.SpringUtils;
 import com.snail.common.core.utils.ip.AddressUtils;
-import com.snail.common.log.event.LoginInfoEvent;
+import com.snail.common.log.service.AsyncLogService;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.domain.SysLoginInfo;
 import com.snail.sys.api.domain.SysUser;
 import com.snail.sys.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +44,9 @@ public class SysLoginService {
 
     @Resource
     private SysUserService sysUserService;
+
+    @Resource
+    private AsyncLogService asyncLogService;
 
     /**
      * 密码最大错误次数(默认5次)
@@ -182,7 +185,7 @@ public class SysLoginService {
         // 获取客户端浏览器
         String browser = userAgent.getBrowser().getName();
         // 封装对象
-        LoginInfoEvent loginInfo = new LoginInfoEvent();
+        SysLoginInfo loginInfo = new SysLoginInfo();
         loginInfo.setUserName(username);
         loginInfo.setIpaddr(ip);
         loginInfo.setLoginLocation(address);
@@ -191,13 +194,11 @@ public class SysLoginService {
         loginInfo.setMsg(message);
         // 日志状态
         if (StrUtil.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
-            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
+            loginInfo.setStatus(String.valueOf(Constants.LOGIN_SUCCESS_STATUS));
         } else if (Constants.LOGIN_FAIL.equals(status)) {
-            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
+            loginInfo.setStatus(String.valueOf(Constants.LOGIN_FAIL_STATUS));
         }
-        SpringUtils.context().publishEvent(loginInfo);
+        asyncLogService.saveLoginInfo(loginInfo);
     }
 
 }
-
-

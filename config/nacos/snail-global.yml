@@ -12,7 +12,34 @@ server:
       # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
       io: 8
       # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
-      worker: 256
+  worker: 256
+
+dubbo:
+  application:
+    logger: slf4j
+    metadataType: remote
+    register-mode: instance
+    service-discovery:
+      migration: FORCE_APPLICATION
+    qos-enable: false
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://${spring.cloud.nacos.server-addr}
+    group: DUBBO_GROUP
+    parameters:
+      namespace: ${spring.profiles.active}
+  consumer:
+    cache: false
+    validation: true
+    timeout: 3000
+    check: false
+  scan:
+    base-packages: com.snail.**.dubbo
+  custom:
+    request-log: false
+    log-level: info
 spring:
   # 资源信息
   messages:
@@ -123,6 +150,8 @@ sa-token:
   is-concurrent: true
   # 在多人登录同一账号时，是否共用一个Token
   is-share: true
+  # 内网服务调用 same-token 有效期
+  same-token-timeout: 600
   # Token风格: uuid、simple-uuid、random-32、random-64、random-128
   token-style: uuid
   # 是否输出操作日志

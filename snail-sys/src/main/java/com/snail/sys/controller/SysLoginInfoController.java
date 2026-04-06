@@ -7,7 +7,7 @@ import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.common.log.annotation.Log;
 import com.snail.common.redis.utils.RedisUtils;
-import com.snail.sys.domain.SysLoginInfo;
+import com.snail.sys.api.domain.SysLoginInfo;
 import com.snail.sys.dto.SysLogPageDTO;
 import com.snail.sys.service.SysLoginInfoService;
 import io.swagger.annotations.Api;

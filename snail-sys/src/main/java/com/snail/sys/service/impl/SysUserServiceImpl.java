@@ -13,6 +13,7 @@ import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.utils.R;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.sys.api.domain.*;
+import com.snail.sys.api.dto.RoleDTO;
 import com.snail.sys.api.vo.UserVO;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.domain.SysUserPost;

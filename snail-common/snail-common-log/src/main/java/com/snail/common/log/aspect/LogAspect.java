@@ -8,18 +8,19 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.snail.common.core.enums.BusinessStatus;
 import com.snail.common.core.utils.ServletUtils;
-import com.snail.common.core.utils.SpringUtils;
 import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.log.annotation.Log;
+import com.snail.common.log.service.AsyncLogService;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.common.log.event.OperateLogEvent;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.domain.SysOperateLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.http.HttpMethod;
 import org.springframework.validation.BindingResult;
@@ -49,6 +50,9 @@ public class LogAspect {
      * 排除敏感属性字段
      */
     public static final String[] EXCLUDE_PROPERTIES = {"password", "oldPassword", "newPassword", "confirmPassword"};
+
+    @Autowired
+    private AsyncLogService asyncLogService;
 
     /**
      * 处理完请求后执行
@@ -83,7 +87,7 @@ public class LogAspect {
     protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult) {
         try {
             // *========数据库日志=========*//
-            OperateLogEvent operLog = new OperateLogEvent();
+            SysOperateLog operLog = new SysOperateLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
             // 请求的地址
             String ip = ServletUtils.getClientIP();
@@ -91,8 +95,10 @@ public class LogAspect {
             operLog.setOperateLocation(AddressUtils.getRealAddressByIP(ip));
             operLog.setOperateUrl(StringUtils.substring(Objects.requireNonNull(ServletUtils.getRequest()).getRequestURI(), 0, 255));
             LoginUser loginUser = LoginUtils.getLoginUser();
-            operLog.setOperatorName(loginUser.getUserName());
-            operLog.setDeptName(loginUser.getDeptName());
+            if (ObjectUtil.isNotNull(loginUser)) {
+                operLog.setOperatorName(loginUser.getUserName());
+                operLog.setDeptName(loginUser.getDeptName());
+            }
 
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
@@ -106,8 +112,8 @@ public class LogAspect {
             operLog.setRequestMethod(ServletUtils.getRequest().getMethod());
             // 处理设置注解上的参数
             getControllerMethodDescription(joinPoint, controllerLog, operLog, jsonResult);
-            // 发布事件保存数据库
-            SpringUtils.context().publishEvent(operLog);
+            // 通过 Dubbo 异步调用系统日志服务
+            asyncLogService.saveSysLog(operLog);
         } catch (Exception exp) {
             // 记录本地异常日志
             log.error("异常信息:{}", exp.getMessage());
@@ -121,7 +127,7 @@ public class LogAspect {
      * @param log        日志
      * @param operateLog 操作日志
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, OperateLogEvent operateLog, Object jsonResult) {
+    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperateLog operateLog, Object jsonResult) {
         // 设置action动作
         operateLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
@@ -144,7 +150,7 @@ public class LogAspect {
      *
      * @param operateLog 操作日志
      */
-    private void setRequestValue(JoinPoint joinPoint, OperateLogEvent operateLog, String[] excludeParamNames) {
+    private void setRequestValue(JoinPoint joinPoint, SysOperateLog operateLog, String[] excludeParamNames) {
         Map<String, String> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
         String requestMethod = operateLog.getRequestMethod();
         boolean flag = MapUtil.isEmpty(paramsMap) && HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod);
