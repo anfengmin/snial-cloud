@@ -1,0 +1,2 @@
+com.snail.common.log.service.AsyncLogService
+com.snail.common.log.aspect.LogAspect
