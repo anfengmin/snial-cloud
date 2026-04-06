@@ -25,7 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -38,6 +43,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service("sysUserService")
 public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> implements SysUserService {
+
+    private static final String DATA_IMAGE_PREFIX = "data:image/svg+xml;charset=UTF-8,";
+    private static final String[][] AVATAR_COLOR_PALETTE = {
+            {"#2563EB", "#FFFFFF"},
+            {"#0F766E", "#FFFFFF"},
+            {"#16A34A", "#FFFFFF"},
+            {"#D97706", "#FFFFFF"},
+            {"#DC2626", "#FFFFFF"},
+            {"#7C3AED", "#FFFFFF"},
+            {"#BE185D", "#FFFFFF"},
+            {"#0891B2", "#FFFFFF"},
+            {"#E2E8F0", "#1E293B"}
+    };
 
 
     private final SysUserRoleService sysUserRoleService;
@@ -54,7 +72,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     @Override
     public Page<SysUser> queryByPage(SysUserPageDTO dto) {
         Page<SysUser> page = new Page<>(dto.getCurrent(), dto.getSize());
-        return this.lambdaQuery()
+        Page<SysUser> result = this.lambdaQuery()
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
                 .eq(StrUtil.isNotEmpty(dto.getUserCode()), SysUser::getUserCode, dto.getUserCode())
                 .like(StrUtil.isNotEmpty(dto.getUserName()), SysUser::getUserName, dto.getUserName())
@@ -64,6 +82,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                         SysUser::getCreateTime, dto.getBeginTime(), dto.getEndTime())
 
                 .page(page);
+        result.getRecords().forEach(user -> ensureAvatarIfAbsent(user, true));
+        return result;
+    }
+
+    @Override
+    public SysUser getById(Serializable id) {
+        SysUser user = super.getById(id);
+        return ensureAvatarIfAbsent(user, true);
     }
 
     /**
@@ -110,7 +136,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
 //        List<SysUserRole> sysUserRoles = sysUserRoleService.queryRoleListByUserId(user.getId());
 //        SysDept sysDept = sysDeptService.queryDeptByDeptId(user.getDeptId());
-        return CollUtil.isNotEmpty(list) ? list.get(0) : null;
+        return CollUtil.isNotEmpty(list) ? ensureAvatarIfAbsent(list.get(0), true) : null;
     }
 
     /**
@@ -154,6 +180,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         if (exists) {
             throw new UserException("user.register.save.error", sysUser.getUserCode());
         }
+        fillAvatarForPersist(sysUser, null);
         return this.save(sysUser);
     }
 
@@ -216,6 +243,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     public boolean insertUser(SysUser user) {
         // 新增用户信息
         user.setPassWord(BCrypt.hashpw(user.getPassWord()));
+        fillAvatarForPersist(user, null);
         boolean save = this.save(user);
         // 新增用户岗位关联
         sysUserPostService.insertUserPost(user);
@@ -254,6 +282,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         if (checkUserCodeUnique(user)) {
             return R.fail("修改用户:" + user.getUserCode() + "失败，登录账号已存在");
         }
+        SysUser dbUser = super.getById(user.getId());
+        fillAvatarForPersist(user, ObjectUtil.isNull(dbUser) ? null : dbUser.getAvatar());
         return R.ok(this.updateById(user));
     }
 
@@ -358,6 +388,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     @Transactional(rollbackFor = Exception.class)
     public boolean updateUser(SysUser user) {
         Long userId = user.getId();
+        SysUser dbUser = super.getById(userId);
+        fillAvatarForPersist(user, ObjectUtil.isNull(dbUser) ? null : dbUser.getAvatar());
 
         // 删除用户与岗位关联
         sysUserPostService.deleteUserPost(userId);
@@ -393,5 +425,108 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                 .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
 
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL);
+    }
+
+    private SysUser ensureAvatarIfAbsent(SysUser user, boolean persist) {
+        if (ObjectUtil.isEmpty(user) || StrUtil.isNotBlank(user.getAvatar())) {
+            return user;
+        }
+
+        String avatar = generateAvatarDataUri(user.getUserName());
+        user.setAvatar(avatar);
+
+        if (persist && ObjectUtil.isNotNull(user.getId())) {
+            this.lambdaUpdate()
+                    .eq(SysUser::getId, user.getId())
+                    .set(SysUser::getAvatar, avatar)
+                    .update();
+        }
+
+        return user;
+    }
+
+    private void fillAvatarForPersist(SysUser user, String currentAvatar) {
+        if (StrUtil.isNotBlank(user.getAvatar())) {
+            return;
+        }
+
+        if (StrUtil.isNotBlank(currentAvatar)) {
+            user.setAvatar(currentAvatar);
+            return;
+        }
+
+        user.setAvatar(generateAvatarDataUri(user.getUserName()));
+    }
+
+    private String generateAvatarDataUri(String userName) {
+        String avatarText = extractAvatarText(userName);
+        int hash = Math.abs(StrUtil.emptyToDefault(userName, "USER").hashCode());
+        String[] palette = AVATAR_COLOR_PALETTE[hash % AVATAR_COLOR_PALETTE.length];
+        String backgroundColor = palette[0];
+        String textColor = palette[1];
+        int fontSize = avatarText.length() <= 1 ? 72 : avatarText.length() == 2 ? 56 : 44;
+
+        String safeText = escapeSvgText(avatarText);
+        String svg =
+                "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>"
+                        + "<rect width='160' height='160' rx='20' fill='" + backgroundColor + "'/>"
+                        + "<text x='50%' y='50%' text-anchor='middle' dominant-baseline='central' "
+                        + "font-family='PingFang SC, Microsoft YaHei, Helvetica Neue, Arial, sans-serif' "
+                        + "font-size='" + fontSize + "' font-weight='700' fill='" + textColor + "'>"
+                        + safeText
+                        + "</text></svg>";
+
+        return DATA_IMAGE_PREFIX + encodeSvg(svg);
+    }
+
+    private String extractAvatarText(String userName) {
+        String source = StrUtil.blankToDefault(StrUtil.trim(userName), "User");
+
+        String chinese = source.replaceAll("[^\\u4e00-\\u9fa5]", "");
+        if (StrUtil.isNotBlank(chinese)) {
+            if (chinese.length() <= 2) {
+                return chinese;
+            }
+            return chinese.substring(chinese.length() - 2);
+        }
+
+        String[] words = source.split("[^A-Za-z0-9]+");
+        StringBuilder initials = new StringBuilder();
+        for (String word : words) {
+            if (StrUtil.isBlank(word)) {
+                continue;
+            }
+            initials.append(word.substring(0, 1).toUpperCase(Locale.ROOT));
+            if (initials.length() >= 3) {
+                break;
+            }
+        }
+        if (initials.length() >= 2) {
+            return initials.toString();
+        }
+
+        String normalized = source.replaceAll("[^A-Za-z0-9]", "").toUpperCase(Locale.ROOT);
+        if (StrUtil.isBlank(normalized)) {
+            return "U";
+        }
+        return normalized.substring(0, Math.min(normalized.length(), 3));
+    }
+
+    private String encodeSvg(String svg) {
+        try {
+            return URLEncoder.encode(svg, StandardCharsets.UTF_8.name())
+                    .replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            throw new ServiceException("编码用户头像失败");
+        }
+    }
+
+    private String escapeSvgText(String text) {
+        return text
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&apos;");
     }
 }
