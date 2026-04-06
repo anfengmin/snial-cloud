@@ -4,13 +4,15 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.tree.Tree;
 import com.snail.common.core.constant.UserConstants;
+import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
+import com.snail.common.log.annotation.Log;
 import com.snail.common.satoken.utils.LoginUtils;
+import com.snail.sys.domain.SysMenu;
+import com.snail.sys.service.SysMenuService;
+import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.vo.RouterDataVO;
 import com.snail.sys.vo.RouterVO;
-import com.snail.sys.domain.SysMenu;
-import com.snail.sys.service.SysRoleMenuService;
-import com.snail.sys.service.SysMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +71,7 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:add")
+    @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping("add")
     @ApiOperation(value = "新增菜单")
     public R<Boolean> add(@Validated @RequestBody SysMenu sysMenu) {
@@ -82,6 +85,7 @@ public class SysMenuController {
     }
 
     @SaCheckPermission("system:menu:edit")
+    @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PostMapping("edit")
     @ApiOperation(value = "编辑菜单")
     public R<Boolean> edit(@Validated @RequestBody SysMenu sysMenu) {

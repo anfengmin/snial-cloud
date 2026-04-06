@@ -6,8 +6,7 @@ import com.snail.sys.api.domain.SysOperateLog;
 /**
  * 日志服务
  *
- * @author Levi.
- * Created time 2026/4/6
+ * @author Levi
  * @since 1.0
  */
 public interface RemoteLogService {

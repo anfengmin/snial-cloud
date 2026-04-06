@@ -31,14 +31,6 @@
             </exclusions>
         </dependency>
 
-
-        <!-- RuoYi Api System -->
-        <dependency>
-            <groupId>com.snail</groupId>
-            <artifactId>snail-sys-api</artifactId>
-            <version>${snail.version}</version>
-        </dependency>
-
         <!-- Redis（用于存储Token） -->
         <dependency>
             <groupId>com.snail</groupId>

@@ -7,21 +7,21 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 操作日志记录(SysOperateLog)实体类
+ * 操作日志记录
  *
  * @author makejava
- * @since 2025-05-21 21:52:03
+ * @since 1.0
  */
 @Data
 @TableName("sys_operate_log")
 @ApiModel(value = "操作日志记录")
-public class SysOperateLog {
+public class SysOperateLog implements Serializable {
 
     private static final long serialVersionUID = 602922838570574584L;
-
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "日志主键")
@@ -71,5 +71,4 @@ public class SysOperateLog {
 
     @ApiModelProperty(value = "操作时间")
     private Date operateTime;
-
 }

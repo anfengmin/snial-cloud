@@ -10,10 +10,10 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 系统访问记录(SysLoginInfo)实体类
+ * 系统访问记录
  *
  * @author makejava
- * @since 2025-05-21 21:50:05
+ * @since 1.0
  */
 @Data
 @TableName("sys_login_info")
@@ -21,7 +21,6 @@ import java.util.Date;
 public class SysLoginInfo {
 
     private static final long serialVersionUID = 596901909022038380L;
-
 
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "访问ID")
@@ -50,5 +49,4 @@ public class SysLoginInfo {
 
     @ApiModelProperty(value = "访问时间")
     private Date loginTime;
-
 }

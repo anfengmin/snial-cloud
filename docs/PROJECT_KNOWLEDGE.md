@@ -113,6 +113,43 @@
   - `snail-sys` 中的 `RemoteLogServiceImpl` 写入 `sys_operate_log` / `sys_login_info`
 - `snail-sys-api` 中的 `SysOperateLog`、`SysLoginInfo` 已去掉 `Model` 继承，保持 API 模块轻量，避免额外依赖 `mybatis-plus-extension`
 
+### 4.7 异步线程池配置
+
+- 公共异步配置文件：`snail-common/snail-common-core/src/main/java/com/snail/common/core/config/AsyncConfig.java`
+- 当前不再自定义 `applicationTaskExecutor`，避免与 Spring Boot 默认线程池 bean 冲突
+- 项目自定义线程池 bean 名称为：`taskExecutor`
+- 异步线程池参数改为读取 `spring.task.execution.*`
+- 默认值维护在 Nacos 全局配置：`config/nacos/snail-global.yml`
+- 当前默认值：
+  - `thread-name-prefix: snail-async-`
+  - `core-size: 8`
+  - `max-size: 16`
+  - `queue-capacity: 200`
+  - `keep-alive: 60s`
+  - `await-termination: true`
+  - `await-termination-period: 60s`
+- 后续可直接通过 Nacos 修改这些参数
+- 当前实现为“改配置后重启服务生效”，如果要做运行时热刷新，需要额外补线程池动态刷新逻辑
+
+### 4.8 common 与 sys-api 依赖边界
+
+- 当前已清理 `common -> sys-api` 的反向依赖，`snail-common` 可以独立打包
+- 调整原则：公共能力产生的模型，放回公共层，不放业务 API 层
+- 已迁移到公共层的对象：
+  - `LoginUser`
+  - `RoleDTO`
+  - `RemoteLogService`
+  - `SysOperateLog`
+  - `SysLoginInfo`
+- 为减少代码改动，迁移后仍保留原有包名 `com.snail.sys.api.*`
+- 当前位置：
+  - `LoginUser`、`RoleDTO` 在 `snail-common-core`
+  - `RemoteLogService`、`SysOperateLog`、`SysLoginInfo` 在 `snail-common-log`
+- `snail-common-satoken` 已去掉对 `snail-sys-api` 的依赖
+- 验证结果：
+  - `mvn -f snail-common/pom.xml -DskipTests package` 通过
+  - `mvn -pl snail-sys -am -DskipTests compile` 通过
+
 ## 5. 用户头像默认生成规则
 
 ### 5.1 生效场景

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.snail.sys.api.dto.RoleDTO;
-import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,16 +15,12 @@ import java.util.Set;
 
 /**
  * 登录用户信息
- * <p>
- * 核心用户信息存储在Token中，权限信息从数据库动态获取
  *
  * @author Anfm
- * Created time 2025/5/12
  * @since 1.0
  */
 @Data
 @NoArgsConstructor
-@AutoMapper(target = SysUser.class)
 @ApiModel(value = "登录用户信息")
 public class LoginUser implements Serializable {
 

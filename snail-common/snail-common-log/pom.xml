@@ -14,12 +14,10 @@
     <description>日志记录</description>
 
     <dependencies>
-
-        <!-- RuoYi Common Security -->
-<!--        <dependency>-->
-<!--            <groupId>com.ruoyi</groupId>-->
-<!--            <artifactId>ruoyi-common-security</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-common-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.snail</groupId>
