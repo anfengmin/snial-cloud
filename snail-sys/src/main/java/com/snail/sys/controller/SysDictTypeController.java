@@ -29,7 +29,7 @@ public class SysDictTypeController {
 
 
     @SaCheckPermission("system:dict:list")
-    @GetMapping("/queryByPage")
+    @PostMapping("/queryByPage")
     @ApiOperation(value = "查询字典类型详细")
     public R<Page<SysDictType>> queryByPage(@RequestBody SysDictTypePageDTO dto) {
         return R.ok(sysDictTypeService.queryByPage(dto));
@@ -77,4 +77,3 @@ public class SysDictTypeController {
     }
 
 }
-
