@@ -67,6 +67,20 @@ public class SysDeptController {
         if (sysDeptService.checkDeptNameExists(dept)) {
             return R.fail("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
+
+        Long parentId = ObjectUtil.defaultIfNull(dept.getParentId(), 0L);
+        dept.setParentId(parentId);
+
+        if (ObjectUtil.equals(parentId, 0L)) {
+          dept.setAncestors("0");
+        } else {
+          SysDept parentDept = sysDeptService.getById(parentId);
+          String ancestors = ObjectUtil.isNotNull(parentDept)
+                  ? parentDept.getAncestors() + StrUtil.COMMA + parentDept.getId()
+                  : "0";
+          dept.setAncestors(ancestors);
+        }
+
         return R.isOk(sysDeptService.save(dept));
     }
 
@@ -105,4 +119,3 @@ public class SysDeptController {
     }
 
 }
-
