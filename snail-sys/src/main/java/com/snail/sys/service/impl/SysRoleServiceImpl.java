@@ -79,7 +79,25 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
     @Override
     public SysRole selectRoleById(Long roleId) {
         this.checkRoleDataScope(roleId);
-        return this.getById(roleId);
+        SysRole role = this.getById(roleId);
+        if (ObjectUtil.isNotNull(role)) {
+            List<Long> menuIds = sysRoleMenuService.querySysRoleMenuListByRoleId(roleId)
+                    .stream()
+                    .map(item -> item.getMenuId())
+                    .collect(Collectors.toList());
+            role.setMenuIds(menuIds.toArray(new Long[0]));
+        }
+        return role;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean insertRole(SysRole role) {
+        boolean saved = this.save(role);
+        if (!saved) {
+            return false;
+        }
+        return sysRoleMenuService.insertRoleMenu(role);
     }
 
     /**
@@ -144,7 +162,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
     @Override
     public boolean checkRoleNameExists(SysRole role) {
         return this.lambdaQuery()
-                .eq(ObjectUtil.isNotNull(role.getId()), SysRole::getId, role.getId())
+                .ne(ObjectUtil.isNotNull(role.getId()), SysRole::getId, role.getId())
                 .eq(SysRole::getRoleName, role.getRoleName())
                 .exists();
     }
@@ -160,7 +178,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
     @Override
     public boolean checkRoleKeyExists(SysRole role) {
         return this.lambdaQuery()
-                .eq(ObjectUtil.isNotNull(role.getId()), SysRole::getId, role.getId())
+                .ne(ObjectUtil.isNotNull(role.getId()), SysRole::getId, role.getId())
                 .eq(SysRole::getRoleKey, role.getRoleKey())
                 .exists();
     }
@@ -177,11 +195,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
     @Override
     public boolean updateRole(SysRole role) {
         // 修改角色信息
-        this.updateById(role);
+        boolean updated = this.updateById(role);
         // 删除角色与菜单关联
         sysRoleMenuService.deleteRoleMenuByRoleId(role.getId());
         // 新增角色菜单信息
-        return sysRoleMenuService.insertRoleMenu(role);
+        return updated && sysRoleMenuService.insertRoleMenu(role);
     }
 
 
