@@ -13,7 +13,7 @@ import com.snail.common.log.annotation.Log;
 import com.snail.common.log.service.AsyncLogService;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysOperateLog;
+import com.snail.common.log.domain.SysOperateLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;

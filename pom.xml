@@ -15,8 +15,7 @@
     <modules>
         <module>snail-common</module>
         <module>snail-gateway</module>
-        <module>snail-sys-api</module>
-        <module>snail-sys</module>
+        <module>snail-sys-provider</module>
     </modules>
 
     <properties>

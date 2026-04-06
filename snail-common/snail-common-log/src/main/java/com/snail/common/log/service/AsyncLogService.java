@@ -1,8 +1,8 @@
 package com.snail.common.log.service;
 
-import com.snail.sys.api.RemoteLogService;
-import com.snail.sys.api.domain.SysLoginInfo;
-import com.snail.sys.api.domain.SysOperateLog;
+import com.snail.common.log.api.RemoteLogService;
+import com.snail.common.log.domain.SysLoginInfo;
+import com.snail.common.log.domain.SysOperateLog;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

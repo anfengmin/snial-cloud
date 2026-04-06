@@ -7,6 +7,21 @@
 - 当前联调重点模块：用户、角色、菜单、部门、岗位、字典、在线用户
 - 前端联调仓库对应：`/Users/ansir/work/project/gitee/snail-vue`
 
+## 1.1 当前模块结构
+
+- 根聚合模块当前为：
+  - `snail-common`
+  - `snail-gateway`
+  - `snail-sys-provider`
+- `snail-sys-provider` 作为系统域聚合模块，内部包含：
+  - `snail-sys-provider/snail-sys-api`
+  - `snail-sys-provider/snail-sys`
+- 当前不再增加最外层 `snail-modules` 目录，直接按业务域建立 `xxx-provider`
+- 后续新增业务域时，推荐继续保持同样结构，例如：
+  - `snail-flow-provider/snail-flow-api`
+  - `snail-flow-provider/snail-flow`
+- 目标是让每个业务域的 API 与 Provider 就近放置，根目录避免随着模块增加而持续平铺膨胀
+
 ## 2. 当前前后端联调约定
 
 - 前端请求参数直接按后端字段名走
@@ -19,7 +34,7 @@
 
 ### 3.1 用户
 
-- 文件：`snail-sys/src/main/java/com/snail/sys/controller/SysUserController.java`
+- 文件：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysUserController.java`
 - 关键接口：
   - `POST /sysUser/queryByPage`
   - `GET /sysUser/getUserInfo`
@@ -30,29 +45,29 @@
 
 ### 3.2 角色
 
-- 文件：`snail-sys/src/main/java/com/snail/sys/controller/SysRoleController.java`
+- 文件：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysRoleController.java`
 
 ### 3.3 菜单
 
-- 文件：`snail-sys/src/main/java/com/snail/sys/controller/SysMenuController.java`
+- 文件：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysMenuController.java`
 
 ### 3.4 部门
 
-- 文件：`snail-sys/src/main/java/com/snail/sys/controller/SysDeptController.java`
+- 文件：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysDeptController.java`
 
 ### 3.5 岗位
 
-- 主数据控制器：`snail-sys/src/main/java/com/snail/sys/controller/SysPostController.java`
+- 主数据控制器：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysPostController.java`
 - 说明：`SysUserPostController` 只负责用户与岗位关联，不负责岗位管理页面
 
 ### 3.6 字典
 
-- 字典类型：`snail-sys/src/main/java/com/snail/sys/controller/SysDictTypeController.java`
-- 字典数据：`snail-sys/src/main/java/com/snail/sys/controller/SysDictDataController.java`
+- 字典类型：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysDictTypeController.java`
+- 字典数据：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysDictDataController.java`
 
 ### 3.7 在线用户
 
-- 文件：`snail-sys/src/main/java/com/snail/sys/controller/SysUserOnlineController.java`
+- 文件：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysUserOnlineController.java`
 
 ## 4. 已做过的重要后端修正
 
@@ -93,7 +108,7 @@
 
 - 参考项目：`RuoYi-Cloud-Plus` 的 `ruoyi-common-dubbo`、`ruoyi-common-log`、`ruoyi-common-satoken`
 - 当前项目已新增公共模块：`snail-common/snail-common-dubbo`
-- `snail-sys` 已接入 `snail-common-dubbo`，启动类增加了 `@EnableDubbo`
+- `snail-sys-provider/snail-sys` 已接入 `snail-common-dubbo`，启动类增加了 `@EnableDubbo`
 - 全局 Nacos 配置 `config/nacos/snail-global.yml` 已补齐 `dubbo` 配置块，核心包括：
   - `metadataType: remote`
   - `register-mode: instance`
@@ -110,8 +125,8 @@
   - `@Log` -> `LogAspect`
   - `LogAspect` -> `AsyncLogService`
   - `AsyncLogService` -> `RemoteLogService`
-  - `snail-sys` 中的 `RemoteLogServiceImpl` 写入 `sys_operate_log` / `sys_login_info`
-- `snail-sys-api` 中的 `SysOperateLog`、`SysLoginInfo` 已去掉 `Model` 继承，保持 API 模块轻量，避免额外依赖 `mybatis-plus-extension`
+  - `snail-sys-provider/snail-sys` 中的 `RemoteLogServiceImpl` 写入 `sys_operate_log` / `sys_login_info`
+- 原 `snail-sys-api` 中的 `SysOperateLog`、`SysLoginInfo` 已迁移到公共层，避免 `common -> sys-api` 反向依赖
 
 ### 4.7 异步线程池配置
 
@@ -135,20 +150,45 @@
 
 - 当前已清理 `common -> sys-api` 的反向依赖，`snail-common` 可以独立打包
 - 调整原则：公共能力产生的模型，放回公共层，不放业务 API 层
+- 当前业务域结构保留 `sys-api`，但 `sys-api` 只承载真正对外暴露给其他服务使用的契约
+- 设计目标：
+  - `common` 不依赖任何业务 `api`
+  - `snail-sys-provider/snail-sys-api` 可以被未来的 `snail-flow-provider/snail-flow` 等模块直接依赖
+  - `snail-sys-provider/snail-sys` 只负责系统域实现
 - 已迁移到公共层的对象：
   - `LoginUser`
   - `RoleDTO`
   - `RemoteLogService`
   - `SysOperateLog`
   - `SysLoginInfo`
-- 为减少代码改动，迁移后仍保留原有包名 `com.snail.sys.api.*`
 - 当前位置：
-  - `LoginUser`、`RoleDTO` 在 `snail-common-core`
+  - `LoginUser`、`RoleDTO` 在 `snail-common-core`，当前仍保留 `com.snail.sys.api.*` 包名以降低安全上下文相关改动面
   - `RemoteLogService`、`SysOperateLog`、`SysLoginInfo` 在 `snail-common-log`
+- 其中 `snail-common-log` 相关包名已进一步收口为模块内语义：
+  - `com.snail.common.log.api.RemoteLogService`
+  - `com.snail.common.log.domain.SysOperateLog`
+  - `com.snail.common.log.domain.SysLoginInfo`
 - `snail-common-satoken` 已去掉对 `snail-sys-api` 的依赖
 - 验证结果：
   - `mvn -f snail-common/pom.xml -DskipTests package` 通过
-  - `mvn -pl snail-sys -am -DskipTests compile` 通过
+  - `mvn -pl snail-sys-provider/snail-sys -am -DskipTests compile` 通过
+
+### 4.9 Provider 聚合结构调整
+
+- 根 `pom.xml` 不再直接平铺 `snail-sys-api`、`snail-sys`
+- 当前改为只聚合 `snail-sys-provider`
+- `snail-sys-provider/pom.xml` 为系统域聚合 pom，内部统一管理：
+  - `snail-sys-api`
+  - `snail-sys`
+- 这样做的目的：
+  - 保留 `sys-api` 作为跨模块远程契约
+  - 避免根目录随着服务数量增长持续平铺
+  - 后续新增 `snail-flow-provider` 时可完全复用该模式
+- 当前构建约定：
+  - 根目录构建系统服务：`mvn -pl snail-sys-provider/snail-sys -am -DskipTests package`
+  - 单独构建公共层：`mvn -f snail-common/pom.xml -DskipTests package`
+  - 单独构建 `snail-sys-provider` 时，如果本地仓库未提前安装 `snail-common-bom` 等公共父/依赖，需要先从根工程或公共层完成 install/package
+- 这属于正常 Maven 分层结果，不是循环依赖
 
 ## 5. 用户头像默认生成规则
 
@@ -178,11 +218,11 @@
 
 ## 6. 当前服务层关键文件
 
-- 用户服务：`snail-sys/src/main/java/com/snail/sys/service/impl/SysUserServiceImpl.java`
-- 角色服务：`snail-sys/src/main/java/com/snail/sys/service/impl/SysRoleServiceImpl.java`
-- 部门服务：`snail-sys/src/main/java/com/snail/sys/service/impl/SysDeptServiceImpl.java`
-- 字典类型服务：`snail-sys/src/main/java/com/snail/sys/service/impl/SysDictTypeServiceImpl.java`
-- 字典数据服务：`snail-sys/src/main/java/com/snail/sys/service/impl/SysDictDataServiceImpl.java`
+- 用户服务：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/service/impl/SysUserServiceImpl.java`
+- 角色服务：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/service/impl/SysRoleServiceImpl.java`
+- 部门服务：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/service/impl/SysDeptServiceImpl.java`
+- 字典类型服务：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/service/impl/SysDictTypeServiceImpl.java`
+- 字典数据服务：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/service/impl/SysDictDataServiceImpl.java`
 
 ## 7. 数据库与脚本
 
@@ -192,8 +232,8 @@
 ## 8. 当前环境已知问题
 
 - Maven `settings.xml` 解析问题已修复
-- 2026-04-06 已完成一次完整验证：`mvn -pl snail-sys -am -DskipTests compile` 通过
-- `snail-sys/pom.xml` 中重复的 `spring-cloud-starter-alibaba-nacos-discovery` 依赖声明已清理
+- 2026-04-07 已完成一次完整验证：`mvn -pl snail-sys-provider/snail-sys -am -DskipTests package` 通过
+- `snail-sys-provider/snail-sys/pom.xml` 中重复的 `spring-cloud-starter-alibaba-nacos-discovery` 依赖声明已清理
 
 ## 9. 关键模块与文件
 
@@ -205,8 +245,8 @@
 - Dubbo Filter SPI：`snail-common/snail-common-dubbo/src/main/resources/META-INF/dubbo/org.apache.dubbo.rpc.Filter`
 - 日志切面：`snail-common/snail-common-log/src/main/java/com/snail/common/log/aspect/LogAspect.java`
 - 异步日志服务：`snail-common/snail-common-log/src/main/java/com/snail/common/log/service/AsyncLogService.java`
-- 系统日志 Dubbo Provider：`snail-sys/src/main/java/com/snail/sys/dubbo/RemoteLogServiceImpl.java`
-- 系统启动类：`snail-sys/src/main/java/com/snail/SnailSysApplication.java`
+- 系统日志 Dubbo Provider：`snail-sys-provider/snail-sys/src/main/java/com/snail/sys/dubbo/RemoteLogServiceImpl.java`
+- 系统启动类：`snail-sys-provider/snail-sys/src/main/java/com/snail/SnailSysApplication.java`
 
 ## 10. 后续维护建议
 
