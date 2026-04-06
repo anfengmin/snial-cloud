@@ -1,18 +1,21 @@
 package com.snail.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.common.core.constant.CacheNames;
 import com.snail.common.core.utils.R;
 import com.snail.sys.domain.SysDictData;
 import com.snail.sys.service.SysDictDataService;
+import com.snail.sys.service.SysDictTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,29 +26,35 @@ import java.util.List;
  */
 @Api(tags = "字典数据")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/dict/data")
 public class SysDictDataController {
 
-    @Resource
-    private SysDictDataService sysDictDataService;
+    private final SysDictDataService sysDictDataService;
+    private final SysDictTypeService sysDictTypeService;
 
 
-    @SaCheckPermission("system:dept:list")
+    @SaCheckPermission("system:dict:list")
     @ApiOperation(value = "获取字典数据列表")
     @GetMapping("/list")
     public R<Page<SysDictData>> list(SysDictData dictData, Page<SysDictData> pageQuery) {
-        Page<SysDictData> page = sysDictDataService.lambdaQuery().page(pageQuery);
+        Page<SysDictData> page = sysDictDataService.lambdaQuery()
+                .eq(StrUtil.isNotBlank(dictData.getDictType()), SysDictData::getDictType, dictData.getDictType())
+                .like(StrUtil.isNotBlank(dictData.getDictLabel()), SysDictData::getDictLabel, dictData.getDictLabel())
+                .eq(ObjectUtil.isNotNull(dictData.getStatus()), SysDictData::getStatus, dictData.getStatus())
+                .orderByAsc(SysDictData::getDictSort)
+                .page(pageQuery);
         return R.ok(page);
     }
 
-    @SaCheckPermission("system:dept:list")
+    @SaCheckPermission("system:dict:query")
     @ApiOperation(value = "查询字典数据详细")
     @GetMapping(value = "/{dictCode}")
     public R<SysDictData> getInfo(@PathVariable Long dictCode) {
         return R.ok(sysDictDataService.getById(dictCode));
     }
 
-    @SaCheckPermission("system:dept:query")
+    @SaCheckPermission("system:dict:query")
     @ApiOperation(value = "根据字典类型查询字典数据信息")
     @GetMapping(value = "/type/{dictType}")
     @Cacheable(cacheNames = CacheNames.SYS_DICT, key = "#dictType")
@@ -53,27 +62,38 @@ public class SysDictDataController {
         return R.ok(sysDictDataService.queryDictDataByType(dictType));
     }
 
-    @SaCheckPermission("system:dept:add")
+    @SaCheckPermission("system:dict:add")
     @PostMapping(value = "/add")
-    @ApiOperation(value = "新增字典类型")
+    @ApiOperation(value = "新增字典数据")
     public R<Boolean> add(@Validated @RequestBody SysDictData dict) {
-        return R.ok(sysDictDataService.save(dict));
+        boolean saved = sysDictDataService.save(dict);
+        if (saved) {
+            sysDictTypeService.resetDictCache();
+        }
+        return R.ok(saved);
     }
 
 
-    @SaCheckPermission("system:dept:edit")
+    @SaCheckPermission("system:dict:edit")
     @PostMapping(value = "/edit")
-    @ApiOperation(value = "编辑字典类型")
-    public R<Boolean> edit(SysDictData sysDictData) {
-        return R.ok(sysDictDataService.updateById(sysDictData));
+    @ApiOperation(value = "编辑字典数据")
+    public R<Boolean> edit(@Validated @RequestBody SysDictData sysDictData) {
+        boolean updated = sysDictDataService.updateById(sysDictData);
+        if (updated) {
+            sysDictTypeService.resetDictCache();
+        }
+        return R.ok(updated);
     }
 
-    @SaCheckPermission("system:dept:remove")
+    @SaCheckPermission("system:dict:remove")
     @PostMapping(value = "/remove")
-    @ApiOperation(value = "删除字典类型")
+    @ApiOperation(value = "删除字典数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
-        return R.ok(sysDictDataService.removeByIds(ids));
+        boolean removed = sysDictDataService.removeByIds(ids);
+        if (removed) {
+            sysDictTypeService.resetDictCache();
+        }
+        return R.ok(removed);
     }
 
 }
-
