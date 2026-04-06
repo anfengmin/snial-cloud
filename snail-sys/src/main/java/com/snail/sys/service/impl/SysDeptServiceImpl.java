@@ -131,7 +131,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
     @Override
     public Long selectNormalChildrenDeptById(Long deptId) {
         return this.lambdaQuery()
-                .eq(SysDept::getId, deptId)
+                .eq(SysDept::getStatus, UserConstants.DEPT_NORMAL)
+                .apply(DataBaseHelper.findInSet(deptId, "ancestors"))
                 .count();
     }
 
