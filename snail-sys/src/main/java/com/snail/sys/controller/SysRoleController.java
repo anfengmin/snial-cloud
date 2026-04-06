@@ -63,7 +63,7 @@ public class SysRoleController {
         } else if (sysRoleService.checkRoleKeyExists(role)) {
             return R.fail("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
-        return R.ok(sysRoleService.save(role));
+        return R.ok(sysRoleService.insertRole(role));
 
     }
 
@@ -162,4 +162,3 @@ public class SysRoleController {
         return R.ok();
     }
 }
-
