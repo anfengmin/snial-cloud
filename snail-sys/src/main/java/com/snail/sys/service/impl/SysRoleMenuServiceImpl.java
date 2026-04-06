@@ -89,6 +89,10 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuDao, SysRoleM
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insertRoleMenu(SysRole role) {
+        if (role.getMenuIds() == null || role.getMenuIds().length == 0) {
+            return true;
+        }
+
         // 新增用户与角色管理
         List<SysRoleMenu> list = Arrays.stream(role.getMenuIds())
                 .map(menuId -> {
