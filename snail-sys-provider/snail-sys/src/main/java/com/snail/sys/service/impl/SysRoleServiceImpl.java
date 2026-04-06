@@ -15,7 +15,7 @@ import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysDept;
 import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.OptionVO;
+import com.snail.sys.vo.OptionVO;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;

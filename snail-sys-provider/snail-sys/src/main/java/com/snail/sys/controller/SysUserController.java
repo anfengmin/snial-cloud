@@ -10,7 +10,7 @@ import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.UserVO;
+import com.snail.sys.vo.UserVO;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;

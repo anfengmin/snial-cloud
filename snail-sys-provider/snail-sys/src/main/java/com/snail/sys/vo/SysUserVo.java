@@ -1,6 +1,5 @@
 package com.snail.sys.vo;
 
-import com.snail.sys.api.vo.UserVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;

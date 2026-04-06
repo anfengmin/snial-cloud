@@ -1,4 +1,4 @@
-package com.snail.sys.api.vo;
+package com.snail.sys.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,4 +1,4 @@
-package com.snail.sys.api.vo;
+package com.snail.sys.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.snail.sys.api.domain.SysDept;

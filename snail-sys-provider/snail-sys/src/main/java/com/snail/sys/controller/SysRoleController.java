@@ -6,7 +6,7 @@ import com.snail.common.core.utils.R;
 import com.snail.common.core.enums.BusinessType;
 import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.api.vo.OptionVO;
+import com.snail.sys.vo.OptionVO;
 import com.snail.sys.api.domain.SysRole;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
