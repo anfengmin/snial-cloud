@@ -38,6 +38,14 @@ public interface SysRoleService extends IService<SysRole> {
     SysRole selectRoleById(Long roleId);
 
     /**
+     * 新增角色并保存菜单关联
+     *
+     * @param role role
+     * @return boolean
+     */
+    boolean insertRole(SysRole role);
+
+    /**
      * checkRoleDataScope
      *
      * @param roleId roleId
