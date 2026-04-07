@@ -187,8 +187,27 @@
 - 当前构建约定：
   - 根目录构建系统服务：`mvn -pl snail-sys-provider/snail-sys -am -DskipTests package`
   - 单独构建公共层：`mvn -f snail-common/pom.xml -DskipTests package`
-  - 单独构建 `snail-sys-provider` 时，如果本地仓库未提前安装 `snail-common-bom` 等公共父/依赖，需要先从根工程或公共层完成 install/package
+- 单独构建 `snail-sys-provider` 时，如果本地仓库未提前安装 `snail-common-bom` 等公共父/依赖，需要先从根工程或公共层完成 install/package
 - 这属于正常 Maven 分层结果，不是循环依赖
+
+### 4.10 POM 结构收口
+
+- 2026-04-07 对 `snail-cloud` 全项目 `pom.xml` 做过一轮结构清理，目标是减少重复版本、重复依赖和分散的插件配置
+- 根 `pom.xml` 当前统一管理了以下依赖版本：
+  - `sa-token-reactor-spring-boot-starter`
+  - `sa-token-jwt`
+  - `dynamic-datasource-spring-boot-starter`
+  - `hutool-captcha`
+- 根 `pom.xml` 已统一维护 `spring-boot-maven-plugin` 版本，业务模块不再各自重复写 `${spring-boot.version}`
+- `snail-gateway/pom.xml` 已清理掉重复的 `spring-cloud-loadbalancer` 依赖，只保留 `spring-cloud-starter-loadbalancer`
+- `snail-common-mybatis`、`snail-common-satoken`、`snail-gateway`、`snail-sys-provider/snail-sys` 中部分原本手写的版本号已回收至根 `dependencyManagement`
+- `snail-sys-provider/pom.xml` 已新增对 `snail-sys-api` 的局部 `dependencyManagement`，后续 `snail-sys` 依赖兄弟模块无需重复写版本
+- 注意：
+  - `snail-common-bom` 作为被根工程 `import` 的 BOM，不能再挂到 `snail-common` 或 `snail-cloud` 父子继承链上
+  - 否则 Maven 会报 `type=pom and with scope=import form a cycle`
+- 当前验证结果：
+  - `mvn -DskipTests validate` 通过
+  - `mvn -pl snail-sys-provider/snail-sys -am -DskipTests compile` 通过
 
 ## 5. 用户头像默认生成规则
 

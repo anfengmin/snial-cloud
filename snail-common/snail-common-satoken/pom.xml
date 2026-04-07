@@ -22,7 +22,6 @@
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-jwt</artifactId>
-            <version>${satoken.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>cn.hutool</groupId>

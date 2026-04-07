@@ -18,4 +18,14 @@
         <module>snail-sys-api</module>
         <module>snail-sys</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-sys-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
