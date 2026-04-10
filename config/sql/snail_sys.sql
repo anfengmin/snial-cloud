@@ -434,6 +434,7 @@ create table sys_operate_log
     json_result      varchar(2000) default '' comment '返回参数',
     status           tinyint(1)    default 0 comment '操作状态（0正常 1异常）',
     error_msg        varchar(2000) default '' comment '错误消息',
+    cost_time        bigint(20)    default 0 comment '消耗时间(毫秒)',
     operate_time     datetime comment '操作时间',
     primary key (id),
     key idx_sys_oper_log_bt (business_type),
