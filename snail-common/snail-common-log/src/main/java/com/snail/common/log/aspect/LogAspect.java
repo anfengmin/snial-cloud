@@ -17,8 +17,8 @@ import com.snail.common.log.domain.SysOperateLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -54,25 +54,24 @@ public class LogAspect {
     @Autowired
     private AsyncLogService asyncLogService;
 
-    /**
-     * 处理完请求后执行
-     *
-     * @param joinPoint 切点
-     */
-    @AfterReturning(pointcut = "@annotation(controllerLog)", returning = "jsonResult")
-    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult) {
-        handleLog(joinPoint, controllerLog, null, jsonResult);
-    }
-
-    /**
-     * 拦截异常操作
-     *
-     * @param joinPoint 切点
-     * @param e         异常
-     */
-    @AfterThrowing(value = "@annotation(controllerLog)", throwing = "e")
-    public void doAfterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e) {
-        handleLog(joinPoint, controllerLog, e, null);
+    @Around("@annotation(controllerLog)")
+    public Object doAround(ProceedingJoinPoint joinPoint, Log controllerLog) throws Throwable {
+        long startTime = System.currentTimeMillis();
+        Object jsonResult = null;
+        Exception exception = null;
+        try {
+            jsonResult = joinPoint.proceed();
+            return jsonResult;
+        } catch (Exception e) {
+            exception = e;
+            throw e;
+        } catch (Throwable throwable) {
+            exception = throwable instanceof Exception ? (Exception) throwable : new RuntimeException(throwable);
+            throw throwable;
+        } finally {
+            long costTime = System.currentTimeMillis() - startTime;
+            handleLog(joinPoint, controllerLog, exception, jsonResult, costTime);
+        }
     }
 
     /**
@@ -82,13 +81,15 @@ public class LogAspect {
      * @param controllerLog controllerLog
      * @param e             e
      * @param jsonResult    jsonResult
+     * @param costTime      接口耗时(ms)
      * @since 1.0
      */
-    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult) {
+    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult, long costTime) {
         try {
             // *========数据库日志=========*//
             SysOperateLog operLog = new SysOperateLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+            operLog.setCostTime(costTime);
             // 请求的地址
             String ip = ServletUtils.getClientIP();
             operLog.setOperateIp(ip);
@@ -153,7 +154,8 @@ public class LogAspect {
     private void setRequestValue(JoinPoint joinPoint, SysOperateLog operateLog, String[] excludeParamNames) {
         Map<String, String> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
         String requestMethod = operateLog.getRequestMethod();
-        boolean flag = MapUtil.isEmpty(paramsMap) && HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod);
+        boolean flag = MapUtil.isEmpty(paramsMap)
+                && (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod));
         if (flag) {
             String params = argsArrayToString(joinPoint.getArgs(), excludeParamNames);
             operateLog.setOperateParam(StringUtils.substring(params, 0, 2000));

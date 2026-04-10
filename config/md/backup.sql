@@ -281,6 +281,7 @@ CREATE TABLE `sys_operate_log` (
   `json_result` varchar(2000) DEFAULT '' COMMENT '返回参数',
   `status` tinyint(1) DEFAULT '0' COMMENT '操作状态（0正常 1异常）',
   `error_msg` varchar(2000) DEFAULT '' COMMENT '错误消息',
+  `cost_time` bigint DEFAULT '0' COMMENT '消耗时间(毫秒)',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`),
   KEY `idx_sys_oper_log_bt` (`business_type`),

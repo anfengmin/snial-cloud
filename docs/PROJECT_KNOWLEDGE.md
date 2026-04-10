@@ -209,6 +209,67 @@
   - `mvn -DskipTests validate` 通过
   - `mvn -pl snail-sys-provider/snail-sys -am -DskipTests compile` 通过
 
+### 4.11 应用配置占位符约定
+
+- `snail-gateway` 与 `snail-sys` 的 `application.yml` 不再使用 Maven 资源过滤占位符，例如：
+  - `@profiles.active@`
+  - `@nacos.server@`
+  - `@nacos.username@`
+  - `@nacos.password@`
+- 原因：
+  - IDEA 直接运行应用时，资源文件不会先走 Maven filtering
+  - YAML 解析阶段会把 `@...@` 视为非法 token，导致应用在启动前直接失败
+- 当前统一改为 Spring 环境变量占位符 + 默认值，例如：
+  - `${PROFILES_ACTIVE:dev}`
+  - `${NACOS_SERVER:127.0.0.1:8848}`
+  - `${NACOS_USERNAME:nacos}`
+  - `${NACOS_PASSWORD:nacos}`
+- 这样既支持本地 IDE 直接启动，也支持通过环境变量覆盖部署参数
+
+### 4.12 缓存监控接口
+
+- 系统监控新增缓存监控接口：`GET /monitor/cache`
+- 控制器文件：
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/controller/SysCacheController.java`
+- 权限标识：
+  - `monitor:cache:list`
+- 返回结构：
+  - `basicInfo`：Redis 基础信息
+  - `commandStats`：Redis 命令统计
+  - `memoryInfo`：Redis 内存信息
+- 实现方式：
+
+### 4.13 2026-04-10 公共组件优化
+
+- 本轮已优先优化以下公共能力：
+  - `snail-common-mybatis`
+  - `snail-common-log`
+  - `snail-common-satoken`
+  - `snail-common-redis`
+- MyBatis Plus 公共配置新增 `snail.mybatis.*`：
+  - `max-limit` 默认 `1000`
+  - `overflow` 默认 `true`
+  - `worker-id`、`datacenter-id` 可选
+- 雪花 ID 生成器不再固定绑定 `localhost`，默认改为 MP 自身策略；若显式配置 `worker-id/datacenter-id`，则优先使用配置值
+- `@Log` 切面已修正请求参数分支判断优先级，避免所有 `POST` 请求都错误走对象参数分支
+- `AsyncLogService` 已增加本地兜底接口 `LocalLogPersistenceHandler`
+  - 远程 Dubbo 日志服务失败时，系统模块会自动退回本地服务落库
+  - 系统模块实现类：`SysLocalLogPersistenceHandler`
+- Sa-Token Redis 搜索不再先全量收集 key 再分页，改为基于 Redisson key stream 的轻量分页实现
+- `RedisUtils` 不再在类加载时静态固化 `RedissonClient` Bean，改为按调用延迟获取，降低启动时序和测试替换风险
+- `RedisConfiguration` 已增加互斥校验：
+  - `redisson.singleServerConfig`
+  - `redisson.clusterServersConfig`
+  - 两者不可同时存在
+  - 复用 `snail-common-redis` 中的 `RedisUtils.getClient()`
+  - 通过 Redisson `RedisNode.info(...)` 获取 `SERVER / CLIENTS / MEMORY / PERSISTENCE / STATS / CPU / COMMANDSTATS`
+  - 单机、主从、哨兵、集群模式都支持，优先选择可用 master 节点
+- 相关 VO：
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/vo/CacheMonitorVO.java`
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/vo/CacheBasicInfoVO.java`
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/vo/CacheCommandStatVO.java`
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/vo/CacheMemoryInfoVO.java`
+
 ## 5. 用户头像默认生成规则
 
 ### 5.1 生效场景
@@ -253,6 +314,8 @@
 - Maven `settings.xml` 解析问题已修复
 - 2026-04-07 已完成一次完整验证：`mvn -pl snail-sys-provider/snail-sys -am -DskipTests package` 通过
 - `snail-sys-provider/snail-sys/pom.xml` 中重复的 `spring-cloud-starter-alibaba-nacos-discovery` 依赖声明已清理
+- `snail-gateway` 本地启动时，如果 Nacos 客户端仍处于 `STARTING`，可能出现 `Client not connected` 注册失败
+- 已在 `snail-gateway/src/main/resources/application.yml` 中将 `spring.cloud.nacos.discovery.fail-fast` 调整为 `false`，避免本地联调时因瞬时注册失败直接导致应用启动中断
 
 ## 9. 关键模块与文件
 

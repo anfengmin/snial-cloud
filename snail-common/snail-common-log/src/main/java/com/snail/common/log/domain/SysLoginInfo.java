@@ -22,7 +22,7 @@ public class SysLoginInfo {
 
     private static final long serialVersionUID = 596901909022038380L;
 
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "访问ID")
     private Long id;
 

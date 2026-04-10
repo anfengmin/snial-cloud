@@ -14,6 +14,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
@@ -34,6 +35,15 @@ public class RedisConfiguration {
 
     @Resource
     private ObjectMapper objectMapper;
+
+    @PostConstruct
+    public void validateMode() {
+        boolean hasSingle = ObjectUtil.isNotNull(redissonProperties.getSingleServerConfig());
+        boolean hasCluster = ObjectUtil.isNotNull(redissonProperties.getClusterServersConfig());
+        if (hasSingle && hasCluster) {
+            throw new IllegalStateException("redisson.singleServerConfig 和 redisson.clusterServersConfig 不能同时配置");
+        }
+    }
 
     @Bean
     public RedissonAutoConfigurationCustomizer redissonCustomizer() {

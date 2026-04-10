@@ -2,15 +2,12 @@ package com.snail.common.satoken.core.dao;
 
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.session.SaSession;
-import cn.dev33.satoken.util.SaFoxUtil;
 import com.snail.common.redis.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -199,9 +196,7 @@ public class PlusSaTokenDao implements SaTokenDao {
      */
     @Override
     public List<String> searchData(String prefix, String keyword, int start, int size, boolean sortType) {
-        Collection<String> keys = RedisUtils.keys(prefix + "*" + keyword + "*");
-        List<String> list = new ArrayList<>(keys);
-        return SaFoxUtil.searchList(list, start, size, sortType);
+        return RedisUtils.searchKeys(prefix + "*" + keyword + "*", start, size, sortType);
     }
 
 

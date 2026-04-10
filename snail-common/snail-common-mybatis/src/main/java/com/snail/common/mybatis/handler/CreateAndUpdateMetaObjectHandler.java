@@ -6,7 +6,7 @@ import com.snail.sys.api.domain.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -31,14 +31,15 @@ public class CreateAndUpdateMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        LocalDateTime now = LocalDateTime.now();
+        Date now = new Date();
         String userCode = getLoginUserCode(metaObject);
 
-        // 使用统一的方法进行填充，减少重复代码
-        fillField(metaObject, CREATE_TIME, now, LocalDateTime.class);
-        fillField(metaObject, UPDATE_TIME, now, LocalDateTime.class);
-        fillField(metaObject, CREATE_BY, userCode, String.class);
-        fillField(metaObject, UPDATE_BY, userCode, String.class);
+        strictInsertFill(metaObject, CREATE_TIME, Date.class, now);
+        strictInsertFill(metaObject, UPDATE_TIME, Date.class, now);
+        if (userCode != null) {
+            strictInsertFill(metaObject, CREATE_BY, String.class, userCode);
+            strictInsertFill(metaObject, UPDATE_BY, String.class, userCode);
+        }
 
     }
 
@@ -49,34 +50,15 @@ public class CreateAndUpdateMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        fillField(metaObject, UPDATE_TIME, LocalDateTime.now(), LocalDateTime.class);
+        strictUpdateFill(metaObject, UPDATE_TIME, Date.class, new Date());
         LoginUser loginUser = getLoginUser();
         String userCode = Optional.ofNullable(loginUser)
                 .map(LoginUser::getUserCode)
                 .orElse(null);
-        fillField(metaObject, UPDATE_BY, userCode, String.class);
-
-    }
-
-
-    /**
-     * 通用填充
-     *
-     * @param metaObject metaObject
-     * @param fieldName  fieldName
-     * @param value      value
-     * @param fieldType  fieldType
-     * @since 1.0
-     * <p>1.0 Initialization method </p>
-     */
-    private <T> void fillField(MetaObject metaObject, String fieldName, T value, Class<T> fieldType) {
-        if (metaObject.hasSetter(fieldName)) {
-            // 只有在值不为空的时候才填充
-            if (value != null) {
-                // 这里实际上 insert 和 update 都调用的是 insertFill，只是名称不同而已
-                this.strictInsertFill(metaObject, fieldName, fieldType, value);
-            }
+        if (userCode != null) {
+            strictUpdateFill(metaObject, UPDATE_BY, String.class, userCode);
         }
+
     }
 
 
