@@ -23,7 +23,7 @@ public class SysOperateLog implements Serializable {
 
     private static final long serialVersionUID = 602922838570574584L;
 
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.INPUT)
     @ApiModelProperty(value = "日志主键")
     private Long id;
 
@@ -68,6 +68,9 @@ public class SysOperateLog implements Serializable {
 
     @ApiModelProperty(value = "错误消息")
     private String errorMsg;
+
+    @ApiModelProperty(value = "消耗时间(毫秒)")
+    private Long costTime;
 
     @ApiModelProperty(value = "操作时间")
     private Date operateTime;
