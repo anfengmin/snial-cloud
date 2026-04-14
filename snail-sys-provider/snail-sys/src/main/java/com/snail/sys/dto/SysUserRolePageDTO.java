@@ -1,8 +1,7 @@
 package com.snail.sys.dto;
 
 import com.snail.sys.domain.SysUserRole;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,15 +16,15 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "用户和角色关联表")
+@Schema(description = "用户和角色关联表")
 public class SysUserRolePageDTO extends PageDTO<SysUserRole> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户ID")
+    @Schema(description = "用户ID")
     private Long userId;
 
-    @ApiModelProperty(value = "角色ID")
+    @Schema(description = "角色ID")
     private Long roleId;
 
 }

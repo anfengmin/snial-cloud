@@ -12,15 +12,19 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.utils.R;
 import com.snail.common.core.exception.user.UserException;
-import com.snail.sys.api.domain.*;
+import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.api.dto.RoleDTO;
-import com.snail.sys.vo.UserVO;
 import com.snail.sys.dao.SysUserDao;
+import com.snail.sys.constants.SysConfigConstants;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.*;
 import com.snail.sys.vo.SysUserVo;
+import com.snail.sys.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,6 +67,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     private final SysUserPostService sysUserPostService;
     private final SysPermissionService sysPermissionService;
     private final SysDeptService sysDeptService;
+    private final SysConfigService sysConfigService;
 
     /**
      * 分页查询
@@ -404,10 +409,36 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         return this.updateById(user);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String resetUserPassword(Long userId) {
+        SysUser user = super.getById(userId);
+        if (ObjectUtil.isNull(user)) {
+            throw new ServiceException("用户不存在");
+        }
+
+        checkUserAllowed(user);
+        checkUserDataScope(userId);
+
+        String initPassword = StrUtil.blankToDefault(
+                sysConfigService.selectConfigByKey(SysConfigConstants.SYS_USER_INIT_PASSWORD),
+                SysConfigConstants.SYS_USER_INIT_PASSWORD_DEFAULT
+        );
+
+        boolean updated = this.lambdaUpdate()
+                .eq(SysUser::getId, userId)
+                .set(SysUser::getPassWord, BCrypt.hashpw(initPassword))
+                .update();
+        if (!updated) {
+            throw new ServiceException("重置密码失败");
+        }
+        return initPassword;
+    }
+
     /**
      * getUserEq
      *
-     * @return com.github.yulichang.wrapper.MPJLambdaWrapper<com.snail.sys.api.domain.SysUser>
+     * @return com.github.yulichang.wrapper.MPJLambdaWrapper<com.snail.sys.domain.SysUser>
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */

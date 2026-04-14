@@ -258,6 +258,36 @@
 - Sa-Token Redis 搜索不再先全量收集 key 再分页，改为基于 Redisson key stream 的轻量分页实现
 - `RedisUtils` 不再在类加载时静态固化 `RedissonClient` Bean，改为按调用延迟获取，降低启动时序和测试替换风险
 - `RedisConfiguration` 已增加互斥校验：
+
+### 4.14 2026-04-14 sys-api 边界再收口
+
+- `snail-sys-provider/snail-sys-api` 不再承载系统域 ORM 实体
+- 以下类已从 `snail-sys-api` 迁回 `snail-sys` 内部域模型：
+  - `SysUser`
+  - `SysRole`
+  - `SysDept`
+  - `SysUserOnline`
+- 迁移后的包位置：
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/sys/domain`
+- 当前 `snail-sys-api` 仅保留真正的 API 契约对象：
+  - `UserRoleDeptDTO`
+- 2026-04-14 第二次收口：
+  - `LoginUser`
+  - `RoleDTO`
+  已从 `snail-common-core` 迁回 `snail-sys-api`
+- 现在的职责边界：
+  - `snail-sys-api` 放跨模块复用的系统契约 DTO / 登录态对象
+  - `snail-common-core` 不再承载 `com.snail.sys.api.*` 这类系统专属契约
+  - `snail-common-log`、`snail-common-satoken`、`snail-common-mybatis` 如需 `LoginUser`，统一直接依赖 `snail-sys-api`
+- 这次收口后的原则：
+  - `snail-sys-api` 只放跨服务调用需要复用的 DTO / VO / 请求响应契约
+  - `snail-sys` 自己的数据库实体、MyBatis Plus 注解模型、在线会话缓存模型，全部留在 `snail-sys`
+  - 如果某个对象依赖 `@TableName`、`@TableField`、`BaseEntity`、业务内部枚举/常量，默认判定为实现层模型，不应继续留在 `sys-api`
+- 收口结果：
+  - `snail-sys-api/pom.xml` 已去掉 `snail-common-core`、`mybatis-plus-annotation`
+  - 当前 `snail-sys-api` 只需要 `lombok` 以及保留的 OpenAPI/Validation/Hutool 基础依赖
+- 验证结果：
+  - `mvn -pl snail-sys-provider/snail-sys-api -am -DskipTests compile` 通过
   - `redisson.singleServerConfig`
   - `redisson.clusterServersConfig`
   - 两者不可同时存在

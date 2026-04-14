@@ -2,7 +2,7 @@ package com.snail.common.core.utils;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.snail.common.core.constant.HttpStatus;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,20 +24,20 @@ public class R<T> implements Serializable {
     /**
      * 消息状态码
      */
-    @ApiModelProperty(value = "消息状态码", example = "200:成功 500:失败")
+    @Schema(description = "消息状态码", example = "200:成功 500:失败")
     private Integer code;
 
     /**
      * 消息内容
      */
-    @ApiModelProperty(value = "消息内容")
+    @Schema(description = "消息内容")
     @JsonAlias("message")
     private String msg;
 
     /**
      * 数据对象
      */
-    @ApiModelProperty(value = "数据对象")
+    @Schema(description = "数据对象")
     private T data;
 
     /**

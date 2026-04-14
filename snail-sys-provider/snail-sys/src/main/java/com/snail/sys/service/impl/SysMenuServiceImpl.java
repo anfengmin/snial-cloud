@@ -11,7 +11,7 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.domain.SysRole;
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.dao.SysMenuDao;
 import com.snail.sys.domain.SysMenu;
 import com.snail.sys.domain.SysRoleMenu;

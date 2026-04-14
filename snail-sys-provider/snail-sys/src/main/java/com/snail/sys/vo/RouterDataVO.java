@@ -1,7 +1,6 @@
 package com.snail.sys.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,17 +13,17 @@ import java.util.List;
  *
  * @author snail
  */
-@ApiModel("路由返回数据")
+@Schema(description = "路由返回数据")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RouterDataVO {
 
-    @ApiModelProperty("首页路由名称")
+    @Schema(description = "首页路由名称")
     private String home;
 
-    @ApiModelProperty("路由列表")
+    @Schema(description = "路由列表")
     private List<RouterVO> routes;
 }
 

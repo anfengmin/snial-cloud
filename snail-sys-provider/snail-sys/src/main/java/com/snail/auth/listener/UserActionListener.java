@@ -12,7 +12,7 @@ import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysUserOnline;
+import com.snail.sys.domain.SysUserOnline;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

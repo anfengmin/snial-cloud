@@ -2,8 +2,7 @@ package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,16 +15,16 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_role_menu")
-@ApiModel(value = "角色和菜单关联")
+@Schema(description = "角色和菜单关联")
 public class SysRoleMenu extends Model<SysRoleMenu> {
 
     private static final long serialVersionUID = -23476875467648078L;
 
     @TableId(type = IdType.INPUT)
-    @ApiModelProperty(value = "角色ID")
+    @Schema(description = "角色ID")
     private Long roleId;
 
-    @ApiModelProperty(value = "菜单ID")
+    @Schema(description = "菜单ID")
     private Long menuId;
 
 }

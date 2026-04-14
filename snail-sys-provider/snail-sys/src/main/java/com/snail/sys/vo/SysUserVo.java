@@ -1,6 +1,6 @@
 package com.snail.sys.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,12 +17,12 @@ import java.util.Set;
 @Data
 public class SysUserVo {
 
-    @ApiModelProperty(value = "用户信息")
+    @Schema(description = "用户信息")
     private UserVO user;
 
-    @ApiModelProperty(value = "菜单权限")
+    @Schema(description = "菜单权限")
     private Set<String> menuPermission;
 
-    @ApiModelProperty(value = "角色权限")
+    @Schema(description = "角色权限")
     private Set<String> rolePermission;
 }

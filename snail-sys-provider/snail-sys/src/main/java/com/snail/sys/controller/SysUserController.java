@@ -9,14 +9,14 @@ import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.common.log.annotation.Log;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysUser;
-import com.snail.sys.vo.UserVO;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysUserService;
 import com.snail.sys.vo.SysUserVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.snail.sys.vo.UserVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ import java.util.List;
  * @since 2025-05-30 23:06:58
  */
 
-@Api(tags = "用户")
+@Tag(name = "用户")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sysUser")
@@ -41,14 +41,14 @@ public class SysUserController {
 
     @SaCheckPermission("system:user:list")
     @PostMapping("queryByPage")
-    @ApiOperation(value = "分页查询", notes = "分页查询")
+    @Operation(summary = "分页查询", description = "分页查询")
     public R<Page<SysUser>> queryByPage(@RequestBody SysUserPageDTO dto) {
         return R.ok(sysUserService.queryByPage(dto));
     }
 
 
     @GetMapping("getUserInfo")
-    @ApiOperation(value = "获取用户信息")
+    @Operation(summary = "获取用户信息")
     public R<SysUserVo> getInfo() {
         LoginUser loginUser = LoginUtils.getLoginUser();
         assert loginUser != null;
@@ -65,14 +65,14 @@ public class SysUserController {
 
     @SaCheckPermission("system:user:query")
     @GetMapping("/info/{userId}")
-    @ApiOperation(value = "用户id获取用户信息")
+    @Operation(summary = "用户id获取用户信息")
     public R<SysUserVo> getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         SysUserVo sysUserVo = sysUserService.getInfo(userId);
         return R.ok(sysUserVo);
     }
 
     @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
+    @Operation(summary = "主键查询")
     public R<SysUser> queryById(@PathVariable("id") Long id) {
         return R.ok(sysUserService.getById(id));
     }
@@ -80,7 +80,7 @@ public class SysUserController {
     @SaCheckPermission("system:user:add")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping("add")
-    @ApiOperation(value = "新增用户")
+    @Operation(summary = "新增用户")
     public R<Boolean> add(@Validated @RequestBody SysUser user) {
         sysDeptService.checkDeptDataScope(user.getDeptId());
         if (sysUserService.checkUserCodeUnique(user)) {
@@ -98,7 +98,7 @@ public class SysUserController {
     @SaCheckPermission("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("edit")
-    @ApiOperation(value = "编辑用户")
+    @Operation(summary = "编辑用户")
     public R<Boolean> edit(@Validated @RequestBody SysUser user) {
         sysUserService.checkUserAllowed(user);
         sysUserService.checkUserDataScope(user.getId());
@@ -115,13 +115,20 @@ public class SysUserController {
         return R.ok(sysUserService.updateUser(user));
     }
 
+    @SaCheckPermission("system:sysUser:resetPwd")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @PutMapping("resetPwd/{userId}")
+    @Operation(summary = "重置密码")
+    public R<String> resetPwd(@PathVariable("userId") Long userId) {
+        return R.ok(sysUserService.resetUserPassword(userId));
+    }
+
     @SaCheckPermission("system:user:remove")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @DeleteMapping("remove")
-    @ApiOperation(value = "删除数据")
+    @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestParam("ids") List<Long> ids) {
         return R.ok(sysUserService.removeByIds(ids));
     }
 
 }
-

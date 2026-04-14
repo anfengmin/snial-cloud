@@ -11,8 +11,8 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
 import com.snail.common.mybatis.helper.DataBaseHelper;
 import com.snail.common.redis.utils.CacheUtils;
-import com.snail.sys.api.domain.SysDept;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.dao.SysDeptDao;
 import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.service.SysDeptService;
@@ -43,7 +43,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
      * 获取部门列表
      *
      * @param dept dept
-     * @return java.util.List<com.snail.sys.api.domain.SysDept>
+     * @return java.util.List<com.snail.sys.domain.SysDept>
      * @since 1.0
      */
     @Override
@@ -169,7 +169,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDept> impleme
      * 根据ID查询部门
      *
      * @param deptId deptId
-     * @return com.snail.sys.api.domain.SysDept
+     * @return com.snail.sys.domain.SysDept
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */

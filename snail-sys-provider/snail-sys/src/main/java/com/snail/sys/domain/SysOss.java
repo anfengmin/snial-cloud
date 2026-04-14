@@ -4,8 +4,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,45 +17,45 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_oss")
-@ApiModel(value = "OSS对象存储")
+@Schema(description = "OSS对象存储")
 public class SysOss extends Model<SysOss> {
 
     private static final long serialVersionUID = 218914817594058349L;
 
 
     @TableId(type = IdType.AUTO)
-    @ApiModelProperty(value = "对象存储主键")
+    @Schema(description = "对象存储主键")
     private Long id;
 
-    @ApiModelProperty(value = "文件名")
+    @Schema(description = "文件名")
     private String fileName;
 
-    @ApiModelProperty(value = "原名")
+    @Schema(description = "原名")
     private String originalName;
 
-    @ApiModelProperty(value = "文件后缀名")
+    @Schema(description = "文件后缀名")
     private String fileSuffix;
 
-    @ApiModelProperty(value = "URL地址")
+    @Schema(description = "URL地址")
     private String url;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建者")
+    @Schema(description = "创建者")
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间")
+    @Schema(description = "更新时间")
     private Date updateTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新者")
+    @Schema(description = "更新者")
     private String updateBy;
 
-    @ApiModelProperty(value = "服务商")
+    @Schema(description = "服务商")
     private String service;
 
 }

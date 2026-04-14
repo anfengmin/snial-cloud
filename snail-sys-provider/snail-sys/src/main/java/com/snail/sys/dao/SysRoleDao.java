@@ -1,7 +1,7 @@
 package com.snail.sys.dao;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import com.snail.sys.api.domain.SysRole;
+import com.snail.sys.domain.SysRole;
 import org.apache.ibatis.annotations.Mapper;
 
 

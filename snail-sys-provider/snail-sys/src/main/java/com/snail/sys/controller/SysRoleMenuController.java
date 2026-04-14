@@ -1,7 +1,7 @@
 package com.snail.sys.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import com.snail.sys.domain.SysRoleMenu;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.dto.SysRoleMenuPageDTO;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-30 23:06:37
  */
-@Api(tags = "角色和菜单关联")
+@Tag(name = "角色和菜单关联")
 @RestController
 @RequestMapping("/sysRoleMenu")
 public class SysRoleMenuController {
@@ -27,31 +27,31 @@ public class SysRoleMenuController {
     private SysRoleMenuService sysRoleMenuService;
 
     @PostMapping("queryByPage")
-    @ApiOperation(value = "分页查询", notes = "分页查询")
+    @Operation(summary = "分页查询", description = "分页查询")
     public R<Page<SysRoleMenu>> queryByPage(@RequestBody SysRoleMenuPageDTO dto) {
         return sysRoleMenuService.queryByPage(dto);
     }
 
     @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
+    @Operation(summary = "主键查询")
     public R<SysRoleMenu> queryById(@PathVariable("id") Long id) {
         return R.ok(sysRoleMenuService.getById(id));
     }
 
     @PostMapping("add")
-    @ApiOperation(value = "新增数据")
+    @Operation(summary = "新增数据")
     public R<Boolean> add(SysRoleMenu sysRoleMenu) {
         return R.ok(sysRoleMenuService.save(sysRoleMenu));
     }
 
     @PutMapping("edit")
-    @ApiOperation(value = "编辑数据")
+    @Operation(summary = "编辑数据")
     public R<Boolean> edit(SysRoleMenu sysRoleMenu) {
         return R.ok(sysRoleMenuService.updateById(sysRoleMenu));
     }
 
     @DeleteMapping("delete")
-    @ApiOperation(value = "删除数据")
+    @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysRoleMenuService.removeByIds(ids));
     }

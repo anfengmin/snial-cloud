@@ -1,7 +1,6 @@
 package com.snail.gateway.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,17 +14,17 @@ import java.io.Serializable;
  */
 
 @Data
-@ApiModel(value = "验证码")
+@Schema(description = "验证码")
 public class CaptchaVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "验证码开关")
+    @Schema(description = "验证码开关")
     private Boolean captchaEnabled;
 
-    @ApiModelProperty(value = "唯一标识")
+    @Schema(description = "唯一标识")
     private String uuid;
 
-    @ApiModelProperty(value = "验证码")
+    @Schema(description = "验证码")
     private String img;
 }

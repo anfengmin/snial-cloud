@@ -1,6 +1,6 @@
 package com.snail.auth.form;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,10 +15,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class RegisterBody extends LoginBody {
 
-    @ApiModelProperty(value = "用户类型")
+    @Schema(description = "用户类型")
     private String userType;
 
-    @ApiModelProperty(value = "用户名称")
+    @Schema(description = "用户名称")
     private String userName;
 
 }

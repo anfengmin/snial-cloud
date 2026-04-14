@@ -1,7 +1,7 @@
 package com.snail.sys.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.service.SysUserPostService;
 import com.snail.sys.dto.SysUserPostPageDTO;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-30 23:13:44
  */
-@Api(tags = "用户与岗位关联表")
+@Tag(name = "用户与岗位关联表")
 @RestController
 @RequestMapping("/sysUserPost")
 public class SysUserPostController {
@@ -27,31 +27,31 @@ public class SysUserPostController {
     private SysUserPostService sysUserPostService;
 
     @PostMapping("queryByPage")
-    @ApiOperation(value = "分页查询", notes = "分页查询")
+    @Operation(summary = "分页查询", description = "分页查询")
     public R<Page<SysUserPost>> queryByPage(@RequestBody SysUserPostPageDTO dto) {
         return sysUserPostService.queryByPage(dto);
     }
 
     @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
+    @Operation(summary = "主键查询")
     public R<SysUserPost> queryById(@PathVariable("id") Long id) {
         return R.ok(sysUserPostService.getById(id));
     }
 
     @PostMapping("add")
-    @ApiOperation(value = "新增数据")
+    @Operation(summary = "新增数据")
     public R<Boolean> add(SysUserPost sysUserPost) {
         return R.ok(sysUserPostService.save(sysUserPost));
     }
 
     @PutMapping("edit")
-    @ApiOperation(value = "编辑数据")
+    @Operation(summary = "编辑数据")
     public R<Boolean> edit(SysUserPost sysUserPost) {
         return R.ok(sysUserPostService.updateById(sysUserPost));
     }
 
     @DeleteMapping("delete")
-    @ApiOperation(value = "删除数据")
+    @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysUserPostService.removeByIds(ids));
     }

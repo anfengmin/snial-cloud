@@ -1,9 +1,8 @@
-package com.snail.sys.api.domain;
+package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.snail.common.core.constant.UserConstants;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -19,74 +18,74 @@ import java.util.Date;
  */
 @Data
 @TableName("sys_role")
-@ApiModel(value = "角色信息")
+@Schema(description = "角色信息")
 public class SysRole implements Serializable {
 
     private static final long serialVersionUID = 361781560607356976L;
 
     @TableId(type = IdType.AUTO)
-    @ApiModelProperty(value = "角色ID")
+    @Schema(description = "角色ID")
     private Long id;
 
     @NotBlank(message = "角色名称不能为空")
-    @ApiModelProperty(value = "角色名称")
+    @Schema(description = "角色名称")
     private String roleName;
 
     @NotBlank(message = "权限字符不能为空")
-    @ApiModelProperty(value = "角色权限字符串")
+    @Schema(description = "角色权限字符串")
     private String roleKey;
 
     @NotNull(message = "显示顺序不能为空")
-    @ApiModelProperty(value = "显示顺序")
+    @Schema(description = "显示顺序")
     private Integer roleSort;
 
-    @ApiModelProperty(value = "数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）")
+    @Schema(description = "数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）")
     private String dataScope;
 
-    @ApiModelProperty(value = "菜单树选择项是否关联显示")
+    @Schema(description = "菜单树选择项是否关联显示")
     private Integer menuCheckStrictly;
 
-    @ApiModelProperty(value = "部门树选择项是否关联显示")
+    @Schema(description = "部门树选择项是否关联显示")
     private Integer deptCheckStrictly;
 
-    @ApiModelProperty(value = "状态（0正常 1停用）")
+    @Schema(description = "状态（0正常 1停用）")
     private Integer status;
 
     @TableLogic
-    @ApiModelProperty(value = "删除标志（0:存在 1:删除）")
+    @Schema(description = "删除标志（0:存在 1:删除）")
     private Integer deleted;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建者")
+    @Schema(description = "创建者")
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新者")
+    @Schema(description = "更新者")
     private String updateBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间")
+    @Schema(description = "更新时间")
     private Date updateTime;
 
-    @ApiModelProperty(value = "备注")
+    @Schema(description = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "用户是否存在此角色标识 默认不存在")
+    @Schema(description = "用户是否存在此角色标识 默认不存在")
     @TableField(exist = false)
     private boolean flag = false;
 
-    @ApiModelProperty(value = "菜单组")
+    @Schema(description = "菜单组")
     @TableField(exist = false)
     private Long[] menuIds;
 
-    @ApiModelProperty(value = "部门组（数据权限）")
+    @Schema(description = "部门组（数据权限）")
     @TableField(exist = false)
     private Long[] deptIds;
-    @ApiModelProperty(value = "是否管理员")
+    @Schema(description = "是否管理员")
     public boolean isAdmin() {
         return UserConstants.ADMIN_ID.equals(this.id);
     }

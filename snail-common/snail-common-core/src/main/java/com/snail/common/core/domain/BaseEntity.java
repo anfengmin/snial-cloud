@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class BaseEntity implements Serializable {
     /**
      * 搜索值
      */
-    @ApiModelProperty(value = "搜索值")
+    @Schema(description = "搜索值")
     @JsonIgnore
     @TableField(exist = false)
     private String searchValue;
@@ -34,28 +34,28 @@ public class BaseEntity implements Serializable {
     /**
      * 创建者
      */
-    @ApiModelProperty(value = "创建者")
+    @Schema(description = "创建者")
     @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
     /**
      * 创建时间
      */
-    @ApiModelProperty(value = "创建时间")
+    @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
      * 更新者
      */
-    @ApiModelProperty(value = "更新者")
+    @Schema(description = "更新者")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
 
     /**
      * 更新时间
      */
-    @ApiModelProperty(value = "更新时间")
+    @Schema(description = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
@@ -63,7 +63,7 @@ public class BaseEntity implements Serializable {
     /**
      * 请求参数
      */
-    @ApiModelProperty(value = "请求参数")
+    @Schema(description = "请求参数")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @TableField(exist = false)
     private Map<String, Object> params = new HashMap<>();

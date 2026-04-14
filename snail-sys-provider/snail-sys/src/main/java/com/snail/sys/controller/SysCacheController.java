@@ -9,8 +9,8 @@ import com.snail.sys.vo.CacheBasicInfoVO;
 import com.snail.sys.vo.CacheCommandStatVO;
 import com.snail.sys.vo.CacheMemoryInfoVO;
 import com.snail.sys.vo.CacheMonitorVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.redisnode.RedisCluster;
 import org.redisson.api.redisnode.RedisMasterSlave;
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 /**
  * 缓存监控
  */
-@Api(tags = "缓存监控")
+@Tag(name = "缓存监控")
 @RestController
 @RequestMapping("/monitor")
 public class SysCacheController {
 
     @SaCheckPermission("monitor:cache:list")
     @GetMapping("/cache")
-    @ApiOperation(value = "获取缓存监控信息")
+    @Operation(summary = "获取缓存监控信息")
     public R<CacheMonitorVO> cache() {
         RedisNode redisNode = resolveRedisNode();
 

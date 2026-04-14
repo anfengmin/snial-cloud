@@ -1,7 +1,7 @@
 package com.snail.sys.service;
 
 import com.snail.common.core.utils.R;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserRolePageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;

@@ -83,13 +83,6 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <!-- 添加hutool-captcha依赖 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-captcha</artifactId>
-        </dependency>
-
-
     </dependencies>
 
     <build>

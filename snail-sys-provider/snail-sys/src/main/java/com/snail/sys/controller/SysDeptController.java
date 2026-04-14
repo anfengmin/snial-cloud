@@ -7,10 +7,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
-import com.snail.sys.api.domain.SysDept;
+import com.snail.sys.domain.SysDept;
 import com.snail.sys.service.SysDeptService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-21 21:30:46
  */
-@Api(tags = "部门表")
+@Tag(name = "部门表")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/dept")
@@ -34,7 +34,7 @@ public class SysDeptController {
 
     @SaCheckPermission("system:dept:list")
     @PostMapping("/list")
-    @ApiOperation(value = "获取部门列表")
+    @Operation(summary = "获取部门列表")
     public R<List<SysDept>> list(@RequestBody SysDept dept) {
         List<SysDept> depts = sysDeptService.queryDeptList(dept);
         return R.ok(depts);
@@ -42,7 +42,7 @@ public class SysDeptController {
 
     @SaCheckPermission("system:dept:list")
     @GetMapping("/list/exclude/{deptId}")
-    @ApiOperation(value = "查询部门列表（排除节点）")
+    @Operation(summary = "查询部门列表（排除节点）")
     public R<List<SysDept>> excludeChild(@PathVariable(value = "deptId", required = false) Long deptId) {
         List<SysDept> depts = sysDeptService.queryDeptList(new SysDept());
 
@@ -55,14 +55,14 @@ public class SysDeptController {
 
     @SaCheckPermission("system:dept:query")
     @GetMapping("/{deptId}")
-    @ApiOperation(value = "根据部门编号获取详细信息")
+    @Operation(summary = "根据部门编号获取详细信息")
     public R<SysDept> getInfo(@PathVariable Long deptId) {
         return R.ok(sysDeptService.getById(deptId));
     }
 
     @SaCheckPermission("system:dept:add")
     @PostMapping("/add")
-    @ApiOperation(value = "新增部门")
+    @Operation(summary = "新增部门")
     public R<Boolean> add(@Validated @RequestBody SysDept dept) {
         if (sysDeptService.checkDeptNameExists(dept)) {
             return R.fail("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
@@ -86,7 +86,7 @@ public class SysDeptController {
 
     @SaCheckPermission("system:dept:edit")
     @PostMapping("/edit")
-    @ApiOperation(value = "修改部门")
+    @Operation(summary = "修改部门")
     public R<Boolean> edit(@Validated @RequestBody SysDept dept) {
         Long deptId = dept.getId();
         sysDeptService.checkDeptDataScope(deptId);
@@ -107,7 +107,7 @@ public class SysDeptController {
 
     @SaCheckPermission("system:dept:remove")
     @DeleteMapping("/{deptId}")
-    @ApiOperation(value = "删除部门")
+    @Operation(summary = "删除部门")
     public R<Boolean> remove(@PathVariable Long deptId) {
         if (sysDeptService.hasChildByDeptId(deptId)) {
             return R.warn("存在下级部门,不允许删除");

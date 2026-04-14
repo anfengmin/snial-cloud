@@ -1,6 +1,6 @@
 package com.snail.sys.service;
 
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 
 import java.util.Set;
 

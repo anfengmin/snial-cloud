@@ -1,8 +1,7 @@
-package com.snail.sys.api.domain;
+package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,58 +15,58 @@ import java.util.Date;
  */
 @Data
 @TableName("sys_dept")
-@ApiModel(value = "部门")
+@Schema(description = "部门")
 public class SysDept implements Serializable {
 
     private static final long serialVersionUID = -96652055306476181L;
 
 
     @TableId(type = IdType.AUTO)
-    @ApiModelProperty(value = "部门id")
+    @Schema(description = "部门id")
     private Long id;
 
-    @ApiModelProperty(value = "父部门id")
+    @Schema(description = "父部门id")
     private Long parentId;
 
-    @ApiModelProperty(value = "祖级列表")
+    @Schema(description = "祖级列表")
     private String ancestors;
 
-    @ApiModelProperty(value = "部门名称")
+    @Schema(description = "部门名称")
     private String deptName;
 
-    @ApiModelProperty(value = "显示顺序")
+    @Schema(description = "显示顺序")
     private Integer orderNo;
 
-    @ApiModelProperty(value = "负责人")
+    @Schema(description = "负责人")
     private String leader;
 
-    @ApiModelProperty(value = "联系电话")
+    @Schema(description = "联系电话")
     private String phone;
 
-    @ApiModelProperty(value = "邮箱")
+    @Schema(description = "邮箱")
     private String email;
 
-    @ApiModelProperty(value = "部门状态（0:正常 1:停用）")
+    @Schema(description = "部门状态（0:正常 1:停用）")
     private Integer status;
 
     @TableLogic
-    @ApiModelProperty(value = "删除标志（0:存在 1:删除）")
+    @Schema(description = "删除标志（0:存在 1:删除）")
     private Integer deleted;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建者")
+    @Schema(description = "创建者")
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新者")
+    @Schema(description = "更新者")
     private String updateBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间")
+    @Schema(description = "更新时间")
     private Date updateTime;
 
 }

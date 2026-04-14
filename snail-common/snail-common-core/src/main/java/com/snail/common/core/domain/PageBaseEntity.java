@@ -1,6 +1,6 @@
 package com.snail.common.core.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,10 +20,10 @@ public class PageBaseEntity extends SearchBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @NotNull(message = "当前页码不能为空")
-    @ApiModelProperty(value = "当前页码")
+    @Schema(description = "当前页码")
     private Integer current = 1;
 
     @NotNull(message = "每页条数不能为空")
-    @ApiModelProperty(value = "每页条数")
+    @Schema(description = "每页条数")
     private Integer size = 10;
 }

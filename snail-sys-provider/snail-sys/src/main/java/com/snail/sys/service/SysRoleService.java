@@ -2,7 +2,7 @@ package com.snail.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.snail.sys.api.domain.SysRole;
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.vo.OptionVO;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysRolePageDTO;
@@ -31,7 +31,7 @@ public interface SysRoleService extends IService<SysRole> {
      * selectRoleById
      *
      * @param roleId roleId
-     * @return com.snail.sys.api.domain.SysRole
+     * @return com.snail.sys.domain.SysRole
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */

@@ -1,4 +1,4 @@
-package com.snail.sys.api.domain;
+package com.snail.sys.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

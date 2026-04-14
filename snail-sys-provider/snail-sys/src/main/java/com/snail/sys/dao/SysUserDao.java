@@ -1,7 +1,7 @@
 package com.snail.sys.dao;
 
 import com.github.yulichang.base.MPJBaseMapper;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 

@@ -12,9 +12,9 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysDept;
-import com.snail.sys.api.domain.SysRole;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysRole;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.vo.OptionVO;
 import com.snail.sys.dao.SysRoleDao;
 import com.snail.sys.domain.SysUserRole;
@@ -72,7 +72,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
      * selectRoleById
      *
      * @param roleId roleId
-     * @return com.snail.sys.api.domain.SysRole
+     * @return com.snail.sys.domain.SysRole
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */

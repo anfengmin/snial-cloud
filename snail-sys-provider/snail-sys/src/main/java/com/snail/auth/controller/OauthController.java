@@ -14,9 +14,9 @@ import com.snail.common.core.utils.MessageUtils;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Slf4j
-@Api(tags = "登录")
+@Tag(name = "登录")
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
@@ -43,9 +43,9 @@ public class OauthController {
 
     private final SysLoginService sysLoginService;
 
-    @ApiModelProperty(value = "登录")
+    @Schema(description = "登录")
     @PostMapping("login")
-    @ApiOperation("用户登录")
+    @Operation(summary = "用户登录")
     public R<Map<String, Object>> login(@Validated @RequestBody LoginBody form) {
         // 用户登录
         String accessToken = sysLoginService.login(form.getUserCode(), form.getPassWord());
@@ -56,16 +56,16 @@ public class OauthController {
         return R.ok(rspMap);
     }
 
-    @ApiModelProperty(value = "登出")
+    @Schema(description = "登出")
     @PostMapping("logout")
-    @ApiOperation("用户登出")
+    @Operation(summary = "用户登出")
     public R<Void> logout() {
         sysLoginService.logout();
         return R.ok();
     }
 
     @GetMapping("/isLogin")
-    @ApiOperation("判断用户是否登录")
+    @Operation(summary = "判断用户是否登录")
     public R<Object> isLogin(@RequestParam("userCode") String userCode) {
         LoginUser loginUser1 = LoginUtils.getLoginUser();
         boolean login = StpUtil.isLogin(userCode);
@@ -76,7 +76,7 @@ public class OauthController {
 
 
     @PostMapping("register")
-    @ApiOperation("用户注册")
+    @Operation(summary = "用户注册")
     public R<Void> register(@RequestBody RegisterBody registerBody) {
         // 用户注册
         sysLoginService.register(registerBody);
@@ -85,7 +85,7 @@ public class OauthController {
 
 
     @PostMapping("token")
-    @ApiOperation("获取token")
+    @Operation(summary = "获取token")
     public R<Map<String, Object>> token(@ModelAttribute LoginBody form) {
 
         log.info("登录信息：{}", form);

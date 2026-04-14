@@ -4,8 +4,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,42 +17,42 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_dict_type")
-@ApiModel(value = "字典类型")
+@Schema(description = "字典类型")
 public class SysDictType extends Model<SysDictType> {
 
     private static final long serialVersionUID = -20392288936621109L;
 
 
     @TableId(type = IdType.AUTO)
-    @ApiModelProperty(value = "字典主键")
+    @Schema(description = "字典主键")
     private Long id;
 
-    @ApiModelProperty(value = "字典名称")
+    @Schema(description = "字典名称")
     private String dictName;
 
-    @ApiModelProperty(value = "字典类型")
+    @Schema(description = "字典类型")
     private String dictType;
 
-    @ApiModelProperty(value = "状态（0:正常 1:停用）")
+    @Schema(description = "状态（0:正常 1:停用）")
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建者")
+    @Schema(description = "创建者")
     private String createBy;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty(value = "创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新者")
+    @Schema(description = "更新者")
     private String updateBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @ApiModelProperty(value = "更新时间")
+    @Schema(description = "更新时间")
     private Date updateTime;
 
-    @ApiModelProperty(value = "备注")
+    @Schema(description = "备注")
     private String remark;
 
 }

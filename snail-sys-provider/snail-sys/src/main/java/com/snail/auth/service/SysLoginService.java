@@ -20,7 +20,7 @@ import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.common.log.domain.SysLoginInfo;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

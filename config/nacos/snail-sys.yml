@@ -7,9 +7,9 @@ spring:
       datasource:
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/snail_sys?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
-          username: root
-          password: 123456
+          url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/snail_sys?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true}
+          username: ${SPRING_DATASOURCE_USERNAME:root}
+          password: ${SPRING_DATASOURCE_PASSWORD:123456}
 # Sa-Token配置
 sa-token:
   # token名称 (同时也是cookie名称)
@@ -35,8 +35,8 @@ sa-token:
   is-read-cookie: false
   # token前缀
   token-prefix: "Bearer"
-  # jwt秘钥
-  jwt-secret-key: abcdefghijklmnopqrstuvwxyz
+  # jwt秘钥（通过环境变量注入）
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET_KEY:abcdefghijklmnopqrstuvwxyz}
 
 user:
   password:

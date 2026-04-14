@@ -2,7 +2,7 @@ package com.snail.sys.service.impl;
 
 import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.utils.R;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.dao.SysUserRoleDao;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserRolePageDTO;

@@ -13,8 +13,8 @@ import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.vo.RouterDataVO;
 import com.snail.sys.vo.RouterVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-29 21:44:59
  */
-@Api(tags = "菜单权限")
+@Tag(name = "菜单权限")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/menu")
@@ -39,7 +39,7 @@ public class SysMenuController {
 
     @SaCheckPermission("system:menu:list")
     @GetMapping("/list")
-    @ApiOperation(value = "获取菜单列表")
+    @Operation(summary = "获取菜单列表")
     public R<List<SysMenu>> list(SysMenu menu) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
@@ -48,21 +48,21 @@ public class SysMenuController {
 
     @SaCheckPermission("system:menu:query")
     @GetMapping("/{menuId}")
-    @ApiOperation(value = "根据菜单编号获取详细信息")
+    @Operation(summary = "根据菜单编号获取详细信息")
     public R<SysMenu> queryById(@PathVariable Long menuId) {
         return R.ok(sysMenuService.getById(menuId));
     }
 
     @GetMapping("/menuTree")
-    @ApiOperation(value = "获取菜单下拉树列表")
+    @Operation(summary = "获取菜单下拉树列表")
     public R<List<Tree<Long>>> queryMenuTree(SysMenu menu) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(menu, userId);
         return R.ok(sysMenuService.queryMenuTree(menus));
     }
 
-    @GetMapping(value = "/roleMenuTrees/{roleId}")
-    @ApiOperation(value = "获取角色菜单下拉树列表")
+    @GetMapping("/roleMenuTrees/{roleId}")
+    @Operation(summary = "获取角色菜单下拉树列表")
     public R<List<Tree<Long>>> roleMenuTrees(@PathVariable("roleId") Long roleId) {
         Long userId = LoginUtils.getUserId();
         List<SysMenu> menus = sysMenuService.queryMenuList(new SysMenu(), userId);
@@ -73,7 +73,7 @@ public class SysMenuController {
     @SaCheckPermission("system:menu:add")
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping("add")
-    @ApiOperation(value = "新增菜单")
+    @Operation(summary = "新增菜单")
     public R<Boolean> add(@Validated @RequestBody SysMenu sysMenu) {
         if (sysMenuService.checkMenuNameExists(sysMenu)) {
             return R.fail("新增菜单'" + sysMenu.getMenuName() + "'失败，菜单名称已存在");
@@ -87,7 +87,7 @@ public class SysMenuController {
     @SaCheckPermission("system:menu:edit")
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PostMapping("edit")
-    @ApiOperation(value = "编辑菜单")
+    @Operation(summary = "编辑菜单")
     public R<Boolean> edit(@Validated @RequestBody SysMenu sysMenu) {
         if (sysMenuService.checkMenuNameExists(sysMenu)) {
             return R.fail("修改菜单'" + sysMenu.getMenuName() + "'失败，菜单名称已存在");
@@ -102,7 +102,7 @@ public class SysMenuController {
 
     @SaCheckPermission("system:menu:remove")
     @DeleteMapping("delete")
-    @ApiOperation(value = "删除菜单")
+    @Operation(summary = "删除菜单")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         if (sysMenuService.hasChildByMenuIds(ids)) {
             return R.warn("存在子菜单，不允许删除");
@@ -113,7 +113,7 @@ public class SysMenuController {
     }
 
     @GetMapping("getRouters")
-    @ApiOperation(value = "获取路由信息")
+    @Operation(summary = "获取路由信息")
     public R<RouterDataVO> getRouters() {
         Long userId = LoginUtils.getUserId();
         List<RouterVO> menus = sysMenuService.selectMenuTreeByUserId(userId);

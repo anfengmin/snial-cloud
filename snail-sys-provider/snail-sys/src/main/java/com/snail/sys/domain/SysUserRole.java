@@ -2,8 +2,7 @@ package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,16 +15,16 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user_role")
-@ApiModel(value = "用户和角色关联表")
+@Schema(description = "用户和角色关联表")
 public class SysUserRole extends Model<SysUserRole> {
 
     private static final long serialVersionUID = -26215685220310436L;
 
     @TableId(type = IdType.INPUT)
-    @ApiModelProperty(value = "用户ID")
+    @Schema(description = "用户ID")
     private Long userId;
 
-    @ApiModelProperty(value = "角色ID")
+    @Schema(description = "角色ID")
     private Long roleId;
 
 }

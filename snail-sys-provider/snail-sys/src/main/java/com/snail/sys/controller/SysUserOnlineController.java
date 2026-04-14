@@ -10,7 +10,7 @@ import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.common.log.annotation.Log;
 import com.snail.common.redis.utils.RedisUtils;
-import com.snail.sys.api.domain.SysUserOnline;
+import com.snail.sys.domain.SysUserOnline;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

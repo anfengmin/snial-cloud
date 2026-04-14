@@ -36,6 +36,11 @@
             <artifactId>snail-common-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>snail-sys-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

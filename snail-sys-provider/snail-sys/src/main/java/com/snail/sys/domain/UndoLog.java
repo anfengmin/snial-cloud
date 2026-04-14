@@ -2,8 +2,7 @@ package com.snail.sys.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,31 +15,31 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("undo_log")
-@ApiModel(value = "AT transaction mode undo table")
+@Schema(description = "AT transaction mode undo table")
 public class UndoLog extends Model<UndoLog> {
 
     private static final long serialVersionUID = 634391168589750851L;
 
     @TableId(type = IdType.INPUT)
-    @ApiModelProperty(value = "branch transaction id")
+    @Schema(description = "branch transaction id")
     private Long branchId;
 
-    @ApiModelProperty(value = "global transaction id")
+    @Schema(description = "global transaction id")
     private String xid;
 
-    @ApiModelProperty(value = "undo_log context,such as serialization")
+    @Schema(description = "undo_log context,such as serialization")
     private String context;
 
-    @ApiModelProperty(value = "rollback info")
+    @Schema(description = "rollback info")
     private String rollbackInfo;
 
-    @ApiModelProperty(value = "0:normal status,1:defense status")
+    @Schema(description = "0:normal status,1:defense status")
     private Integer logStatus;
 
-    @ApiModelProperty(value = "create datetime")
+    @Schema(description = "create datetime")
     private Object logCreated;
 
-    @ApiModelProperty(value = "modify datetime")
+    @Schema(description = "modify datetime")
     private Object logModified;
 
 }

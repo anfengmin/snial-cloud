@@ -6,8 +6,8 @@ import com.snail.common.core.utils.R;
 import com.snail.sys.service.SysDictTypeService;
 import com.snail.sys.domain.SysDictType;
 import com.snail.sys.dto.SysDictTypePageDTO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-21 21:48:36
  */
-@Api(tags = "字典类型")
+@Tag(name = "字典类型")
 @RestController
 @RequestMapping("/dict/type")
 public class SysDictTypeController {
@@ -30,21 +30,21 @@ public class SysDictTypeController {
 
     @SaCheckPermission("system:dict:list")
     @PostMapping("/queryByPage")
-    @ApiOperation(value = "查询字典类型详细")
+    @Operation(summary = "查询字典类型详细")
     public R<Page<SysDictType>> queryByPage(@RequestBody SysDictTypePageDTO dto) {
         return R.ok(sysDictTypeService.queryByPage(dto));
     }
 
     @SaCheckPermission("system:dict:query")
     @GetMapping("/{dictId}")
-    @ApiOperation(value = "查询字典类型详细")
+    @Operation(summary = "查询字典类型详细")
     public R<SysDictType> queryById(@PathVariable("dictId") Long id) {
         return R.ok(sysDictTypeService.getById(id));
     }
 
     @SaCheckPermission("system:dict:add")
     @PostMapping
-    @ApiOperation(value = "新增字典类型")
+    @Operation(summary = "新增字典类型")
     public R<Boolean> add(@RequestBody SysDictType sysDictType) {
         if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
             return R.fail("新增字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
@@ -54,7 +54,7 @@ public class SysDictTypeController {
 
     @SaCheckPermission("system:dict:edit")
     @PutMapping
-    @ApiOperation(value = "编辑字典类型")
+    @Operation(summary = "编辑字典类型")
     public R<Boolean> edit(@RequestBody SysDictType sysDictType) {
         if (sysDictTypeService.checkDictTypeUnique(sysDictType)) {
             return R.fail("修改字典'" + sysDictType.getDictName() + "'失败，字典类型已存在");
@@ -64,7 +64,7 @@ public class SysDictTypeController {
 
     @SaCheckPermission("system:dict:remove")
     @DeleteMapping
-    @ApiOperation(value = "删除数据")
+    @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysDictTypeService.removeByIds(ids));
     }

@@ -9,8 +9,8 @@ import com.snail.common.core.constant.Constants;
 import com.snail.common.core.utils.R;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Slf4j
-@Api(tags = "登录")
+@Tag(name = "登录")
 @Validated
 @RequiredArgsConstructor
 @RestController
@@ -35,7 +35,7 @@ public class TokenController {
 
     private final SysLoginService sysLoginService;
 
-    @ApiModelProperty(value = "登录")
+    @Schema(description = "登录")
     @PostMapping("login")
     public R<Map<String, Object>> login(@Validated @RequestBody LoginBody form) {
         // 用户登录
@@ -47,7 +47,7 @@ public class TokenController {
         return R.ok(rspMap);
     }
 
-    @ApiModelProperty(value = "登出")
+    @Schema(description = "登出")
     @PostMapping("logout")
     public R<Void> logout() {
         sysLoginService.logout();

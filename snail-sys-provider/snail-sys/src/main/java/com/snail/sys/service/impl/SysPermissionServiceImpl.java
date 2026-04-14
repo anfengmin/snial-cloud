@@ -1,7 +1,7 @@
 package com.snail.sys.service.impl;
 
 import com.snail.common.satoken.utils.LoginUtils;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.service.SysMenuService;
 import com.snail.sys.service.SysPermissionService;
 import com.snail.sys.service.SysRoleService;

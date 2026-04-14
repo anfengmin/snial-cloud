@@ -10,8 +10,8 @@ import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.log.domain.SysLoginInfo;
 import com.snail.sys.dto.SysLogPageDTO;
 import com.snail.sys.service.SysLoginInfoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-21 21:50:06
  */
-@Api(tags = "系统访问记录")
+@Tag(name = "系统访问记录")
 @RestController
 @RequestMapping("/loginfo")
 public class SysLoginInfoController {
@@ -34,7 +34,7 @@ public class SysLoginInfoController {
 
     @SaCheckPermission("system:loginfo:list")
     @GetMapping("/list")
-    @ApiOperation(value = "获取系统访问记录列表")
+    @Operation(summary = "获取系统访问记录列表")
     public R<Page<SysLoginInfo>> list(SysLogPageDTO dto) {
         return R.ok(sysLoginInfoService.queryByPage(dto));
     }
@@ -42,7 +42,7 @@ public class SysLoginInfoController {
 
     @SaCheckPermission("system:loginfo:remove")
     @PostMapping("/remove")
-    @ApiOperation(value = "删除系统访问记录")
+    @Operation(summary = "删除系统访问记录")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysLoginInfoService.removeByIds(ids));
     }

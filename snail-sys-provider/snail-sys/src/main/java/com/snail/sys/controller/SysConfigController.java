@@ -9,8 +9,8 @@ import com.snail.common.log.annotation.Log;
 import com.snail.sys.dto.SysConfigPageDTO;
 import com.snail.sys.domain.SysConfig;
 import com.snail.sys.service.SysConfigService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +24,7 @@ import java.util.List;
  * @author makejava
  * @since 2025-05-21 21:32:37
  */
-@Api(tags = "参数配置表")
+@Tag(name = "参数配置表")
 @RequiredArgsConstructor
 @RequestMapping("/sysConfig")
 public class SysConfigController {
@@ -38,18 +38,18 @@ public class SysConfigController {
      */
     @SaCheckPermission("system:config:list")
     @GetMapping("/queryByPage")
-    @ApiOperation(value = "参数配置分页查询")
+    @Operation(summary = "参数配置分页查询")
     public R<Page<SysConfig>> queryByPage(@RequestBody SysConfigPageDTO dto) {
         return R.ok(sysConfigService.queryByPage(dto));
     }
 
     @GetMapping("{id}")
-    @ApiOperation(value = "主键查询")
+    @Operation(summary = "主键查询")
     public R<SysConfig> queryById(@PathVariable("id") Long id) {
         return R.ok(sysConfigService.getById(id));
     }
 
-    @GetMapping(value = "/configKey/{configKey}")
+    @GetMapping("/configKey/{configKey}")
     public R<Void> getConfigKey(@PathVariable String configKey) {
         return R.ok(sysConfigService.selectConfigByKey(configKey));
     }
@@ -58,7 +58,7 @@ public class SysConfigController {
     @Log(title = "参数管理", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
-    @ApiOperation(value = "新增数据")
+    @Operation(summary = "新增数据")
     public R<Boolean> add(@Validated @RequestBody SysConfig config) {
         return R.ok(sysConfigService.save(config));
     }
@@ -67,7 +67,7 @@ public class SysConfigController {
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @CachePut(cacheNames = CacheNames.SYS_CONFIG, key = "#config.configKey")
-    @ApiOperation(value = "编辑数据")
+    @Operation(summary = "编辑数据")
     public R<Boolean> edit(@Validated @RequestBody SysConfig config) {
         if (sysConfigService.checkConfigKeyExists(config)) {
             return R.fail("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
@@ -78,7 +78,7 @@ public class SysConfigController {
     @SaCheckPermission("system:config:remove")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
     @PostMapping("/remove")
-    @ApiOperation(value = "删除数据")
+    @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
         return R.ok(sysConfigService.removeByIds(ids));
     }

@@ -3,7 +3,7 @@ package com.snail.sys.service;
 
 import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -159,5 +159,13 @@ public interface SysUserService extends IService<SysUser> {
      * <p>1.0 Initialization method </p>
      */
     boolean updateUser(SysUser user);
+
+    /**
+     * 重置用户密码
+     *
+     * @param userId 用户ID
+     * @return 重置后的初始密码
+     */
+    String resetUserPassword(Long userId);
 
 }

@@ -1,7 +1,7 @@
 package com.snail.sys.service.impl;
 
 import com.snail.common.core.utils.R;
-import com.snail.sys.api.domain.SysRole;
+import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysRoleDept;
 import com.snail.sys.dao.SysRoleDeptDao;
 import com.snail.sys.dto.SysRoleDeptPageDTO;

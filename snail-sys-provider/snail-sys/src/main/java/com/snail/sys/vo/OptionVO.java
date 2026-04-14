@@ -1,7 +1,6 @@
 package com.snail.sys.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,15 +17,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor()
 @Data
-@ApiModel("下拉列表")
+@Schema(description = "下拉列表")
 public class OptionVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("值")
+    @Schema(description = "值")
     private Long value;
 
-    @ApiModelProperty("标签")
+    @Schema(description = "标签")
     private String label;
 
 

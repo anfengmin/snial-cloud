@@ -3,7 +3,7 @@
 <mapper namespace="com.snail.sys.dao.SysRoleDao">
 
 
-    <select id="selectAllocatedList" resultType="com.snail.sys.api.domain.SysUser">
+    <select id="selectAllocatedList" resultType="com.snail.sys.domain.SysUser">
         select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phone_no, u.status, u.create_time
         from sys_user u
                  left join sys_dept d on u.dept_id = d.dept_id

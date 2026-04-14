@@ -2,7 +2,7 @@ package com.snail.sys.service.impl;
 
 import com.snail.common.core.utils.R;
 import com.snail.sys.service.SysUserPostService;
-import com.snail.sys.api.domain.SysUser;
+import com.snail.sys.domain.SysUser;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.dao.SysUserPostDao;
 import com.snail.sys.dto.SysUserPostPageDTO;

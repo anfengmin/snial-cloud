@@ -21,6 +21,11 @@
 
         <dependency>
             <groupId>com.snail</groupId>
+            <artifactId>snail-sys-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.snail</groupId>
             <artifactId>snail-common-satoken</artifactId>
         </dependency>
 

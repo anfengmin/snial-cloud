@@ -87,7 +87,7 @@ public class CreateAndUpdateMetaObjectHandler implements MetaObjectHandler {
     /**
      * 获取登录用户信息
      *
-     * @return com.snail.sys.api.domain.SysUser
+     * @return com.snail.sys.domain.SysUser
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
