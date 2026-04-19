@@ -8,7 +8,17 @@ spring:
     name: snail-sys
   profiles:
     # 环境配置
-    active: @profiles.active@
+    active: ${PROFILES_ACTIVE:dev}
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
+    algorithm: ${JASYPT_ENCRYPTOR_ALGORITHM:PBEWITHHMACSHA512ANDAES_256}
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+    string-output-type: base64
+    property:
+      prefix: ENC(
+      suffix: )
 
 
 --- # nacos 配置
@@ -16,16 +26,16 @@ spring:
   cloud:
     nacos:
       # nacos 服务地址
-      server-addr: @nacos.server@
-      username: @nacos.username@
-      password: @nacos.password@
+      server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
       discovery:
         # 注册组
-        group: @nacos.discovery.group@
+        group: ${NACOS_DISCOVERY_GROUP:DEFAULT_GROUP}
         namespace: ${spring.profiles.active}
       config:
         # 配置组
-        group: @nacos.config.group@
+        group: ${NACOS_CONFIG_GROUP:DEFAULT_GROUP}
         namespace: ${spring.profiles.active}
   config:
     import:

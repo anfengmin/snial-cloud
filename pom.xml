@@ -65,6 +65,7 @@
         <mapstruct-plus.version>1.4.6</mapstruct-plus.version>
         <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
         <mysql-connector-j.version>8.0.33</mysql-connector-j.version>
+        <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
     </properties>
 
     <profiles>
@@ -420,6 +421,12 @@
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector-j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt-spring-boot.version}</version>
             </dependency>
 
         </dependencies>

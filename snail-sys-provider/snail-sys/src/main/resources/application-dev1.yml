@@ -40,8 +40,8 @@ spring:
         master:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://localhost:3306/snail_sys?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
-          username: root
-          password: 123456
+          username: ${SPRING_DATASOURCE_USERNAME:root}
+          password: ${SPRING_DATASOURCE_PASSWORD:}
   # Redis配置
   redis:
     host: 127.0.0.1
@@ -108,8 +108,8 @@ sa-token:
   is-read-cookie: false
   # token前缀
   token-prefix: "Bearer"
-  # jwt秘钥
-  jwt-secret-key: abcdefghijklmnopqrstuvwxyz
+  # jwt秘钥（支持 ENC(...)）
+  jwt-secret-key: ${SA_TOKEN_JWT_SECRET_KEY:}
 #  # 配置 Sa-Token 单独使用的 Redis 连接
 #  alone-redis:
 #    # Redis数据库索引（默认为0）

@@ -226,6 +226,31 @@
   - `${NACOS_PASSWORD:nacos}`
 - 这样既支持本地 IDE 直接启动，也支持通过环境变量覆盖部署参数
 
+### 4.11.1 Jasypt 敏感配置解密
+
+- 2026-04-19 已为 `snail-gateway`、`snail-sys` 接入 `jasypt-spring-boot-starter`
+- 本地 `application.yml` 已统一增加：
+  - `jasypt.encryptor.password`
+  - `jasypt.encryptor.algorithm`
+  - `jasypt.encryptor.iv-generator-classname`
+  - `jasypt.encryptor.string-output-type`
+- 当前约定：
+  - Nacos 配置中的敏感项允许直接使用 `ENC(...)`
+  - 也允许通过环境变量注入，例如 `${SPRING_DATASOURCE_PASSWORD}`、`${SA_TOKEN_JWT_SECRET_KEY}`
+  - 仓库中不再保留数据库密码、JWT 密钥的明文默认值
+- 使用建议：
+  - 业务配置中的数据库密码、JWT 密钥、Redis 密码、OSS `secretKey` 适合放在 Nacos 中用 `ENC(...)`
+  - 微服务“连接 Nacos 自身”的用户名密码，优先还是通过环境变量 `NACOS_USERNAME` / `NACOS_PASSWORD` 注入
+- 本地加解密工具：
+  - `snail-sys-provider/snail-sys/src/main/java/com/snail/tools/JasyptCryptoTool.java`
+  - 支持两种方式：
+    - 环境变量主密码：`JASYPT_ENCRYPTOR_PASSWORD=xxx`
+    - 命令参数主密码：`--password=xxx`
+  - 示例：
+    - `encrypt 123456`
+    - `encrypt --password=your-master-password 123456`
+    - `decrypt ENC(xxxxx)`
+
 ### 4.12 缓存监控接口
 
 - 系统监控新增缓存监控接口：`GET /monitor/cache`

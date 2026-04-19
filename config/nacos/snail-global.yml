@@ -12,34 +12,7 @@ server:
       # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
       io: 8
       # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
-  worker: 256
-
-dubbo:
-  application:
-    logger: slf4j
-    metadataType: remote
-    register-mode: instance
-    service-discovery:
-      migration: FORCE_APPLICATION
-    qos-enable: false
-  protocol:
-    name: dubbo
-    port: -1
-  registry:
-    address: nacos://${spring.cloud.nacos.server-addr}
-    group: DUBBO_GROUP
-    parameters:
-      namespace: ${spring.profiles.active}
-  consumer:
-    cache: false
-    validation: true
-    timeout: 3000
-    check: false
-  scan:
-    base-packages: com.snail.**.dubbo
-  custom:
-    request-log: false
-    log-level: info
+      worker: 256
 spring:
   # 资源信息
   messages:
@@ -143,27 +116,37 @@ mybatis-plus:
       # AUTO 自增 NONE 空 INPUT 用户输入 ASSIGN_ID 雪花 ASSIGN_UUID 唯一 UUID
       idType: ASSIGN_ID
       # 逻辑已删除值
-      logicDeleteValue: 2
+      logicDeleteValue: 1
       # 逻辑未删除值
       logicNotDeleteValue: 0
       insertStrategy: NOT_NULL
       updateStrategy: NOT_NULL
       where-strategy: NOT_NULL
-
-# Sa-Token 配置
-# https://sa-token.dev33.cn/
+# Sa-Token配置
 sa-token:
-  # Token名称 (同时也是cookie名称)
+  # token名称 (同时也是cookie名称)
   token-name: Authorization
-  # Token有效期（单位：秒），默认30天
-  timeout: 2592000
-  # 是否允许同一账号多地登录
+  # token有效期 设为一天 (必定过期) 单位: 秒
+  timeout: 86400
+  # 多端不同 token 有效期 可查看 LoginHelper.loginByDevice 方法自定义
+  # token最低活跃时间 (指定时间无操作就过期) 单位: 秒
+  active-timeout: 1800
+  # 允许动态设置 token 有效期
+  dynamic-active-timeout: true
+  # 开启内网服务调用鉴权
+  check-same-token: true
+  # Same-Token的有效期 (单位: 秒)(默认一天）
+  # same-token-timeout: 600
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
   is-concurrent: true
-  # 在多人登录同一账号时，是否共用一个Token
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
   is-share: true
-  # 内网服务调用 same-token 有效期
-  same-token-timeout: 600
-  # Token风格: uuid、simple-uuid、random-32、random-64、random-128
-  token-style: uuid
-  # 是否输出操作日志
-  is-log: false
+  # 是否尝试从header里读取token
+  is-read-header: true
+  # 是否尝试从cookie里读取token
+  is-read-cookie: false
+  # token前缀
+  token-prefix: "Bearer"
+  # jwt秘钥
+  jwt-secret-key: ENC(XjOrf27BL9g8RPFnXc/mJyBWdRahMJ0NWra83nkFMN6KKBNz+25g3rdbnBS+d9QPk6ihLQj/79t4u2GbTDQrNw==)
+
