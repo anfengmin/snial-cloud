@@ -1,0 +1,54 @@
+management:
+  server:
+    servlet:
+      context-path: /actuator
+  health:
+    mail:
+      enabled: false
+
+mybatis:
+  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
+
+spring:
+  datasource:
+    url: ${XXL_JOB_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai}
+    username: ${XXL_JOB_DATASOURCE_USERNAME:root}
+    password: ${XXL_JOB_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 30
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: XxlJobHikariCP
+      max-lifetime: 900000
+      connection-timeout: 10000
+      connection-test-query: SELECT 1
+      validation-timeout: 1000
+  mail:
+    host: ${XXL_JOB_MAIL_HOST:}
+    port: ${XXL_JOB_MAIL_PORT:25}
+    username: ${XXL_JOB_MAIL_USERNAME:}
+    from: ${XXL_JOB_MAIL_FROM:}
+    password: ${XXL_JOB_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+
+xxl:
+  job:
+    accessToken: ${XXL_JOB_ACCESS_TOKEN:default_token}
+    i18n: ${XXL_JOB_I18N:zh_CN}
+    triggerpool:
+      fast:
+        max: ${XXL_JOB_TRIGGERPOOL_FAST_MAX:200}
+      slow:
+        max: ${XXL_JOB_TRIGGERPOOL_SLOW_MAX:100}
+    logretentiondays: ${XXL_JOB_LOG_RETENTION_DAYS:30}

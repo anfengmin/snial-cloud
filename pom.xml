@@ -15,6 +15,7 @@
     <modules>
         <module>snail-common</module>
         <module>snail-gateway</module>
+        <module>snail-job-provider</module>
         <module>snail-sys-provider</module>
     </modules>
 
@@ -42,7 +43,7 @@
         <hutool.version>5.8.37</hutool.version>
         <redisson.version>3.46.0</redisson.version>
         <lock4j.version>2.2.3</lock4j.version>
-        <xxl-job.version>2.4.0</xxl-job.version>
+        <xxl-job.version>2.4.1</xxl-job.version>
         <satoken.version>1.42.0</satoken.version>
         <satoken-redis-jackson.version>1.34.0</satoken-redis-jackson.version>
         <lombok.version>1.18.30</lombok.version>

@@ -390,3 +390,69 @@
 - 每次完成一个模块联调后，把接口路径和关键文件补到本文件
 - 如果后端控制器请求方式有调整，优先在这里记录“前端当前依赖的请求方法”
 - 如果增加新的全局约定，例如头像、菜单图标、动态路由规范，也放在本文件集中维护
+
+## 11. XXL-JOB 服务迁移
+
+### 11.1 模块结构
+
+- 已新增聚合模块：`snail-job-provider`
+- 已新增服务模块：`snail-job-provider/snail-job-admin`
+- 根聚合 `snail-cloud/pom.xml` 已接入 `snail-job-provider`
+
+### 11.2 当前迁移策略
+
+- 迁移来源：本地项目 `../xxl-job` 的 `xxl-job-admin`
+- 第一阶段只迁移后端核心能力：
+  - `controller`
+  - `dao`
+  - `service`
+  - `core`
+  - `mybatis-mapper`
+  - `i18n`
+- 不迁移前端静态资源和模板：
+  - `templates`
+  - `static`
+- 目的：
+  - 先让调度中心后端服务在 `snail-cloud` 中独立运行
+  - 后续由本地前端重新接管理页面，不复用原始 Freemarker 页面
+
+### 11.3 当前实现约定
+
+- 服务名：`snail-job-admin`
+- 本地默认端口：`9002`
+- 默认上下文路径：`/xxl-job-admin`
+- 启动类：`snail-job-provider/snail-job-admin/src/main/java/com/snail/job/SnailJobAdminApplication.java`
+- Nacos 配置文件：`config/nacos/snail-job-admin.yml`
+- 本地启动配置：`snail-job-provider/snail-job-admin/src/main/resources/application.yml`
+
+### 11.4 当前依赖设计
+
+- 采用 `snail-cloud` 父 `pom` 管理版本
+- 当前服务依赖：
+  - `spring-cloud-starter-alibaba-nacos-discovery`
+  - `spring-cloud-starter-alibaba-nacos-config`
+  - `spring-boot-starter-web`
+  - `spring-boot-starter-undertow`
+  - `spring-boot-starter-actuator`
+  - `spring-boot-starter-mail`
+  - `mybatis-spring-boot-starter`
+  - `mysql-connector-j`
+  - `com.xuxueli:xxl-job-core`
+  - `jasypt-spring-boot-starter`
+
+### 11.5 已做的裁剪
+
+- 未复制 `xxl-job-admin` 的原始启动类，改为 `SnailJobAdminApplication`
+- 未复制 `CookieInterceptor` 和原 `WebMvcConfig`
+- 新增 `com.snail.job.config.WebMvcConfig`，当前只注册 `PermissionInterceptor`
+- 删除了 `FtlUtil`，避免为了旧页面残留引入 Freemarker 依赖
+- `PermissionInterceptor` 已改成未登录时返回 `401 + JSON`，不再强依赖 `/toLogin` 页面跳转
+
+### 11.6 当前状态
+
+- 编译验证通过：
+  - `mvn -f snail-cloud/pom.xml -pl snail-job-provider/snail-job-admin -am -DskipTests compile`
+- 说明：
+  - 目前仍保留了部分原始页面型控制器方法（如返回 `index`、`jobinfo/jobinfo.index` 的方法）
+  - 因为未迁移模板，这些页面路由暂时不作为正式入口
+  - 后续本地前端接入时，应优先使用现有 JSON 接口，并逐步把这些页面型方法改造成 REST 初始化接口

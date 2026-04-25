@@ -12,6 +12,7 @@ import com.snail.common.core.constant.UserConstants;
 import com.snail.common.core.exception.ServiceException;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
+import com.snail.sys.api.dto.RoleDTO;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysUser;
@@ -24,6 +25,7 @@ import com.snail.sys.service.SysRoleMenuService;
 import com.snail.sys.service.SysRoleService;
 import com.snail.sys.service.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
  * @since 2025-05-30 23:06:12
  */
 @RequiredArgsConstructor
+@Slf4j
 @Service("sysRoleService")
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> implements SysRoleService {
 
@@ -230,13 +233,26 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRole> impleme
                 return;
             }
             LoginUser loginUser = LoginUtils.getLoginUser(token);
-            if (loginUser.getRoles().stream().anyMatch(r -> r.getRoleId().equals(roleId))) {
-                try {
-                    StpUtil.logoutByTokenValue(token);
-                } catch (NotLoginException ignored) {
-                }
+            if (loginUser == null || CollUtil.isEmpty(loginUser.getRoles())) {
+                return;
+            }
+            boolean containsRole = loginUser.getRoles().stream()
+                    .filter(ObjectUtil::isNotNull)
+                    .map(RoleDTO::getRoleId)
+                    .filter(ObjectUtil::isNotNull)
+                    .anyMatch(roleId::equals);
+            if (containsRole) {
+                logoutTokenQuietly(token);
             }
         });
+    }
+
+    private void logoutTokenQuietly(String token) {
+        try {
+            StpUtil.logoutByTokenValue(token);
+        } catch (NotLoginException e) {
+            log.debug("角色变更清理在线用户时，token 已失效，跳过登出: {}", token);
+        }
     }
 
     /**
