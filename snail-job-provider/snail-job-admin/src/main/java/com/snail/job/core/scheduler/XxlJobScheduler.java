@@ -2,7 +2,6 @@ package com.snail.job.core.scheduler;
 
 import com.snail.job.core.conf.XxlJobAdminConfig;
 import com.snail.job.core.thread.*;
-import com.xxl.job.admin.core.thread.*;
 import com.snail.job.core.util.I18nUtil;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.client.ExecutorBizClient;

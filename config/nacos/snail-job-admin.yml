@@ -1,53 +1,68 @@
+# XXL-JOB 管理端配置
 management:
   server:
     servlet:
+      # 监控端点前缀
       context-path: /actuator
   health:
     mail:
+      # 关闭邮件健康检查，避免未配置邮件时启动告警
       enabled: false
 
 mybatis:
+  # MyBatis Mapper 扫描路径
   mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
-spring:
+
+snail:
   datasource:
-    dynamic:
-      # 设置默认的数据源或者数据源组,默认值即为 master
-      primary: master
-      strict: false
-      datasource:
-        master:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/xxl_job?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
-          username: root
-          password: ENC(OaXuTbJoWUDnWF4laulbExgQplXff/01HJLvMGmxnBfk5OULxo1rjPuFTMxemBph)
+    # 当前服务使用的数据库 schema
+    schema: ${SNAIL_JOB_DB_SCHEMA:xxl_job}
+
+spring:
   mail:
+    # 邮件服务器地址
     host: ${XXL_JOB_MAIL_HOST:}
+    # 邮件服务器端口
     port: ${XXL_JOB_MAIL_PORT:25}
+    # 邮件账号
     username: ${XXL_JOB_MAIL_USERNAME:}
+    # 发件人
     from: ${XXL_JOB_MAIL_FROM:}
+    # 邮件密码
     password: ${XXL_JOB_MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
+          # 是否开启 SMTP 认证
           auth: true
           starttls:
+            # 是否启用 STARTTLS
             enable: true
+            # 是否强制要求 STARTTLS
             required: true
           socketFactory:
+            # SSL Socket 工厂
             class: javax.net.ssl.SSLSocketFactory
 
 xxl:
   job:
+    # 调度中心访问令牌
     accessToken: ${XXL_JOB_ACCESS_TOKEN:default_token}
+    # 国际化语言
     i18n: ${XXL_JOB_I18N:zh_CN}
     triggerpool:
       fast:
+        # 快速触发线程池大小
         max: ${XXL_JOB_TRIGGERPOOL_FAST_MAX:200}
       slow:
+        # 慢速触发线程池大小
         max: ${XXL_JOB_TRIGGERPOOL_SLOW_MAX:100}
+    # 日志保留天数
     logretentiondays: ${XXL_JOB_LOG_RETENTION_DAYS:30}
 
 user:
   password:
+    # 密码错误锁定时长（分钟）
     lockTime: 10
+    # 最大重试次数
     maxRetryCount: 5

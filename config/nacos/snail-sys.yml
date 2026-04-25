@@ -1,17 +1,12 @@
-spring:
+# 系统服务配置
+snail:
   datasource:
-    dynamic:
-      # 设置默认的数据源或者数据源组,默认值即为 master
-      primary: master
-      strict: false
-      datasource:
-        master:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/snail_sys?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
-          username: root
-          password: ENC(OaXuTbJoWUDnWF4laulbExgQplXff/01HJLvMGmxnBfk5OULxo1rjPuFTMxemBph)
+    # 当前服务使用的数据库 schema
+    schema: ${SNAIL_SYS_DB_SCHEMA:snail_sys}
 
 user:
   password:
+    # 密码错误锁定时长（分钟）
     lockTime: 10
+    # 最大重试次数
     maxRetryCount: 5

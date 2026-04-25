@@ -1,26 +1,51 @@
+# 数据源公共配置
+snail:
+  datasource:
+    # 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库主机
+    host: ${MYSQL_HOST:127.0.0.1}
+    # 数据库端口
+    port: ${MYSQL_PORT:3306}
+    # 数据库用户名
+    username: ${MYSQL_USERNAME:root}
+    # 数据库密码
+    password: ${MYSQL_PASSWORD:ENC(OaXuTbJoWUDnWF4laulbExgQplXff/01HJLvMGmxnBfk5OULxo1rjPuFTMxemBph)}
+    # MySQL 连接参数
+    params: nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
+
 spring:
   datasource:
+    # 数据源实现
     type: com.zaxxer.hikari.HikariDataSource
-    # 动态数据源文档 https://www.kancloud.cn/tracy5546/dynamic-datasource/content
+    # 动态数据源配置
     dynamic:
-      # 性能分析插件(有性能损耗 不建议生产环境使用)
-      #      p6spy: true
-      # 开启seata代理，开启后默认每个数据源都代理，如果某个不需要代理可单独关闭
-      #      seata: true
-      # 严格模式 匹配不到数据源则报错
-      strict: true
+      # 设置默认的数据源或者数据源组
+      primary: master
+      # 是否开启严格模式，未匹配到数据源时直接报错
+      strict: false
+      datasource:
+        master:
+          # 数据库驱动
+          driver-class-name: ${snail.datasource.driver-class-name}
+          # 数据库连接地址
+          url: jdbc:mysql://${snail.datasource.host}:${snail.datasource.port}/${snail.datasource.schema}?${snail.datasource.params}
+          # 数据库用户名
+          username: ${snail.datasource.username}
+          # 数据库密码
+          password: ${snail.datasource.password}
       hikari:
         # 最大连接池数量
         maxPoolSize: 20
-        # 最小空闲线程数量
+        # 最小空闲连接数量
         minIdle: 10
-        # 配置获取连接等待超时的时间
+        # 获取连接等待超时时间
         connectionTimeout: 30000
-        # 校验超时时间
+        # 连接校验超时时间
         validationTimeout: 5000
-        # 空闲连接存活最大时间，默认10分钟
+        # 空闲连接最大存活时间
         idleTimeout: 600000
-        # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认30分钟
+        # 连接最大生命周期
         maxLifetime: 1800000
-        # 多久检查一次连接的活性
+        # 检查连接活性的间隔时间
         keepaliveTime: 30000

@@ -1,7 +1,6 @@
 package com.snail.job.core.route;
 
 import com.snail.job.core.route.strategy.*;
-import com.xxl.job.admin.core.route.strategy.*;
 import com.snail.job.core.util.I18nUtil;
 
 /**
