@@ -8,24 +8,18 @@ management:
 
 mybatis:
   mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
-
 spring:
   datasource:
-    url: ${XXL_JOB_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai}
-    username: ${XXL_JOB_DATASOURCE_USERNAME:root}
-    password: ${XXL_JOB_DATASOURCE_PASSWORD:}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari:
-      minimum-idle: 10
-      maximum-pool-size: 30
-      auto-commit: true
-      idle-timeout: 30000
-      pool-name: XxlJobHikariCP
-      max-lifetime: 900000
-      connection-timeout: 10000
-      connection-test-query: SELECT 1
-      validation-timeout: 1000
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为 master
+      primary: master
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/xxl_job?nullCatalogMeansCurrent=true&nullDatabaseMeansCurrent=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true
+          username: root
+          password: ENC(OaXuTbJoWUDnWF4laulbExgQplXff/01HJLvMGmxnBfk5OULxo1rjPuFTMxemBph)
   mail:
     host: ${XXL_JOB_MAIL_HOST:}
     port: ${XXL_JOB_MAIL_PORT:25}
@@ -52,3 +46,8 @@ xxl:
       slow:
         max: ${XXL_JOB_TRIGGERPOOL_SLOW_MAX:100}
     logretentiondays: ${XXL_JOB_LOG_RETENTION_DAYS:30}
+
+user:
+  password:
+    lockTime: 10
+    maxRetryCount: 5

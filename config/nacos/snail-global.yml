@@ -1,152 +1,58 @@
-server:
-  # undertow 配置
-  undertow:
-    # HTTP post内容的最大大小。当值为-1时，默认值为大小是无限的
-    max-http-post-size: -1
-    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
-    # 每块buffer的空间大小,越小的空间被利用越充分
-    buffer-size: 512
-    # 是否分配的直接内存
-    direct-buffers: true
-    threads:
-      # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
-      io: 8
-      # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
-      worker: 256
-spring:
-  # 资源信息
-  messages:
-    # 国际化资源文件路径
-    basename: i18n/messages
-  servlet:
-    multipart:
-      # 整个请求大小限制
-      max-request-size: 20MB
-      # 上传单个文件大小限制
-      max-file-size: 10MB
-  mvc:
-    format:
-      date-time: yyyy-MM-dd HH:mm:ss
-  task:
-    execution:
-      thread-name-prefix: snail-async-
-      pool:
-        core-size: 8
-        max-size: 16
-        queue-capacity: 200
-        keep-alive: 60s
-      shutdown:
-        await-termination: true
-        await-termination-period: 60s
-  #jackson配置
-  jackson:
-    # 日期格式化
-    date-format: yyyy-MM-dd HH:mm:ss
-    serialization:
-      # 格式化输出
-      INDENT_OUTPUT: false
-      # 忽略无法转换的对象
-      fail_on_empty_beans: false
-    deserialization:
-      # 允许对象忽略json中不存在的属性
-      fail_on_unknown_properties: false
-      # 将空数组视为 null
-      accept_empty_array_as_null_object: true
-  # Redis配置
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    database: 0
-    timeout: 10s
+# 安全配置
+security:
+  # 验证码
+  captcha:
+    # 是否开启验证码
+    enabled: true
+    # 验证码类型 math 数组计算 char 字符验证
+    type: MATH
+    # line 线段干扰 circle 圆圈干扰 shear 扭曲干扰
+    category: CIRCLE
+    # 数字验证码位数
+    numberLength: 1
+    # 字符验证码长度
+    charLength: 4
+  # 防止XSS攻击
+  xss:
+    enabled: true
+    excludeUrls:
+      - /system/notice
+  # 不校验白名单
+  ignore:
+    whites:
+      - /code
+      - /sys/auth/logout
+      - /auth/login
+      - /sys/auth/login
+      - /auth/smsLogin
+      - /auth/xcxLogin
+      - /auth/register
+      - /resource/sms/code
+      - /*/v3/api-docs
+      - /csrf
 
-# redisson 配置
-redisson:
-  # redis key前缀
-  keyPrefix:
-  # 线程池数量
-  threads: 4
-  # Netty线程池数量
-  nettyThreads: 8
-  # 单节点配置
-  singleServerConfig:
-    # 客户端名称
-    clientName: ${spring.application.name}
-    # 最小空闲连接数
-    connectionMinimumIdleSize: 8
-    # 连接池大小
-    connectionPoolSize: 32
-    # 连接空闲超时，单位：毫秒
-    idleConnectionTimeout: 10000
-    # 命令等待超时，单位：毫秒
-    timeout: 3000
-    # 发布和订阅连接池大小
-    subscriptionConnectionPoolSize: 50
-# 日志配置
-logging:
-  level:
-    org.springframework: info
-#    org.apache.dubbo: warn
-#    com.alibaba.nacos: warn
-#  config: classpath:logback-plus.xml
-# MyBatisPlus配置
-# https://baomidou.com/config/
-mybatis-plus:
-  # 不支持多包, 如有需要可在注解配置 或 提升扫包等级
-  mapperPackage: com.snail.**.mapper
-  # 对应的 XML 文件位置
-  mapperLocations: classpath*:mapper/**/*Dao.xml
-  # 启动时是否检查 MyBatis XML 文件的存在，默认不检查
-  checkConfigLocation: false
-  configuration:
-    # MyBatis 自动映射策略
-    # NONE：不启用 PARTIAL：只对非嵌套 resultMap 自动映射 FULL：对所有 resultMap 自动映射
-    autoMappingBehavior: PARTIAL
-    # MyBatis 自动映射时未知列或未知属性处理策
-    # NONE：不做处理 WARNING：打印相关警告 FAILING：抛出异常和详细信息
-    autoMappingUnknownColumnBehavior: NONE
-    # 更详细的日志输出 会有性能损耗 org.apache.ibatis.logging.stdout.StdOutImpl
-    # 关闭日志记录 (可单纯使用 p6spy 分析) org.apache.ibatis.logging.nologging.NoLoggingImpl
-    # 默认日志输出 org.apache.ibatis.logging.slf4j.Slf4jImpl
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    # 是否打印 Logo banner
-    banner: true
-    dbConfig:
-      # 主键类型
-      # AUTO 自增 NONE 空 INPUT 用户输入 ASSIGN_ID 雪花 ASSIGN_UUID 唯一 UUID
-      idType: ASSIGN_ID
-      # 逻辑已删除值
-      logicDeleteValue: 1
-      # 逻辑未删除值
-      logicNotDeleteValue: 0
-      insertStrategy: NOT_NULL
-      updateStrategy: NOT_NULL
-      where-strategy: NOT_NULL
-# Sa-Token配置
-sa-token:
-  # token名称 (同时也是cookie名称)
-  token-name: Authorization
-  # token有效期 设为一天 (必定过期) 单位: 秒
-  timeout: 86400
-  # 多端不同 token 有效期 可查看 LoginHelper.loginByDevice 方法自定义
-  # token最低活跃时间 (指定时间无操作就过期) 单位: 秒
-  active-timeout: 1800
-  # 允许动态设置 token 有效期
-  dynamic-active-timeout: true
-  # 开启内网服务调用鉴权
-  check-same-token: true
-  # Same-Token的有效期 (单位: 秒)(默认一天）
-  # same-token-timeout: 600
-  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
-  is-concurrent: true
-  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
-  is-share: true
-  # 是否尝试从header里读取token
-  is-read-header: true
-  # 是否尝试从cookie里读取token
-  is-read-cookie: false
-  # token前缀
-  token-prefix: "Bearer"
-  # jwt秘钥
-  jwt-secret-key: ENC(XjOrf27BL9g8RPFnXc/mJyBWdRahMJ0NWra83nkFMN6KKBNz+25g3rdbnBS+d9QPk6ihLQj/79t4u2GbTDQrNw==)
+spring:
+  cloud:
+    # 网关配置
+    gateway:
+      # 打印请求日志(自定义)
+      requestLog: true
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        # 认证中心
+        - id: snail-sys
+          uri: lb://snail-sys
+          # uri: http://localhost:9001
+          predicates:
+            - Path=/sys/**
+          filters:
+            # 验证码处理
+            # - ValidateCodeFilter
+            - StripPrefix=1
+# logging:
+#   level:
+#     org.springframework: debug
 
