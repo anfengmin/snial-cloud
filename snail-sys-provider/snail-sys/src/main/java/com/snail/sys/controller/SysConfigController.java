@@ -26,6 +26,7 @@ import java.util.List;
  */
 @Tag(name = "参数配置表")
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/sysConfig")
 public class SysConfigController {
 
@@ -37,12 +38,13 @@ public class SysConfigController {
      * 获取参数配置列表
      */
     @SaCheckPermission("system:config:list")
-    @GetMapping("/queryByPage")
+    @PostMapping("/queryByPage")
     @Operation(summary = "参数配置分页查询")
     public R<Page<SysConfig>> queryByPage(@RequestBody SysConfigPageDTO dto) {
         return R.ok(sysConfigService.queryByPage(dto));
     }
 
+    @SaCheckPermission("system:config:query")
     @GetMapping("{id}")
     @Operation(summary = "主键查询")
     public R<SysConfig> queryById(@PathVariable("id") Long id) {
@@ -84,4 +86,3 @@ public class SysConfigController {
     }
 
 }
-
