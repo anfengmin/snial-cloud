@@ -1,12 +1,12 @@
 package com.snail.sys.domain;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * 对象存储配置表(SysOssConfig)实体类
@@ -22,9 +22,9 @@ public class SysOssConfig extends Model<SysOssConfig> {
 
     private static final long serialVersionUID = 527786467057027481L;
 
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.AUTO)
     @Schema(description = "主建")
-    private Long ossConfigId;
+    private Long id;
 
     @Schema(description = "配置key")
     private String configKey;

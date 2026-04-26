@@ -1,8 +1,10 @@
 package com.snail.common.storage.model;
 
 import com.snail.common.storage.enums.StorageType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 对象存储配置
@@ -12,6 +14,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StorageConfig {
 
     /**

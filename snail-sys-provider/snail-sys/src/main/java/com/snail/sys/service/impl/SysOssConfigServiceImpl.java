@@ -112,14 +112,14 @@ public class SysOssConfigServiceImpl extends ServiceImpl<SysOssConfigDao, SysOss
         }
         this.lambdaUpdate()
                 .set(SysOssConfig::getStatus, 1)
-                .ne(entity.getOssConfigId() != null, SysOssConfig::getOssConfigId, entity.getOssConfigId())
+                .ne(entity.getId() != null, SysOssConfig::getId, entity.getId())
                 .update();
     }
 
     private StorageConfig toStorageConfig(SysOssConfig config) {
         String provider = StrUtil.blankToDefault(config.getExt1(), config.getConfigKey());
         return StorageConfig.builder()
-                .configId(config.getOssConfigId())
+                .configId(config.getId())
                 .configKey(config.getConfigKey())
                 .type(StorageType.resolve(provider, config.getConfigKey(), config.getEndpoint()))
                 .accessKey(config.getAccessKey())

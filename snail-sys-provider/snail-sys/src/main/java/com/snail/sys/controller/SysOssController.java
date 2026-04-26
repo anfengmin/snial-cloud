@@ -9,6 +9,7 @@ import com.snail.sys.domain.SysOss;
 import com.snail.sys.service.SysOssService;
 import com.snail.sys.dto.SysOssPageDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.snail.common.core.utils.R;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,9 +47,9 @@ public class SysOssController {
 
     @SaCheckPermission("system:oss:upload")
     @Log(title = "文件管理", businessType = BusinessType.IMPORT)
-    @PostMapping("upload")
+    @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "上传文件")
-    public R<SysOss> upload(@RequestPart("file") MultipartFile file,
+    public R<SysOss> upload(@RequestParam("file") MultipartFile file,
                             @RequestParam(value = "configKey", required = false) String configKey) {
         return sysOssService.upload(file, configKey);
     }

@@ -23,14 +23,14 @@ import java.util.List;
 public class StorageAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
-    public StorageClient aliyunOssStorageClient() {
+    @ConditionalOnMissingBean(AliyunOssStorageClient.class)
+    public AliyunOssStorageClient aliyunOssStorageClient() {
         return new AliyunOssStorageClient();
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public StorageClient minioStorageClient() {
+    @ConditionalOnMissingBean(MinioStorageClient.class)
+    public MinioStorageClient minioStorageClient() {
         return new MinioStorageClient();
     }
 
