@@ -38,7 +38,15 @@ public class SysOssConfigServiceImpl extends ServiceImpl<SysOssConfigDao, SysOss
     @Override
     public R<Page<SysOssConfig>> queryByPage(SysOssConfigPageDTO dto) {
         Page<SysOssConfig> page = new Page<>(dto.getCurrent(), dto.getSize());
-        Page<SysOssConfig> result = this.lambdaQuery().page(page);
+        Page<SysOssConfig> result = this.lambdaQuery()
+                .like(StrUtil.isNotBlank(dto.getConfigKey()), SysOssConfig::getConfigKey, dto.getConfigKey())
+                .like(StrUtil.isNotBlank(dto.getBucketName()), SysOssConfig::getBucketName, dto.getBucketName())
+                .like(StrUtil.isNotBlank(dto.getEndpoint()), SysOssConfig::getEndpoint, dto.getEndpoint())
+                .eq(dto.getStatus() != null, SysOssConfig::getStatus, dto.getStatus())
+                .eq(StrUtil.isNotBlank(dto.getExt1()), SysOssConfig::getExt1, dto.getExt1())
+                .orderByAsc(SysOssConfig::getStatus)
+                .orderByDesc(SysOssConfig::getUpdateTime)
+                .page(page);
         return R.ok(result);
     }
 

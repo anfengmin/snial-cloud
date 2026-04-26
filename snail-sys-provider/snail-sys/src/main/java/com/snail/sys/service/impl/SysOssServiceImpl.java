@@ -1,5 +1,6 @@
 package com.snail.sys.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.common.core.utils.R;
@@ -36,7 +37,12 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssDao, SysOss> implements
     @Override
     public R<Page<SysOss>> queryByPage(SysOssPageDTO dto) {
         Page<SysOss> page = new Page<>(dto.getCurrent(), dto.getSize());
-        Page<SysOss> result = this.lambdaQuery().page(page);
+        Page<SysOss> result = this.lambdaQuery()
+                .like(StrUtil.isNotBlank(dto.getOriginalName()), SysOss::getOriginalName, dto.getOriginalName())
+                .like(StrUtil.isNotBlank(dto.getFileSuffix()), SysOss::getFileSuffix, dto.getFileSuffix())
+                .like(StrUtil.isNotBlank(dto.getService()), SysOss::getService, dto.getService())
+                .orderByDesc(SysOss::getCreateTime)
+                .page(page);
         return R.ok(result);
     }
 

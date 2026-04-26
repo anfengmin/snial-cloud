@@ -37,6 +37,7 @@ public class SysOssController {
         return sysOssService.queryByPage(dto);
     }
 
+    @SaCheckPermission("system:oss:query")
     @GetMapping("{id}")
     @Operation(summary = "主键查询")
     public R<SysOss> queryById(@PathVariable("id") Long id) {
@@ -52,18 +53,24 @@ public class SysOssController {
         return sysOssService.upload(file, configKey);
     }
 
+    @SaCheckPermission("system:oss:add")
+    @Log(title = "文件管理", businessType = BusinessType.INSERT)
     @PostMapping("add")
     @Operation(summary = "新增数据")
-    public R<Boolean> add(SysOss sysOss) {
+    public R<Boolean> add(@RequestBody SysOss sysOss) {
         return R.ok(sysOssService.save(sysOss));
     }
 
+    @SaCheckPermission("system:oss:edit")
+    @Log(title = "文件管理", businessType = BusinessType.UPDATE)
     @PutMapping("edit")
     @Operation(summary = "编辑数据")
-    public R<Boolean> edit(SysOss sysOss) {
+    public R<Boolean> edit(@RequestBody SysOss sysOss) {
         return R.ok(sysOssService.updateById(sysOss));
     }
 
+    @SaCheckPermission("system:oss:remove")
+    @Log(title = "文件管理", businessType = BusinessType.DELETE)
     @DeleteMapping("delete")
     @Operation(summary = "删除数据")
     public R<Boolean> deleteById(@RequestBody List<Long> ids) {
