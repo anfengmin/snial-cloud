@@ -1,13 +1,22 @@
 package com.snail.sys.service.impl;
 
-import com.snail.common.core.utils.R;
-import com.snail.sys.service.SysOssConfigService;
-import com.snail.sys.domain.SysOssConfig;
-import com.snail.sys.dao.SysOssConfigDao;
-import com.snail.sys.dto.SysOssConfigPageDTO;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snail.common.core.constant.CacheNames;
+import com.snail.common.core.utils.R;
+import com.snail.common.storage.enums.StorageType;
+import com.snail.common.storage.exception.StorageException;
+import com.snail.common.storage.model.StorageConfig;
+import com.snail.sys.dao.SysOssConfigDao;
+import com.snail.sys.domain.SysOssConfig;
+import com.snail.sys.dto.SysOssConfigPageDTO;
+import com.snail.sys.service.SysOssConfigService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 
 /**
@@ -31,5 +40,89 @@ public class SysOssConfigServiceImpl extends ServiceImpl<SysOssConfigDao, SysOss
         Page<SysOssConfig> page = new Page<>(dto.getCurrent(), dto.getSize());
         Page<SysOssConfig> result = this.lambdaQuery().page(page);
         return R.ok(result);
+    }
+
+    @Override
+    @Cacheable(cacheNames = CacheNames.SYS_OSS_CONFIG, key = "'default'")
+    public StorageConfig getDefaultConfig() {
+        return toStorageConfig(getDefaultEntity());
+    }
+
+    @Override
+    @Cacheable(cacheNames = CacheNames.SYS_OSS_CONFIG, key = "#configKey")
+    public StorageConfig getByConfigKey(String configKey) {
+        return toStorageConfig(getByConfigKeyEntity(configKey));
+    }
+
+    @Override
+    public SysOssConfig getDefaultEntity() {
+        SysOssConfig config = this.lambdaQuery()
+                .eq(SysOssConfig::getStatus, 0)
+                .last("limit 1")
+                .one();
+        if (config == null) {
+            throw new StorageException("未找到默认对象存储配置");
+        }
+        return config;
+    }
+
+    @Override
+    public SysOssConfig getByConfigKeyEntity(String configKey) {
+        SysOssConfig config = this.lambdaQuery()
+                .eq(SysOssConfig::getConfigKey, configKey)
+                .last("limit 1")
+                .one();
+        if (config == null) {
+            throw new StorageException("未找到对象存储配置: " + configKey);
+        }
+        return config;
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_OSS_CONFIG, allEntries = true)
+    public boolean save(SysOssConfig entity) {
+        refreshDefaultStatus(entity);
+        return super.save(entity);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_OSS_CONFIG, allEntries = true)
+    public boolean updateById(SysOssConfig entity) {
+        refreshDefaultStatus(entity);
+        return super.updateById(entity);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_OSS_CONFIG, allEntries = true)
+    public boolean removeByIds(Collection<?> list) {
+        return super.removeByIds(list);
+    }
+
+    private void refreshDefaultStatus(SysOssConfig entity) {
+        if (entity == null || entity.getStatus() == null || entity.getStatus() != 0) {
+            return;
+        }
+        this.lambdaUpdate()
+                .set(SysOssConfig::getStatus, 1)
+                .ne(entity.getOssConfigId() != null, SysOssConfig::getOssConfigId, entity.getOssConfigId())
+                .update();
+    }
+
+    private StorageConfig toStorageConfig(SysOssConfig config) {
+        String provider = StrUtil.blankToDefault(config.getExt1(), config.getConfigKey());
+        return StorageConfig.builder()
+                .configId(config.getOssConfigId())
+                .configKey(config.getConfigKey())
+                .type(StorageType.resolve(provider, config.getConfigKey(), config.getEndpoint()))
+                .accessKey(config.getAccessKey())
+                .secretKey(config.getSecretKey())
+                .bucketName(config.getBucketName())
+                .prefix(config.getPrefix())
+                .endpoint(config.getEndpoint())
+                .domain(config.getDomain())
+                .https("Y".equalsIgnoreCase(config.getIsHttps()))
+                .region(config.getRegion())
+                .accessPolicy(config.getAccessPolicy())
+                .build();
     }
 }

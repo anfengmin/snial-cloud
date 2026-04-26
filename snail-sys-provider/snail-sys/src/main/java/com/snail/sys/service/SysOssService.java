@@ -5,6 +5,7 @@ import com.snail.sys.domain.SysOss;
 import com.snail.sys.dto.SysOssPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * OSS对象存储
@@ -23,5 +24,24 @@ public interface SysOssService extends IService<SysOss> {
      */
     R<Page<SysOss>> queryByPage(SysOssPageDTO dto);
 
+    /**
+     * 上传文件
+     *
+     * @param file      文件
+     * @param configKey 配置键
+     * @return 上传记录
+     */
+    R<SysOss> upload(MultipartFile file, String configKey);
+
+    /**
+     * 上传字节内容并落库
+     *
+     * @param content 文件字节
+     * @param originalFilename 原始文件名
+     * @param contentType 内容类型
+     * @param configKey 配置键
+     * @return 上传记录
+     */
+    SysOss uploadContent(byte[] content, String originalFilename, String contentType, String configKey);
 
 }

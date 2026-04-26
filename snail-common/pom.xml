@@ -18,6 +18,7 @@
         <module>snail-common-log</module>
         <module>snail-common-mybatis</module>
         <module>snail-common-security</module>
+        <module>snail-common-storage</module>
     </modules>
 
     <artifactId>snail-common</artifactId>

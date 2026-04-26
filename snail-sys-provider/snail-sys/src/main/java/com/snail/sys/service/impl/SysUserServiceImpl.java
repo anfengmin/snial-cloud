@@ -21,6 +21,7 @@ import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.constants.SysConfigConstants;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.domain.SysUserRole;
+import com.snail.sys.domain.SysOss;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.snail.sys.service.*;
 import com.snail.sys.vo.SysUserVo;
@@ -31,8 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
@@ -48,8 +47,6 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @Service("sysUserService")
 public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> implements SysUserService {
-
-    private static final String DATA_IMAGE_PREFIX = "data:image/svg+xml;charset=UTF-8,";
     private static final String[][] AVATAR_COLOR_PALETTE = {
             {"#2563EB", "#FFFFFF"},
             {"#0F766E", "#FFFFFF"},
@@ -68,6 +65,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     private final SysPermissionService sysPermissionService;
     private final SysDeptService sysDeptService;
     private final SysConfigService sysConfigService;
+    private final SysOssService sysOssService;
 
     /**
      * 分页查询
@@ -464,7 +462,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             return user;
         }
 
-        String avatar = generateAvatarDataUri(user.getUserName());
+        String avatar = generateAvatarUrl(user.getUserCode(), user.getUserName());
         user.setAvatar(avatar);
 
         if (persist && ObjectUtil.isNotNull(user.getId())) {
@@ -487,10 +485,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             return;
         }
 
-        user.setAvatar(generateAvatarDataUri(user.getUserName()));
+        user.setAvatar(generateAvatarUrl(user.getUserCode(), user.getUserName()));
     }
 
-    private String generateAvatarDataUri(String userName) {
+    private String generateAvatarUrl(String userCode, String userName) {
+        String safeCode = StrUtil.blankToDefault(StrUtil.trim(userCode), "avatar");
+        String svg = buildAvatarSvg(userName);
+        try {
+            SysOss sysOss = sysOssService.uploadContent(
+                    svg.getBytes(StandardCharsets.UTF_8),
+                    safeCode + ".svg",
+                    "image/svg+xml",
+                    null
+            );
+            return sysOss.getUrl();
+        } catch (Exception e) {
+            log.warn("生成用户头像并上传失败，userCode={}, userName={}", userCode, userName, e);
+            return StrUtil.EMPTY;
+        }
+    }
+
+    private String buildAvatarSvg(String userName) {
         String avatarText = extractAvatarText(userName);
         int hash = Math.abs(StrUtil.emptyToDefault(userName, "USER").hashCode());
         String[] palette = AVATAR_COLOR_PALETTE[hash % AVATAR_COLOR_PALETTE.length];
@@ -507,8 +522,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                         + "font-size='" + fontSize + "' font-weight='700' fill='" + textColor + "'>"
                         + safeText
                         + "</text></svg>";
-
-        return DATA_IMAGE_PREFIX + encodeSvg(svg);
+        return svg;
     }
 
     private String extractAvatarText(String userName) {
@@ -542,15 +556,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             return "U";
         }
         return normalized.substring(0, Math.min(normalized.length(), 3));
-    }
-
-    private String encodeSvg(String svg) {
-        try {
-            return URLEncoder.encode(svg, StandardCharsets.UTF_8.name())
-                    .replace("+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            throw new ServiceException("编码用户头像失败");
-        }
     }
 
     private String escapeSvgText(String text) {

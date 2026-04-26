@@ -59,6 +59,8 @@
 
         <!-- OSS 配置 -->
         <aws-java-sdk-s3.version>1.12.540</aws-java-sdk-s3.version>
+        <aliyun-oss.version>3.17.4</aliyun-oss.version>
+        <minio.version>8.5.12</minio.version>
         <okhttp.version>4.10.0</okhttp.version>
 
         <!-- SMS 配置 -->

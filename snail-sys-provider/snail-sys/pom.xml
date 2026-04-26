@@ -82,6 +82,11 @@
 
         <dependency>
             <groupId>com.snail</groupId>
+            <artifactId>snail-common-storage</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.snail</groupId>
             <artifactId>snail-common-log</artifactId>
         </dependency>
         <!-- SpringBoot Actuator -->

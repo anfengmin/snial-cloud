@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  minio:
+    image: minio/minio:latest
+    platform: linux/arm64
+    container_name: snail-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+      MINIO_REGION_NAME: ap-southeast-1
+      MINIO_BROWSER: "on"
+    volumes:
+    - /Users/ansir/docker/minio:/data
+    command: server /data --console-address ":9001"
+    mem_limit: 1024m
+    cpus: 1.0
+    tmpfs:
+      - /tmp:size=64m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  minio-init:
+    image: minio/minio:latest
+    container_name: snail-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set local http://minio:9000 minio minio123 &&
+      /usr/bin/mc mb -p local/snail || true &&
+      /usr/bin/mc anonymous set public local/snail || true
+      "
+    mem_limit: 256m
+    cpus: 0.5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "1"

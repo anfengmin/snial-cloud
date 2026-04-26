@@ -73,6 +73,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- 对象存储服务 -->
+            <dependency>
+                <groupId>com.snail</groupId>
+                <artifactId>snail-common-storage</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
 
             <!-- Apache Dubbo 配置 -->
             <dependency>
