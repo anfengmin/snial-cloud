@@ -425,6 +425,14 @@
 - Nacos 配置文件：`config/nacos/snail-job-admin.yml`
 - 本地启动配置：`snail-job-provider/snail-job-admin/src/main/resources/application.yml`
 
+### 11.1 权限体系切换
+
+- `snail-job-admin` 已切换为使用 `Sa-Token + sys_menu` 的统一权限模型。
+- 调度概览、任务管理、执行器管理、调度日志四类接口统一使用 `job:*:*` 权限码。
+- 不再依赖 XXL-JOB 自带的 `Cookie + LoginService + PermissionInterceptor` 作为前端权限入口。
+- 执行器回调接口 `/api/{uri}` 仍保留 accessToken 校验，供执行器注册、回调和摘除使用。
+- 调度中心菜单初始化 SQL 已整理到 `config/sql/snail_job_menu.sql`。
+
 ### 11.4 当前依赖设计
 
 - 采用 `snail-cloud` 父 `pom` 管理版本

@@ -3,6 +3,7 @@ package com.snail.job.core.conf;
 import com.snail.job.core.alarm.JobAlarmer;
 import com.snail.job.core.scheduler.XxlJobScheduler;
 import com.snail.job.dao.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,22 +50,22 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     // ---------------------- XxlJobScheduler ----------------------
 
     // conf
-    @Value("${xxl.job.i18n}")
+    @Value("${xxl.job.i18n:zh_CN}")
     private String i18n;
 
-    @Value("${xxl.job.accessToken}")
+    @Value("${xxl.job.accessToken:default_token}")
     private String accessToken;
 
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.from:}")
     private String emailFrom;
 
-    @Value("${xxl.job.triggerpool.fast.max}")
+    @Value("${xxl.job.triggerpool.fast.max:200}")
     private int triggerPoolFastMax;
 
-    @Value("${xxl.job.triggerpool.slow.max}")
+    @Value("${xxl.job.triggerpool.slow.max:100}")
     private int triggerPoolSlowMax;
 
-    @Value("${xxl.job.logretentiondays}")
+    @Value("${xxl.job.logretentiondays:30}")
     private int logretentiondays;
 
     // dao, service
@@ -79,7 +80,7 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     private XxlJobGroupDao xxlJobGroupDao;
     @Resource
     private XxlJobLogReportDao xxlJobLogReportDao;
-    @Resource
+    @Autowired(required = false)
     private JavaMailSender mailSender;
     @Resource
     private DataSource dataSource;

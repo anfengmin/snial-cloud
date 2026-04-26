@@ -2,7 +2,6 @@ package com.snail.job.service;
 
 
 import com.snail.job.core.model.XxlJobInfo;
-import com.snail.job.core.model.XxlJobUser;
 import com.xxl.job.core.biz.model.ReturnT;
 
 import java.util.Date;
@@ -77,7 +76,7 @@ public interface XxlJobService {
 	 * @param addressList
 	 * @return
 	 */
-	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList);
+	public ReturnT<String> trigger(int jobId, String executorParam, String addressList);
 
 	/**
 	 * dashboard info

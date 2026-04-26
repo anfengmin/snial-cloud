@@ -4,7 +4,6 @@ import com.snail.job.core.cron.CronExpression;
 import com.snail.job.core.model.XxlJobGroup;
 import com.snail.job.core.model.XxlJobInfo;
 import com.snail.job.core.model.XxlJobLogReport;
-import com.snail.job.core.model.XxlJobUser;
 import com.snail.job.core.route.ExecutorRouteStrategyEnum;
 import com.snail.job.core.scheduler.MisfireStrategyEnum;
 import com.snail.job.core.scheduler.ScheduleTypeEnum;
@@ -351,17 +350,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 
 	@Override
-	public ReturnT<String> trigger(XxlJobUser loginUser, int jobId, String executorParam, String addressList) {
-		// permission
-		if (loginUser == null) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
-		}
+	public ReturnT<String> trigger(int jobId, String executorParam, String addressList) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(jobId);
 		if (xxlJobInfo == null) {
 			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
-		}
-		if (!hasPermission(loginUser, xxlJobInfo.getJobGroup())) {
-			return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("system_permission_limit"));
 		}
 
 		// force cover job param
@@ -371,17 +363,6 @@ public class XxlJobServiceImpl implements XxlJobService {
 
 		JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
 		return ReturnT.SUCCESS;
-	}
-
-	private boolean hasPermission(XxlJobUser loginUser, int jobGroup){
-		if (loginUser.getRole() == 1) {
-			return true;
-		}
-		List<String> groupIdStrs = new ArrayList<>();
-		if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
-			groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
-		}
-		return groupIdStrs.contains(String.valueOf(jobGroup));
 	}
 
 	@Override

@@ -11,7 +11,7 @@ management:
 
 mybatis:
   # MyBatis Mapper 扫描路径
-  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
+  mapper-locations: classpath*:mybatis-mapper/*Mapper.xml
 
 snail:
   datasource:

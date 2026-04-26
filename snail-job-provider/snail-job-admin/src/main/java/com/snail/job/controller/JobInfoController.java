@@ -1,16 +1,17 @@
 package com.snail.job.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.snail.common.core.utils.R;
 import com.snail.job.core.exception.XxlJobException;
 import com.snail.job.core.model.XxlJobGroup;
 import com.snail.job.core.model.XxlJobInfo;
-import com.snail.job.core.model.XxlJobUser;
 import com.snail.job.core.route.ExecutorRouteStrategyEnum;
 import com.snail.job.core.scheduler.MisfireStrategyEnum;
 import com.snail.job.core.scheduler.ScheduleTypeEnum;
 import com.snail.job.core.thread.JobScheduleHelper;
 import com.snail.job.core.util.I18nUtil;
+import com.snail.job.controller.support.JobResponseUtils;
 import com.snail.job.dao.XxlJobGroupDao;
-import com.snail.job.service.LoginService;
 import com.snail.job.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
@@ -18,155 +19,168 @@ import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * index controller
- * @author xuxueli 2015-12-19 16:13:16
+ * 任务管理接口
  */
-@Controller
+@RestController
 @RequestMapping("/jobinfo")
 public class JobInfoController {
-	private static Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
-	@Resource
-	private XxlJobGroupDao xxlJobGroupDao;
-	@Resource
-	private XxlJobService xxlJobService;
-	
-	@RequestMapping
-	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+    private static final Logger logger = LoggerFactory.getLogger(JobInfoController.class);
 
-		// 枚举-字典
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	    // 路由策略-列表
-		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
-		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
-		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
+    @Resource
+    private XxlJobGroupDao xxlJobGroupDao;
+    @Resource
+    private XxlJobService xxlJobService;
 
-		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
+    @GetMapping("/metadata")
+    @SaCheckPermission("job:info:list")
+    public R<Map<String, Object>> metadata(@RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+        List<XxlJobGroup> jobGroupList = filterJobGroupByRole(null, xxlJobGroupDao.findAll());
+        if (jobGroupList.isEmpty()) {
+            throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
+        }
 
-		// filter group
-		List<XxlJobGroup> jobGroupList = filterJobGroupByRole(request, jobGroupList_all);
-		if (jobGroupList==null || jobGroupList.size()==0) {
-			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
-		}
+        Map<String, Object> data = new HashMap<>(7);
+        data.put("jobGroup", jobGroup);
+        data.put("jobGroupList", jobGroupList);
+        data.put("executorRouteStrategies", ExecutorRouteStrategyEnum.values());
+        data.put("glueTypes", GlueTypeEnum.values());
+        data.put("executorBlockStrategies", ExecutorBlockStrategyEnum.values());
+        data.put("scheduleTypes", ScheduleTypeEnum.values());
+        data.put("misfireStrategies", MisfireStrategyEnum.values());
+        return R.ok(data);
+    }
 
-		model.addAttribute("JobGroupList", jobGroupList);
-		model.addAttribute("jobGroup", jobGroup);
+    public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupListAll) {
+        if (jobGroupListAll == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(jobGroupListAll);
+    }
 
-		return "jobinfo/jobinfo.index";
-	}
+    public static void validPermission(HttpServletRequest request, int jobGroup) {
+        // snail-job-admin 已改为使用 sys_menu + Sa-Token 控制访问范围，
+        // 不再使用 xxl_job_user 维度的执行器分组过滤。
+    }
 
-	public static List<XxlJobGroup> filterJobGroupByRole(HttpServletRequest request, List<XxlJobGroup> jobGroupList_all){
-		List<XxlJobGroup> jobGroupList = new ArrayList<>();
-		if (jobGroupList_all!=null && jobGroupList_all.size()>0) {
-			XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-			if (loginUser.getRole() == 1) {
-				jobGroupList = jobGroupList_all;
-			} else {
-				List<String> groupIdStrs = new ArrayList<>();
-				if (loginUser.getPermission()!=null && loginUser.getPermission().trim().length()>0) {
-					groupIdStrs = Arrays.asList(loginUser.getPermission().trim().split(","));
-				}
-				for (XxlJobGroup groupItem:jobGroupList_all) {
-					if (groupIdStrs.contains(String.valueOf(groupItem.getId()))) {
-						jobGroupList.add(groupItem);
-					}
-				}
-			}
-		}
-		return jobGroupList;
-	}
-	public static void validPermission(HttpServletRequest request, int jobGroup) {
-		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-		if (!loginUser.validPermission(jobGroup)) {
-			throw new RuntimeException(I18nUtil.getString("system_permission_limit") + "[username="+ loginUser.getUsername() +"]");
-		}
-	}
-	
-	@RequestMapping("/pageList")
-	@ResponseBody
-	public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,  
-			@RequestParam(required = false, defaultValue = "10") int length,
-			int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author) {
-		
-		return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
-	}
-	
-	@RequestMapping("/add")
-	@ResponseBody
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
-		return xxlJobService.add(jobInfo);
-	}
-	
-	@RequestMapping("/update")
-	@ResponseBody
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
-		return xxlJobService.update(jobInfo);
-	}
-	
-	@RequestMapping("/remove")
-	@ResponseBody
-	public ReturnT<String> remove(int id) {
-		return xxlJobService.remove(id);
-	}
-	
-	@RequestMapping("/stop")
-	@ResponseBody
-	public ReturnT<String> pause(int id) {
-		return xxlJobService.stop(id);
-	}
-	
-	@RequestMapping("/start")
-	@ResponseBody
-	public ReturnT<String> start(int id) {
-		return xxlJobService.start(id);
-	}
-	
-	@RequestMapping("/trigger")
-	@ResponseBody
-	public ReturnT<String> triggerJob(HttpServletRequest request, int id, String executorParam, String addressList) {
-		// login user
-		XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-		// trigger
-		return xxlJobService.trigger(loginUser, id, executorParam, addressList);
-	}
+    @RequestMapping("/pageList")
+    @ResponseBody
+    @SaCheckPermission("job:info:list")
+    public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
+                                        @RequestParam(required = false, defaultValue = "10") int length,
+                                        int jobGroup,
+                                        int triggerStatus,
+                                        String jobDesc,
+                                        String executorHandler,
+                                        String author) {
 
-	@RequestMapping("/nextTriggerTime")
-	@ResponseBody
-	public ReturnT<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
+        return xxlJobService.pageList(start, length, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+    }
 
-		XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
-		paramXxlJobInfo.setScheduleType(scheduleType);
-		paramXxlJobInfo.setScheduleConf(scheduleConf);
+    @RequestMapping("/queryByPage")
+    @ResponseBody
+    @SaCheckPermission("job:info:list")
+    public R<Map<String, Object>> queryByPage(@RequestParam(required = false, defaultValue = "1") int current,
+                                              @RequestParam(required = false, defaultValue = "10") int size,
+                                              @RequestParam(required = false, defaultValue = "-1") int jobGroup,
+                                              @RequestParam(required = false, defaultValue = "-1") int triggerStatus,
+                                              String jobDesc,
+                                              String executorHandler,
+                                              String author) {
+        int start = Math.max((current - 1) * size, 0);
+        Map<String, Object> result = xxlJobService.pageList(start, size, jobGroup, triggerStatus, jobDesc, executorHandler, author);
+        return R.ok(buildPageResult(result, current, size));
+    }
 
-		List<String> result = new ArrayList<>();
-		try {
-			Date lastTime = new Date();
-			for (int i = 0; i < 5; i++) {
-				lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
-				if (lastTime != null) {
-					result.add(DateUtil.formatDateTime(lastTime));
-				} else {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return new ReturnT<List<String>>(ReturnT.FAIL_CODE, (I18nUtil.getString("schedule_type")+I18nUtil.getString("system_unvalid")) + e.getMessage());
-		}
-		return new ReturnT<List<String>>(result);
+    @RequestMapping("/add")
+    @ResponseBody
+    @SaCheckPermission("job:info:add")
+    public R<String> add(XxlJobInfo jobInfo) {
+        return JobResponseUtils.fromReturnT(xxlJobService.add(jobInfo));
+    }
 
-	}
-	
+    @RequestMapping("/update")
+    @ResponseBody
+    @SaCheckPermission("job:info:edit")
+    public R<String> update(XxlJobInfo jobInfo) {
+        return JobResponseUtils.fromReturnT(xxlJobService.update(jobInfo));
+    }
+
+    @RequestMapping("/remove")
+    @ResponseBody
+    @SaCheckPermission("job:info:remove")
+    public R<String> remove(int id) {
+        return JobResponseUtils.fromReturnT(xxlJobService.remove(id));
+    }
+
+    @RequestMapping("/stop")
+    @ResponseBody
+    @SaCheckPermission("job:info:stop")
+    public R<String> pause(int id) {
+        return JobResponseUtils.fromReturnT(xxlJobService.stop(id));
+    }
+
+    @RequestMapping("/start")
+    @ResponseBody
+    @SaCheckPermission("job:info:start")
+    public R<String> start(int id) {
+        return JobResponseUtils.fromReturnT(xxlJobService.start(id));
+    }
+
+    @RequestMapping("/trigger")
+    @ResponseBody
+    @SaCheckPermission("job:info:trigger")
+    public R<String> triggerJob(int id, String executorParam, String addressList) {
+        return JobResponseUtils.fromReturnT(xxlJobService.trigger(id, executorParam, addressList));
+    }
+
+    @RequestMapping("/nextTriggerTime")
+    @ResponseBody
+    @SaCheckPermission("job:info:nextTriggerTime")
+    public R<List<String>> nextTriggerTime(String scheduleType, String scheduleConf) {
+        XxlJobInfo paramXxlJobInfo = new XxlJobInfo();
+        paramXxlJobInfo.setScheduleType(scheduleType);
+        paramXxlJobInfo.setScheduleConf(scheduleConf);
+
+        List<String> result = new ArrayList<>();
+        try {
+            java.util.Date lastTime = new java.util.Date();
+            for (int i = 0; i < 5; i++) {
+                lastTime = JobScheduleHelper.generateNextValidTime(paramXxlJobInfo, lastTime);
+                if (lastTime == null) {
+                    break;
+                }
+                result.add(DateUtil.formatDateTime(lastTime));
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return R.fail(I18nUtil.getString("schedule_type") + I18nUtil.getString("system_unvalid") + e.getMessage());
+        }
+        return R.ok(result);
+    }
+
+    private Map<String, Object> buildPageResult(Map<String, Object> source, int current, int size) {
+        List<?> records = (List<?>) source.getOrDefault("data", new ArrayList<>());
+        int total = ((Number) source.getOrDefault("recordsTotal", 0)).intValue();
+        Map<String, Object> result = new HashMap<>(4);
+        result.put("records", records);
+        result.put("current", current);
+        result.put("size", size);
+        result.put("total", total);
+        return result;
+    }
 }

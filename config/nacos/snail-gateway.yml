@@ -52,7 +52,13 @@ spring:
             # 验证码处理
             # - ValidateCodeFilter
             - StripPrefix=1
+        # 调度中心
+        - id: snail-job-admin
+          uri: lb://snail-job-admin
+          predicates:
+            - Path=/job/**
+          filters:
+            - StripPrefix=1
 # logging:
 #   level:
 #     org.springframework: debug
-

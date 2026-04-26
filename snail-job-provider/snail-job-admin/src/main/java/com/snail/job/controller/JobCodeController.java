@@ -1,5 +1,6 @@
 package com.snail.job.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.snail.job.core.model.XxlJobInfo;
 import com.snail.job.core.model.XxlJobLogGlue;
 import com.snail.job.core.util.I18nUtil;
@@ -31,6 +32,7 @@ public class JobCodeController {
 	private XxlJobLogGlueDao xxlJobLogGlueDao;
 
 	@RequestMapping
+	@SaCheckPermission("job:info:query")
 	public String index(HttpServletRequest request, Model model, int jobId) {
 		XxlJobInfo jobInfo = xxlJobInfoDao.loadById(jobId);
 		List<XxlJobLogGlue> jobLogGlues = xxlJobLogGlueDao.findByJobId(jobId);
@@ -55,6 +57,7 @@ public class JobCodeController {
 	
 	@RequestMapping("/save")
 	@ResponseBody
+	@SaCheckPermission("job:info:edit")
 	public ReturnT<String> save(Model model, int id, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {

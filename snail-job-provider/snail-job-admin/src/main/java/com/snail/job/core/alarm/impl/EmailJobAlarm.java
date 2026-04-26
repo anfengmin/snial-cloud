@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
@@ -38,6 +39,11 @@ public class EmailJobAlarm implements JobAlarm {
 
         // send monitor email
         if (info!=null && info.getAlarmEmail()!=null && info.getAlarmEmail().trim().length()>0) {
+            if (XxlJobAdminConfig.getAdminConfig().getMailSender() == null
+                    || !StringUtils.hasText(XxlJobAdminConfig.getAdminConfig().getEmailFrom())) {
+                logger.warn(">>>>>>>>>>> xxl-job, mail sender not configured, skip email alarm. JobLogId:{}", jobLog.getId());
+                return false;
+            }
 
             // alarmContent
             String alarmContent = "Alarm Job LogId=" + jobLog.getId();

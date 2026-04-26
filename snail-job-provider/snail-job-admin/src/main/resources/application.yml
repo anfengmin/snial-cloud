@@ -1,29 +1,30 @@
 server:
   port: 9002
-  servlet:
-    context-path: /xxl-job-admin
 
 spring:
   application:
     name: snail-job-admin
   profiles:
     active: ${PROFILES_ACTIVE:dev}
-  config:
-    import:
-      - optional:nacos:snail-global.yml?group=${NACOS_CONFIG_GROUP:DEFAULT_GROUP}&refreshEnabled=true
-      - optional:nacos:datasource.yml?group=${NACOS_CONFIG_GROUP:DEFAULT_GROUP}&refreshEnabled=true
-      - optional:nacos:snail-job-admin.yml?group=${NACOS_CONFIG_GROUP:DEFAULT_GROUP}&refreshEnabled=true
   cloud:
     nacos:
+      # nacos 服务地址
       server-addr: ${NACOS_SERVER:127.0.0.1:8848}
       username: ${NACOS_USERNAME:nacos}
       password: ${NACOS_PASSWORD:nacos}
       discovery:
+        # 注册组
         group: ${NACOS_DISCOVERY_GROUP:DEFAULT_GROUP}
         namespace: ${spring.profiles.active}
       config:
+        # 配置组
         group: ${NACOS_CONFIG_GROUP:DEFAULT_GROUP}
         namespace: ${spring.profiles.active}
+  config:
+    import:
+      - optional:nacos:snail-global.yml
+      - optional:nacos:datasource.yml
+      - optional:nacos:${spring.application.name}.yml
 
 jasypt:
   encryptor:
@@ -31,6 +32,15 @@ jasypt:
     algorithm: PBEWITHHMACSHA512ANDAES_256
     iv-generator-classname: org.jasypt.iv.RandomIvGenerator
     string-output-type: base64
+
+mybatis:
+  # 本地启动时的 Mapper XML 扫描路径，Nacos 中同名配置会覆盖它
+  mapper-locations: classpath*:mybatis-mapper/*Mapper.xml
+
+snail:
+  datasource:
+    # 本地启动时使用的默认 schema，Nacos 中同名配置会覆盖它
+    schema: ${SNAIL_JOB_DB_SCHEMA:xxl_job}
 
 management:
   endpoints:

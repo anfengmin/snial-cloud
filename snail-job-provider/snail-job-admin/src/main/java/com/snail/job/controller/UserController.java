@@ -1,12 +1,11 @@
 package com.snail.job.controller;
 
-import com.snail.job.controller.annotation.PermissionLimit;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.snail.job.core.model.XxlJobGroup;
 import com.snail.job.core.model.XxlJobUser;
 import com.snail.job.core.util.I18nUtil;
 import com.snail.job.dao.XxlJobGroupDao;
 import com.snail.job.dao.XxlJobUserDao;
-import com.snail.job.service.LoginService;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +34,7 @@ public class UserController {
     private XxlJobGroupDao xxlJobGroupDao;
 
     @RequestMapping
-    @PermissionLimit(adminuser = true)
+    @SaCheckPermission("job:user:list")
     public String index(Model model) {
 
         // 执行器列表
@@ -47,7 +46,7 @@ public class UserController {
 
     @RequestMapping("/pageList")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @SaCheckPermission("job:user:list")
     public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int start,
                                         @RequestParam(required = false, defaultValue = "10") int length,
                                         String username, int role) {
@@ -73,7 +72,7 @@ public class UserController {
 
     @RequestMapping("/add")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
+    @SaCheckPermission("job:user:add")
     public ReturnT<String> add(XxlJobUser xxlJobUser) {
 
         // valid username
@@ -108,15 +107,8 @@ public class UserController {
 
     @RequestMapping("/update")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
-    public ReturnT<String> update(HttpServletRequest request, XxlJobUser xxlJobUser) {
-
-        // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-        if (loginUser.getUsername().equals(xxlJobUser.getUsername())) {
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
-        }
-
+    @SaCheckPermission("job:user:edit")
+    public ReturnT<String> update(XxlJobUser xxlJobUser) {
         // valid password
         if (StringUtils.hasText(xxlJobUser.getPassword())) {
             xxlJobUser.setPassword(xxlJobUser.getPassword().trim());
@@ -136,44 +128,17 @@ public class UserController {
 
     @RequestMapping("/remove")
     @ResponseBody
-    @PermissionLimit(adminuser = true)
-    public ReturnT<String> remove(HttpServletRequest request, int id) {
-
-        // avoid opt login seft
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-        if (loginUser.getId() == id) {
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), I18nUtil.getString("user_update_loginuser_limit"));
-        }
-
+    @SaCheckPermission("job:user:remove")
+    public ReturnT<String> remove(int id) {
         xxlJobUserDao.delete(id);
         return ReturnT.SUCCESS;
     }
 
     @RequestMapping("/updatePwd")
     @ResponseBody
+    @SaCheckPermission("job:user:edit")
     public ReturnT<String> updatePwd(HttpServletRequest request, String password){
-
-        // valid password
-        if (password==null || password.trim().length()==0){
-            return new ReturnT<String>(ReturnT.FAIL.getCode(), "密码不可为空");
-        }
-        password = password.trim();
-        if (!(password.length()>=4 && password.length()<=20)) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("system_lengh_limit")+"[4-20]" );
-        }
-
-        // md5 password
-        String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
-
-        // update pwd
-        XxlJobUser loginUser = (XxlJobUser) request.getAttribute(LoginService.LOGIN_IDENTITY_KEY);
-
-        // do write
-        XxlJobUser existUser = xxlJobUserDao.loadByUserName(loginUser.getUsername());
-        existUser.setPassword(md5Password);
-        xxlJobUserDao.update(existUser);
-
-        return ReturnT.SUCCESS;
+        return new ReturnT<>(ReturnT.FAIL_CODE, "已切换为 snail 统一认证，xxl-job 独立用户密码维护暂不开放");
     }
 
 }
