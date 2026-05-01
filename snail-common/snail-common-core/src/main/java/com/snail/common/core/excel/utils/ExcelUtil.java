@@ -2,7 +2,6 @@ package com.snail.common.core.excel.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
@@ -379,6 +378,6 @@ public class ExcelUtil {
      * 编码文件名
      */
     public static String encodingFilename(String filename) {
-        return IdUtil.fastSimpleUUID() + "_" + filename + ".xlsx";
+        return filename + ".xlsx";
     }
 }

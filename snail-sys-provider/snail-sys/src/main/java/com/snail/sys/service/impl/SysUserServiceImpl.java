@@ -2,18 +2,29 @@ package com.snail.sys.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.snail.common.core.constant.UserConstants;
+import com.snail.common.core.excel.model.ExcelExportRequest;
+import com.snail.common.core.excel.model.ExcelImportResult;
+import com.snail.common.core.excel.model.ExcelImportRowResult;
+import com.snail.common.core.excel.model.ExcelImportRequest;
+import com.snail.common.core.excel.model.ExcelRow;
+import com.snail.common.core.excel.service.ExcelExportService;
+import com.snail.common.core.excel.service.ExcelImportService;
 import com.snail.common.core.exception.ServiceException;
-import com.snail.common.core.utils.R;
+import com.snail.common.core.service.DictService;
 import com.snail.common.core.exception.user.UserException;
+import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.domain.SysDept;
+import com.snail.sys.domain.SysOss;
 import com.snail.sys.domain.SysRole;
 import com.snail.sys.domain.SysUser;
 import com.snail.sys.api.dto.RoleDTO;
@@ -21,20 +32,28 @@ import com.snail.sys.dao.SysUserDao;
 import com.snail.sys.constants.SysConfigConstants;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.domain.SysUserRole;
-import com.snail.sys.domain.SysOss;
 import com.snail.sys.dto.SysUserPageDTO;
+import com.snail.sys.dto.UserProfileUpdateDTO;
+import com.snail.sys.dto.excel.SysUserImportExcelDTO;
 import com.snail.sys.service.*;
 import com.snail.sys.vo.SysUserVo;
+import com.snail.sys.vo.UserProfileVo;
 import com.snail.sys.vo.UserVO;
+import com.snail.sys.vo.excel.SysUserExportExcelVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,6 +85,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     private final SysDeptService sysDeptService;
     private final SysConfigService sysConfigService;
     private final SysOssService sysOssService;
+    private final ExcelExportService excelExportService;
+    private final ExcelImportService excelImportService;
+    private final DictService dictService;
 
     /**
      * 分页查询
@@ -76,16 +98,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     @Override
     public Page<SysUser> queryByPage(SysUserPageDTO dto) {
         Page<SysUser> page = new Page<>(dto.getCurrent(), dto.getSize());
-        Page<SysUser> result = this.lambdaQuery()
-                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
-                .eq(StrUtil.isNotEmpty(dto.getUserCode()), SysUser::getUserCode, dto.getUserCode())
-                .like(StrUtil.isNotEmpty(dto.getUserName()), SysUser::getUserName, dto.getUserName())
-                .eq(ObjectUtil.isNotEmpty(dto.getStatus()), SysUser::getStatus, dto.getStatus())
-                .like(StrUtil.isNotEmpty(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo())
-                .between(StrUtil.isNotEmpty(dto.getBeginTime()) && StrUtil.isNotEmpty(dto.getEndTime()),
-                        SysUser::getCreateTime, dto.getBeginTime(), dto.getEndTime())
-
-                .page(page);
+        Page<SysUser> result = this.page(page, buildUserQueryWrapper(dto));
         result.getRecords().forEach(user -> ensureAvatarIfAbsent(user, true));
         return result;
     }
@@ -232,6 +245,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         return SysUserVo.builder()
                 .user(userVO)
                 .build();
+    }
+
+    @Override
+    public UserProfileVo getProfile(Long userId) {
+        SysUser user = selectUserDetailById(userId);
+        if (ObjectUtil.isNull(user)) {
+            throw new ServiceException("用户不存在");
+        }
+
+        UserProfileVo profile = BeanUtil.copyProperties(user, UserProfileVo.class);
+        profile.setDeptName(ObjectUtil.isNotNull(user.getDept()) ? user.getDept().getDeptName() : StrUtil.EMPTY);
+        profile.setRoleNames(CollUtil.isNotEmpty(user.getRoles())
+                ? user.getRoles().stream().map(SysRole::getRoleName).filter(StrUtil::isNotBlank).collect(Collectors.toList())
+                : new ArrayList<>());
+        return profile;
     }
 
     /**
@@ -409,6 +437,86 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public boolean updateProfile(Long userId, UserProfileUpdateDTO dto) {
+        SysUser dbUser = super.getById(userId);
+        if (ObjectUtil.isNull(dbUser)) {
+            throw new ServiceException("用户不存在");
+        }
+
+        SysUser updateUser = new SysUser();
+        updateUser.setId(userId);
+        updateUser.setNickName(StrUtil.nullToEmpty(StrUtil.trim(dto.getNickName())));
+        updateUser.setEmail(StrUtil.nullToEmpty(StrUtil.trim(dto.getEmail())));
+        updateUser.setPhoneNo(StrUtil.nullToEmpty(StrUtil.trim(dto.getPhoneNo())));
+        updateUser.setSex(StrUtil.blankToDefault(StrUtil.trim(dto.getSex()), dbUser.getSex()));
+        updateUser.setAvatar(StrUtil.trim(dto.getAvatar()));
+
+        if (StrUtil.isNotBlank(updateUser.getPhoneNo()) && checkPhoneExists(updateUser)) {
+            throw new ServiceException("修改个人信息失败，手机号码已存在");
+        }
+
+        if (StrUtil.isNotBlank(updateUser.getEmail()) && checkEmailExists(updateUser)) {
+            throw new ServiceException("修改个人信息失败，邮箱账号已存在");
+        }
+
+        fillAvatarForPersist(updateUser, dbUser.getAvatar());
+        return this.updateById(updateUser);
+    }
+
+    @Override
+    public void exportUsers(SysUserPageDTO dto, HttpServletResponse response) {
+        SysUserPageDTO exportDto = BeanUtil.copyProperties(dto, SysUserPageDTO.class);
+        long totalCount = this.count(buildUserQueryWrapper(exportDto));
+        ExcelExportRequest<SysUserExportExcelVO> request = ExcelExportRequest.<SysUserExportExcelVO>builder()
+                .fileName("用户数据")
+                .sheetName("用户列表")
+                .head(SysUserExportExcelVO.class)
+                .totalCount(totalCount)
+                .pageSize(1000)
+                .maxRowsPerSheet(50000)
+                .maxSheetsPerWorkbook(10)
+                .pageFetcher((current, size) -> queryUserExportPage(exportDto, current, size))
+                .build();
+        excelExportService.export(request, response);
+    }
+
+    @Override
+    public void downloadImportTemplate(HttpServletResponse response) {
+        ExcelExportRequest<SysUserImportExcelDTO> request = ExcelExportRequest.<SysUserImportExcelDTO>builder()
+                .fileName("用户导入模板")
+                .sheetName("用户导入")
+                .head(SysUserImportExcelDTO.class)
+                .totalCount(0L)
+                .dropDownEnabled(Boolean.TRUE)
+                .build();
+        excelExportService.export(request, response);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ExcelImportResult importUsers(MultipartFile file, boolean updateSupport) {
+        if (ObjectUtil.isNull(file) || file.isEmpty()) {
+            throw new ServiceException("导入文件不能为空");
+        }
+        String initPassword = StrUtil.blankToDefault(
+                sysConfigService.selectConfigByKey(SysConfigConstants.SYS_USER_INIT_PASSWORD),
+                SysConfigConstants.SYS_USER_INIT_PASSWORD_DEFAULT
+        );
+        try {
+            ExcelImportRequest<SysUserImportExcelDTO> request = ExcelImportRequest.<SysUserImportExcelDTO>builder()
+                    .head(SysUserImportExcelDTO.class)
+                    .validate(Boolean.TRUE)
+                    .batchSize(200)
+                    .batchConsumer(rows -> importUserRows(rows, updateSupport, initPassword))
+                    .build();
+            return excelImportService.importExcel(file.getInputStream(), request);
+        } catch (IOException e) {
+            throw new ServiceException("导入用户失败");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public String resetUserPassword(Long userId) {
         SysUser user = super.getById(userId);
         if (ObjectUtil.isNull(user)) {
@@ -457,6 +565,110 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
                 .eq(SysUser::getDeleted, UserConstants.USER_NORMAL);
     }
 
+    private LambdaQueryWrapper<SysUser> buildUserQueryWrapper(SysUserPageDTO dto) {
+        return new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
+                .eq(StrUtil.isNotEmpty(dto.getUserCode()), SysUser::getUserCode, dto.getUserCode())
+                .like(StrUtil.isNotEmpty(dto.getUserName()), SysUser::getUserName, dto.getUserName())
+                .eq(ObjectUtil.isNotEmpty(dto.getStatus()), SysUser::getStatus, dto.getStatus())
+                .like(StrUtil.isNotEmpty(dto.getPhoneNo()), SysUser::getPhoneNo, dto.getPhoneNo())
+                .between(StrUtil.isNotEmpty(dto.getBeginTime()) && StrUtil.isNotEmpty(dto.getEndTime()),
+                        SysUser::getCreateTime, dto.getBeginTime(), dto.getEndTime());
+    }
+
+    private List<SysUserExportExcelVO> queryUserExportPage(SysUserPageDTO dto, long current, long size) {
+        Page<SysUser> page = new Page<>(current, size);
+        Page<SysUser> result = this.page(page, buildUserQueryWrapper(dto).orderByAsc(SysUser::getId));
+        return result.getRecords().stream().map(this::toUserExportExcelVO).collect(Collectors.toList());
+    }
+
+    private SysUserExportExcelVO toUserExportExcelVO(SysUser user) {
+        SysUserExportExcelVO vo = BeanUtil.copyProperties(user, SysUserExportExcelVO.class);
+        vo.setSex(dictService.getDictLabel("sys_user_sex", StrUtil.blankToDefault(user.getSex(), "2")));
+        vo.setStatus(dictService.getDictLabel("sys_normal_disable", String.valueOf(ObjectUtil.defaultIfNull(user.getStatus(), UserConstants.USER_NORMAL))));
+        vo.setCreateTime(ObjectUtil.isNull(user.getCreateTime()) ? StrUtil.EMPTY : DateUtil.formatDateTime(user.getCreateTime()));
+        return vo;
+    }
+
+    private List<ExcelImportRowResult> importUserRows(List<ExcelRow<SysUserImportExcelDTO>> rows,
+                                                      boolean updateSupport,
+                                                      String initPassword) {
+        List<ExcelImportRowResult> results = new ArrayList<>();
+        for (ExcelRow<SysUserImportExcelDTO> row : rows) {
+            try {
+                importSingleUser(row.getData(), updateSupport, initPassword);
+                results.add(ExcelImportRowResult.success(row.getRowNum()));
+            } catch (Exception e) {
+                results.add(ExcelImportRowResult.fail(row.getRowNum(), StrUtil.blankToDefault(e.getMessage(), "导入失败")));
+            }
+        }
+        return results;
+    }
+
+    private void importSingleUser(SysUserImportExcelDTO dto, boolean updateSupport, String initPassword) {
+        String userCode = StrUtil.trim(dto.getUserCode());
+        SysUser existUser = this.lambdaQuery()
+                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
+                .eq(SysUser::getUserCode, userCode)
+                .one();
+        if (ObjectUtil.isNotNull(existUser)) {
+            if (!updateSupport) {
+                throw new ServiceException("用户账号已存在");
+            }
+            checkUserAllowed(existUser);
+            updateImportedUser(existUser, dto);
+            return;
+        }
+        createImportedUser(dto, initPassword);
+    }
+
+    private void createImportedUser(SysUserImportExcelDTO dto, String initPassword) {
+        SysUser user = buildImportUser(dto);
+        user.setUserType("sys_user");
+        user.setDeleted(UserConstants.USER_NORMAL);
+        user.setPassWord(BCrypt.hashpw(initPassword));
+
+        if (checkUserCodeUnique(user)) {
+            throw new ServiceException("用户账号已存在");
+        }
+        if (StrUtil.isNotBlank(user.getPhoneNo()) && checkPhoneExists(user)) {
+            throw new ServiceException("手机号码已存在");
+        }
+        if (StrUtil.isNotBlank(user.getEmail()) && checkEmailExists(user)) {
+            throw new ServiceException("邮箱账号已存在");
+        }
+        fillAvatarForPersist(user, null);
+        this.save(user);
+    }
+
+    private void updateImportedUser(SysUser existUser, SysUserImportExcelDTO dto) {
+        SysUser updateUser = buildImportUser(dto);
+        updateUser.setId(existUser.getId());
+
+        if (StrUtil.isNotBlank(updateUser.getPhoneNo()) && checkPhoneExists(updateUser)) {
+            throw new ServiceException("手机号码已存在");
+        }
+        if (StrUtil.isNotBlank(updateUser.getEmail()) && checkEmailExists(updateUser)) {
+            throw new ServiceException("邮箱账号已存在");
+        }
+        fillAvatarForPersist(updateUser, existUser.getAvatar());
+        this.updateById(updateUser);
+    }
+
+    private SysUser buildImportUser(SysUserImportExcelDTO dto) {
+        SysUser user = new SysUser();
+        String userName = StrUtil.trim(dto.getUserName());
+        user.setUserCode(StrUtil.trim(dto.getUserCode()));
+        user.setUserName(userName);
+        user.setNickName(StrUtil.blankToDefault(StrUtil.trim(dto.getNickName()), userName));
+        user.setPhoneNo(StrUtil.nullToEmpty(StrUtil.trim(dto.getPhoneNo())));
+        user.setEmail(StrUtil.nullToEmpty(StrUtil.trim(dto.getEmail())));
+        user.setSex(StrUtil.blankToDefault(StrUtil.trim(dto.getSex()), "2"));
+        user.setStatus(ObjectUtil.defaultIfNull(dto.getStatus(), UserConstants.USER_NORMAL));
+        user.setRemark(StrUtil.nullToEmpty(StrUtil.trim(dto.getRemark())));
+        return user;
+    }
+
     private SysUser ensureAvatarIfAbsent(SysUser user, boolean persist) {
         if (ObjectUtil.isEmpty(user) || StrUtil.isNotBlank(user.getAvatar())) {
             return user;
@@ -473,6 +685,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         }
 
         return user;
+    }
+
+    private SysUser selectUserDetailById(Long userId) {
+        MPJLambdaWrapper<SysUser> wrapper = new MPJLambdaWrapper<SysUser>()
+                .selectAll(SysUser.class)
+                .selectAssociation(SysDept.class, SysUser::getDept)
+                .selectCollection(SysRole.class, SysUser::getRoles)
+                .leftJoin(SysDept.class, SysDept::getId, SysUser::getDeptId)
+                .leftJoin(SysUserRole.class, SysUserRole::getUserId, SysUser::getId)
+                .leftJoin(SysRole.class, SysRole::getId, SysUserRole::getRoleId)
+                .eq(SysUser::getDeleted, UserConstants.USER_NORMAL)
+                .eq(SysUser::getId, userId);
+
+        List<SysUser> list = baseMapper.selectJoinList(SysUser.class, wrapper);
+        return CollUtil.isNotEmpty(list) ? ensureAvatarIfAbsent(list.get(0), true) : null;
     }
 
     private void fillAvatarForPersist(SysUser user, String currentAvatar) {

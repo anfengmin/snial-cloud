@@ -39,6 +39,21 @@ import java.util.Map;
 public class ServletUtils extends ServletUtil {
 
     /**
+     * IPv4 本机回环地址
+     */
+    private static final String IPV4_LOOPBACK = "127.0.0.1";
+
+    /**
+     * IPv6 本机回环地址（完整写法）
+     */
+    private static final String IPV6_LOOPBACK = "0:0:0:0:0:0:0:1";
+
+    /**
+     * IPv6 本机回环地址（简写）
+     */
+    private static final String IPV6_LOOPBACK_SHORT = "::1";
+
+    /**
      * 获取String参数
      */
     public static String getParameter(String name) {
@@ -209,6 +224,43 @@ public class ServletUtils extends ServletUtil {
 
     public static String getClientIP() {
         return getClientIP(getRequest());
+    }
+
+    /**
+     * 获取客户端 IP，并将本机 IPv6 回环地址统一归一化为 IPv4 表示。
+     *
+     * @param request 当前请求
+     * @return 归一化后的客户端 IP
+     */
+    public static String getClientIP(HttpServletRequest request) {
+        if (request == null) {
+            return StringUtils.EMPTY;
+        }
+        return normalizeLoopbackIp(ServletUtil.getClientIP(request));
+    }
+
+    /**
+     * 统一处理本机回环地址，避免页面上出现 IPv6 回环地址长串。
+     *
+     * @param ip 原始 IP
+     * @return 归一化后的 IP
+     */
+    public static String normalizeLoopbackIp(String ip) {
+        if (StringUtils.isBlank(ip)) {
+            return StringUtils.EMPTY;
+        }
+
+        String normalizedIp = StringUtils.trim(ip);
+        int zoneIndex = normalizedIp.indexOf('%');
+        if (zoneIndex > 0) {
+            normalizedIp = normalizedIp.substring(0, zoneIndex);
+        }
+
+        if (StringUtils.equalsAny(normalizedIp, IPV6_LOOPBACK, IPV6_LOOPBACK_SHORT)) {
+            return IPV4_LOOPBACK;
+        }
+
+        return normalizedIp;
     }
 
     /**

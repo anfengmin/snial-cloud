@@ -3,7 +3,6 @@ package com.snail.sys.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.common.core.utils.R;
 import com.snail.common.storage.model.UploadResult;
 import com.snail.common.storage.service.StorageManager;
 import com.snail.sys.dao.SysOssDao;
@@ -35,7 +34,7 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssDao, SysOss> implements
      * @return 查询结果
      */
     @Override
-    public R<Page<SysOss>> queryByPage(SysOssPageDTO dto) {
+    public Page<SysOss> queryByPage(SysOssPageDTO dto) {
         Page<SysOss> page = new Page<>(dto.getCurrent(), dto.getSize());
         Page<SysOss> result = this.lambdaQuery()
                 .like(StrUtil.isNotBlank(dto.getOriginalName()), SysOss::getOriginalName, dto.getOriginalName())
@@ -43,13 +42,13 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssDao, SysOss> implements
                 .like(StrUtil.isNotBlank(dto.getService()), SysOss::getService, dto.getService())
                 .orderByDesc(SysOss::getCreateTime)
                 .page(page);
-        return R.ok(result);
+        return result;
     }
 
     @Override
-    public R<SysOss> upload(MultipartFile file, String configKey) {
+    public SysOss upload(MultipartFile file, String configKey) {
         UploadResult uploadResult = storageManager.upload(configKey, file);
-        return R.ok(saveUploadResult(uploadResult));
+        return saveUploadResult(uploadResult);
     }
 
     @Override

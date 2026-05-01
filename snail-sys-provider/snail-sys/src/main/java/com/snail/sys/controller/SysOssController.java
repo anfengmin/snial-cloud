@@ -35,7 +35,7 @@ public class SysOssController {
     @PostMapping("queryByPage")
     @Operation(summary = "分页查询", description = "分页查询")
     public R<Page<SysOss>> queryByPage(@RequestBody SysOssPageDTO dto) {
-        return sysOssService.queryByPage(dto);
+        return R.ok(sysOssService.queryByPage(dto));
     }
 
     @SaCheckPermission("system:oss:query")
@@ -51,7 +51,7 @@ public class SysOssController {
     @Operation(summary = "上传文件")
     public R<SysOss> upload(@RequestParam("file") MultipartFile file,
                             @RequestParam(value = "configKey", required = false) String configKey) {
-        return sysOssService.upload(file, configKey);
+        return R.ok(sysOssService.upload(file, configKey));
     }
 
     @SaCheckPermission("system:oss:add")

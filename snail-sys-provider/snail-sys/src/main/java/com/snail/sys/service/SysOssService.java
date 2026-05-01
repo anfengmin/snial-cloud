@@ -1,10 +1,9 @@
 package com.snail.sys.service;
 
-import com.snail.common.core.utils.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.sys.domain.SysOss;
 import com.snail.sys.dto.SysOssPageDTO;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -22,7 +21,7 @@ public interface SysOssService extends IService<SysOss> {
      * @return 分页结果
      * @since 1.0
      */
-    R<Page<SysOss>> queryByPage(SysOssPageDTO dto);
+    Page<SysOss> queryByPage(SysOssPageDTO dto);
 
     /**
      * 上传文件
@@ -31,7 +30,7 @@ public interface SysOssService extends IService<SysOss> {
      * @param configKey 配置键
      * @return 上传记录
      */
-    R<SysOss> upload(MultipartFile file, String configKey);
+    SysOss upload(MultipartFile file, String configKey);
 
     /**
      * 上传字节内容并落库

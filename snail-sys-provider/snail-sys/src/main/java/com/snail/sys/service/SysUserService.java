@@ -1,13 +1,19 @@
 package com.snail.sys.service;
 
 
+import com.snail.common.core.excel.model.ExcelImportResult;
 import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.domain.SysUser;
+import com.snail.sys.dto.UserProfileUpdateDTO;
+import com.snail.sys.vo.UserProfileVo;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.dto.SysUserPageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户
@@ -159,6 +165,47 @@ public interface SysUserService extends IService<SysUser> {
      * <p>1.0 Initialization method </p>
      */
     boolean updateUser(SysUser user);
+
+    /**
+     * 获取当前登录用户个人资料
+     *
+     * @param userId 当前登录用户ID
+     * @return 个人资料
+     */
+    UserProfileVo getProfile(Long userId);
+
+    /**
+     * 更新当前登录用户个人资料
+     *
+     * @param userId 当前登录用户ID
+     * @param dto 更新参数
+     * @return 是否成功
+     */
+    boolean updateProfile(Long userId, UserProfileUpdateDTO dto);
+
+    /**
+     * 导出用户列表
+     *
+     * @param dto      查询条件
+     * @param response 响应
+     */
+    void exportUsers(SysUserPageDTO dto, HttpServletResponse response);
+
+    /**
+     * 下载用户导入模板
+     *
+     * @param response 响应
+     */
+    void downloadImportTemplate(HttpServletResponse response);
+
+    /**
+     * 导入用户
+     *
+     * @param file          Excel文件
+     * @param updateSupport 是否更新已存在用户
+     * @return 导入结果
+     */
+    ExcelImportResult importUsers(MultipartFile file, boolean updateSupport);
 
     /**
      * 重置用户密码

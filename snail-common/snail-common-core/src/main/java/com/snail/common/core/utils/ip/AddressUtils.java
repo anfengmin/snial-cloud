@@ -2,6 +2,7 @@ package com.snail.common.core.utils.ip;
 
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.http.HtmlUtil;
+import com.snail.common.core.utils.ServletUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class AddressUtils {
             return UNKNOWN;
         }
         // 内网不查询
-        ip = StringUtils.contains(ip, "0:0:0:0:0:0:0:1") ? "127.0.0.1" : HtmlUtil.cleanHtmlTag(ip);
+        ip = ServletUtils.normalizeLoopbackIp(HtmlUtil.cleanHtmlTag(ip));
         if (NetUtil.isInnerIP(ip)) {
             return "内网IP";
         }

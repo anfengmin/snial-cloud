@@ -62,13 +62,10 @@ public class ExcelDownHandler implements SheetWriteHandler {
      * 当前联动选择进度
      */
     private int currentLinkedOptionsSheetIndex;
-    private final DictService dictService;
-
     public ExcelDownHandler(List<DropDownOptions> options) {
         this.dropDownOptions = options;
         this.currentOptionsColumnIndex = 0;
         this.currentLinkedOptionsSheetIndex = 0;
-        this.dictService = SpringUtils.getBean(DictService.class);
     }
 
     /**
@@ -101,7 +98,7 @@ public class ExcelDownHandler implements SheetWriteHandler {
                 String converterExp = format.readConverterExp();
                 if (StrUtil.isNotBlank(dictType)) {
                     // 如果传递了字典名，则依据字典建立下拉
-                    Collection<String> values = Optional.ofNullable(dictService.getAllDictByDictType(dictType))
+                    Collection<String> values = Optional.ofNullable(getDictService().getAllDictByDictType(dictType))
                             .orElseThrow(() -> new ServiceException(String.format("字典 %s 不存在", dictType)))
                             .values();
                     options = new ArrayList<>(values);
@@ -367,5 +364,9 @@ public class ExcelDownHandler implements SheetWriteHandler {
         String columnNext = StrUtil.subWithLength(EXCEL_COLUMN_NAME, thisCircleColumnIndex, 1);
         // 将二者拼接即为最终的栏位名
         return columnPrefix + columnNext;
+    }
+
+    private DictService getDictService() {
+        return SpringUtils.getBean(DictService.class);
     }
 }

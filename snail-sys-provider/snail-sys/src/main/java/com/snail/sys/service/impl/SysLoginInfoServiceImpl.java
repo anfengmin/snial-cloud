@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snail.common.core.utils.ServletUtils;
 import com.snail.sys.dao.SysLoginInfoDao;
 import com.snail.common.log.domain.SysLoginInfo;
 import com.snail.sys.dto.SysLogPageDTO;
@@ -40,8 +41,7 @@ public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLog
      */
     @Override
     public Page<SysLoginInfo> queryByPage(SysLogPageDTO dto) {
-
-        return this.lambdaQuery()
+        Page<SysLoginInfo> page = this.lambdaQuery()
                 .eq(StrUtil.isNotBlank(dto.getStatus()), SysLoginInfo::getStatus, dto.getStatus())
                 .like(StrUtil.isNotBlank(dto.getIpaddr()), SysLoginInfo::getIpaddr, dto.getIpaddr())
                 .like(StrUtil.isNotBlank(dto.getUserName()), SysLoginInfo::getUserName, dto.getUserName())
@@ -49,6 +49,10 @@ public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLog
                         , SysLoginInfo::getLoginTime, dto.getBeginTime(), dto.getEndTime())
                 .orderByDesc(SysLoginInfo::getId)
                 .page(new Page<>(dto.getCurrent(), dto.getSize()));
+
+        page.getRecords().forEach(record -> record.setIpaddr(ServletUtils.normalizeLoopbackIp(record.getIpaddr())));
+
+        return page;
     }
 
     /**

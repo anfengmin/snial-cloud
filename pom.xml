@@ -40,6 +40,7 @@
         <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
         <poi.version>5.2.3</poi.version>
         <easyexcel.version>3.3.2</easyexcel.version>
+        <commons-io.version>2.15.1</commons-io.version>
         <hutool.version>5.8.37</hutool.version>
         <redisson.version>3.46.0</redisson.version>
         <lock4j.version>2.2.3</lock4j.version>
@@ -300,6 +301,12 @@
                         <artifactId>poi-ooxml-schemas</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <!-- 代码生成使用模板 -->
