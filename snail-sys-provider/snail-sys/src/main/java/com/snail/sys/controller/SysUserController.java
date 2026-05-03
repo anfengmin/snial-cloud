@@ -10,15 +10,19 @@ import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.excel.model.ExcelImportResult;
 import com.snail.common.core.utils.R;
 import com.snail.common.log.annotation.Log;
+import com.snail.auth.service.UserLoginStreakService;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.domain.SysOss;
 import com.snail.sys.domain.SysUser;
 import com.snail.sys.dto.SysUserPageDTO;
+import com.snail.sys.dto.UserPasswordUpdateDTO;
 import com.snail.sys.dto.UserProfileUpdateDTO;
 import com.snail.sys.service.SysDeptService;
 import com.snail.sys.service.SysOssService;
 import com.snail.sys.service.SysUserService;
+import com.snail.sys.vo.UserLoginCalendarVo;
+import com.snail.sys.vo.UserLoginStreakSummaryVo;
 import com.snail.sys.vo.SysUserVo;
 import com.snail.sys.vo.UserProfileVo;
 import com.snail.sys.vo.UserVO;
@@ -49,6 +53,7 @@ public class SysUserController {
     private final SysUserService sysUserService;
     private final SysDeptService sysDeptService;
     private final SysOssService sysOssService;
+    private final UserLoginStreakService userLoginStreakService;
 
     @SaCheckPermission("system:user:list")
     @PostMapping("queryByPage")
@@ -106,12 +111,38 @@ public class SysUserController {
     }
 
     @SaCheckLogin
+    @GetMapping("login-streak")
+    @Operation(summary = "获取当前登录用户连续登录摘要")
+    public R<UserLoginStreakSummaryVo> getLoginStreak() {
+        Long userId = LoginUtils.getUserId();
+        return R.ok(userLoginStreakService.getSummary(userId));
+    }
+
+    @SaCheckLogin
+    @GetMapping("login-calendar")
+    @Operation(summary = "获取当前登录用户登录日历")
+    public R<UserLoginCalendarVo> getLoginCalendar(@RequestParam(value = "year", required = false) Integer year,
+                                                   @RequestParam(value = "month", required = false) Integer month) {
+        Long userId = LoginUtils.getUserId();
+        return R.ok(userLoginStreakService.getCalendar(userId, year, month));
+    }
+
+    @SaCheckLogin
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("profile")
     @Operation(summary = "更新当前登录用户个人资料")
     public R<Boolean> updateProfile(@Validated @RequestBody UserProfileUpdateDTO dto) {
         Long userId = LoginUtils.getUserId();
         return R.ok(sysUserService.updateProfile(userId, dto));
+    }
+
+    @SaCheckLogin
+    @Log(title = "个人密码", businessType = BusinessType.UPDATE)
+    @PutMapping("profile/password")
+    @Operation(summary = "更新当前登录用户密码")
+    public R<Boolean> updateProfilePassword(@Validated @RequestBody UserPasswordUpdateDTO dto) {
+        Long userId = LoginUtils.getUserId();
+        return R.ok(sysUserService.updateProfilePassword(userId, dto));
     }
 
     @SaCheckLogin

@@ -26,11 +26,10 @@ public class GlobalCorsFilter implements WebFilter, Ordered {
     /**
      * 这里为支持的请求头，如果有自定义的header字段请自己添加
      */
-    private static final String ALLOWED_HEADERS = "X-Requested-With, Content-Language, Content-Type, Authorization, credential, X-XSRF-TOKEN, isToken, token, Admin-Token, App-Token,x-request-id";
+    private static final String ALLOWED_HEADERS = "X-Requested-With, Content-Language, Content-Type, Authorization, credential, X-XSRF-TOKEN, isToken, token, Admin-Token, App-Token, x-request-id, X-Client-Type, X-Device-Id, X-Device-Name";
     private static final String ALLOWED_METHODS = "GET,POST,PUT,DELETE,OPTIONS,HEAD";
-    private static final String ALLOWED_ORIGIN = "*";
     private static final String ALLOWED_EXPOSE = "*";
-    private static final String MAX_AGE = "18000L";
+    private static final String MAX_AGE = "18000";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -38,12 +37,14 @@ public class GlobalCorsFilter implements WebFilter, Ordered {
         if (CorsUtils.isCorsRequest(request)) {
             ServerHttpResponse response = exchange.getResponse();
             HttpHeaders headers = response.getHeaders();
-            headers.add("Access-Control-Allow-Headers", ALLOWED_HEADERS);
-            headers.add("Access-Control-Allow-Methods", ALLOWED_METHODS);
-            headers.add("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
-            headers.add("Access-Control-Expose-Headers", ALLOWED_EXPOSE);
-            headers.add("Access-Control-Max-Age", MAX_AGE);
-            headers.add("Access-Control-Allow-Credentials", "true");
+            String origin = request.getHeaders().getOrigin();
+            headers.set("Access-Control-Allow-Headers", ALLOWED_HEADERS);
+            headers.set("Access-Control-Allow-Methods", ALLOWED_METHODS);
+            headers.set("Access-Control-Allow-Origin", origin);
+            headers.set("Access-Control-Expose-Headers", ALLOWED_EXPOSE);
+            headers.set("Access-Control-Max-Age", MAX_AGE);
+            headers.set("Access-Control-Allow-Credentials", "true");
+            headers.add(HttpHeaders.VARY, HttpHeaders.ORIGIN);
             if (request.getMethod() == HttpMethod.OPTIONS) {
                 response.setStatusCode(HttpStatus.OK);
                 return Mono.empty();

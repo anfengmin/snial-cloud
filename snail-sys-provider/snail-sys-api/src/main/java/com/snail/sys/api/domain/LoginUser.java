@@ -95,6 +95,24 @@ public class LoginUser implements Serializable {
     private String userType;
 
     /**
+     * 终端类型
+     */
+    @Schema(description = "终端类型")
+    private String clientType;
+
+    /**
+     * 设备标识
+     */
+    @Schema(description = "设备标识")
+    private String deviceId;
+
+    /**
+     * 设备名称
+     */
+    @Schema(description = "设备名称")
+    private String deviceName;
+
+    /**
      * 角色权限
      */
     private Set<String> rolePermission;

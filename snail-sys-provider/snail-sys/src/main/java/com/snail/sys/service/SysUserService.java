@@ -5,6 +5,7 @@ import com.snail.common.core.excel.model.ExcelImportResult;
 import com.snail.common.core.utils.R;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.domain.SysUser;
+import com.snail.sys.dto.UserPasswordUpdateDTO;
 import com.snail.sys.dto.UserProfileUpdateDTO;
 import com.snail.sys.vo.UserProfileVo;
 import com.snail.sys.vo.SysUserVo;
@@ -182,6 +183,15 @@ public interface SysUserService extends IService<SysUser> {
      * @return 是否成功
      */
     boolean updateProfile(Long userId, UserProfileUpdateDTO dto);
+
+    /**
+     * 更新当前登录用户密码
+     *
+     * @param userId 当前登录用户ID
+     * @param dto 密码更新参数
+     * @return 是否成功
+     */
+    boolean updateProfilePassword(Long userId, UserPasswordUpdateDTO dto);
 
     /**
      * 导出用户列表

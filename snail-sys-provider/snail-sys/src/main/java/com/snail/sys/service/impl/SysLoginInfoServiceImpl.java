@@ -63,7 +63,9 @@ public class SysLoginInfoServiceImpl extends ServiceImpl<SysLoginInfoDao, SysLog
      */
     @Override
     public boolean insertLogininfor(SysLoginInfo sysLoginInfo) {
-        sysLoginInfo.setLoginTime(new Date());
+        if (sysLoginInfo.getLoginTime() == null) {
+            sysLoginInfo.setLoginTime(new Date());
+        }
         return this.save(sysLoginInfo);
     }
 }

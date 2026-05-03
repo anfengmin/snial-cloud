@@ -40,6 +40,15 @@ public class SysLoginInfo {
     @Schema(description = "操作系统")
     private String os;
 
+    @Schema(description = "终端类型")
+    private String clientType;
+
+    @Schema(description = "设备标识")
+    private String deviceId;
+
+    @Schema(description = "设备名称")
+    private String deviceName;
+
     @Schema(description = "登录状态（0成功 1失败）")
     private String status;
 

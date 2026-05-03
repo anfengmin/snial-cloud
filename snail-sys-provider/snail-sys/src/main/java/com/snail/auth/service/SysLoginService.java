@@ -5,30 +5,29 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
 import com.snail.auth.form.RegisterBody;
+import com.snail.auth.model.LoginContextInfo;
+import com.snail.auth.util.LoginContextResolver;
 import com.snail.common.core.constant.CacheConstants;
 import com.snail.common.core.constant.Constants;
 import com.snail.common.core.enums.LoginType;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.MessageUtils;
-import com.snail.common.core.utils.ServletUtils;
-import com.snail.common.core.utils.ip.AddressUtils;
+import com.snail.common.log.domain.SysLoginInfo;
 import com.snail.common.log.service.AsyncLogService;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
-import com.snail.common.log.domain.SysLoginInfo;
 import com.snail.sys.domain.SysUser;
 import com.snail.sys.service.SysUserService;
+import com.snail.sys.vo.UserLoginStreakSummaryVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.util.Date;
 import java.util.function.Supplier;
 
 /**
@@ -47,6 +46,9 @@ public class SysLoginService {
 
     @Resource
     private AsyncLogService asyncLogService;
+
+    @Resource
+    private UserLoginStreakService userLoginStreakService;
 
     /**
      * 密码最大错误次数(默认5次)
@@ -71,8 +73,25 @@ public class SysLoginService {
         // 使用buildLoginUser获取完整的用户信息（包含权限）
         LoginUser userInfo = sysUserService.getUserInfo(userCode);
         checkLogin(LoginType.PASSWORD, userCode, () -> !BCrypt.checkpw(passWord, userInfo.getPassWord()));
+        LoginContextInfo loginContextInfo = LoginContextResolver.resolveCurrentRequest();
+        userInfo.setClientType(loginContextInfo.getClientType());
+        userInfo.setDeviceId(loginContextInfo.getDeviceId());
+        userInfo.setDeviceName(loginContextInfo.getDeviceName());
         LoginUtils.login(userInfo);
-        recordLoginInfo(userInfo.getUserCode(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success"));
+        Date loginTime = new Date();
+        UserLoginStreakSummaryVo streakSummary = userLoginStreakService.recordLoginSuccess(
+                userInfo.getId(),
+                loginContextInfo.getIp(),
+                loginTime
+        );
+        recordLoginInfo(
+                userInfo.getUserCode(),
+                Constants.LOGIN_SUCCESS,
+                MessageUtils.message("user.login.success"),
+                loginContextInfo,
+                streakSummary.getCurrentStreakDays(),
+                loginTime
+        );
 
         return StpUtil.getTokenValue();
     }
@@ -87,7 +106,14 @@ public class SysLoginService {
             // 获取当前登录用户并记录登出信息
             LoginUser loginUser = LoginUtils.getLoginUser();
             if (loginUser != null) {
-                recordLoginInfo(loginUser.getUserCode(), Constants.LOGOUT, MessageUtils.message("user.logout.success"));
+                recordLoginInfo(
+                        loginUser.getUserCode(),
+                        Constants.LOGOUT,
+                        MessageUtils.message("user.logout.success"),
+                        LoginContextResolver.resolveCurrentRequest(),
+                        null,
+                        new Date()
+                );
             }
             // 执行登出操作
             StpUtil.logout();
@@ -123,12 +149,26 @@ public class SysLoginService {
             // 达到规定错误次数 则锁定登录
             if (errorNumber.equals(maxRetryCount)) {
                 RedisUtils.setCacheObject(errorKey, errorNumber, Duration.ofMinutes(lockTime));
-                recordLoginInfo(userCode, loginFail, MessageUtils.message(loginType.getRetryLimitExceed(), maxRetryCount, lockTime));
+                recordLoginInfo(
+                        userCode,
+                        loginFail,
+                        MessageUtils.message(loginType.getRetryLimitExceed(), maxRetryCount, lockTime),
+                        LoginContextResolver.resolveCurrentRequest(),
+                        null,
+                        new Date()
+                );
                 throw new UserException(loginType.getRetryLimitExceed(), maxRetryCount, lockTime);
             } else {
                 // 未达到规定错误次数 则递增
                 RedisUtils.setCacheObject(errorKey, errorNumber);
-                recordLoginInfo(userCode, loginFail, MessageUtils.message(loginType.getRetryLimitCount(), errorNumber));
+                recordLoginInfo(
+                        userCode,
+                        loginFail,
+                        MessageUtils.message(loginType.getRetryLimitCount(), errorNumber),
+                        LoginContextResolver.resolveCurrentRequest(),
+                        null,
+                        new Date()
+                );
                 throw new UserException(loginType.getRetryLimitCount(), errorNumber);
             }
         }
@@ -159,7 +199,14 @@ public class SysLoginService {
         if (!regFlag) {
             throw new UserException("user.register.error");
         }
-        recordLoginInfo(registerBody.getUserCode(), Constants.REGISTER, MessageUtils.message("user.register.success"));
+        recordLoginInfo(
+                registerBody.getUserCode(),
+                Constants.REGISTER,
+                MessageUtils.message("user.register.success"),
+                LoginContextResolver.resolveCurrentRequest(),
+                null,
+                new Date()
+        );
 
 
     }
@@ -173,25 +220,24 @@ public class SysLoginService {
      * @since 1.0
      * <p>1.0 Initialization method </p>
      */
-    public void recordLoginInfo(String username, String status, String message) {
-        HttpServletRequest request = ServletUtils.getRequest();
-        assert request != null;
-        final UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
-        final String ip = ServletUtils.getClientIP(request);
-
-        String address = AddressUtils.getRealAddressByIP(ip);
-        // 获取客户端操作系统
-        String os = userAgent.getOs().getName();
-        // 获取客户端浏览器
-        String browser = userAgent.getBrowser().getName();
+    public void recordLoginInfo(String username,
+                                String status,
+                                String message,
+                                LoginContextInfo loginContextInfo,
+                                Integer streakDays,
+                                Date loginTime) {
         // 封装对象
         SysLoginInfo loginInfo = new SysLoginInfo();
         loginInfo.setUserName(username);
-        loginInfo.setIpaddr(ip);
-        loginInfo.setLoginLocation(address);
-        loginInfo.setBrowser(browser);
-        loginInfo.setOs(os);
-        loginInfo.setMsg(message);
+        loginInfo.setIpaddr(loginContextInfo.getIp());
+        loginInfo.setLoginLocation(loginContextInfo.getLoginLocation());
+        loginInfo.setBrowser(loginContextInfo.getBrowser());
+        loginInfo.setOs(loginContextInfo.getOs());
+        loginInfo.setClientType(loginContextInfo.getClientType());
+        loginInfo.setDeviceId(loginContextInfo.getDeviceId());
+        loginInfo.setDeviceName(loginContextInfo.getDeviceName());
+        loginInfo.setMsg(streakDays != null ? StrUtil.format("{}（连续登录{}天）", message, streakDays) : message);
+        loginInfo.setLoginTime(loginTime);
         // 日志状态
         if (StrUtil.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
             loginInfo.setStatus(String.valueOf(Constants.LOGIN_SUCCESS_STATUS));

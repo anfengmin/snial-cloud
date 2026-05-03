@@ -48,4 +48,19 @@ public interface CacheConstants {
      * 登录账户密码错误次数 redis key
      */
     String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+
+    /**
+     * 登录连续天数摘要 redis key
+     */
+    String LOGIN_STREAK_SUMMARY_KEY = "login:streak:summary:";
+
+    /**
+     * 登录日历 redis key
+     */
+    String LOGIN_CALENDAR_KEY = "login:calendar:";
+
+    /**
+     * 登录连续天数锁 redis key
+     */
+    String LOGIN_STREAK_LOCK_KEY = "login:streak:lock:";
 }

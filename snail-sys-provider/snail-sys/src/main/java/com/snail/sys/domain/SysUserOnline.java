@@ -22,6 +22,11 @@ public class SysUserOnline implements Serializable {
     private String tokenId;
 
     /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
      * 部门名称
      */
     private String deptName;
@@ -57,8 +62,28 @@ public class SysUserOnline implements Serializable {
     private String os;
 
     /**
+     * 终端类型
+     */
+    private String clientType;
+
+    /**
+     * 设备标识
+     */
+    private String deviceId;
+
+    /**
+     * 设备名称
+     */
+    private String deviceName;
+
+    /**
      * 登录时间
      */
     private Long loginTime;
+
+    /**
+     * 是否为当前设备
+     */
+    private Boolean currentDevice;
 
 }

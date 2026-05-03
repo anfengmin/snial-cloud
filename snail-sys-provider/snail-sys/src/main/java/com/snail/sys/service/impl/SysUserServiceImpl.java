@@ -1,11 +1,14 @@
 package com.snail.sys.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import com.snail.common.core.constant.CacheConstants;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,6 +25,8 @@ import com.snail.common.core.exception.ServiceException;
 import com.snail.common.core.service.DictService;
 import com.snail.common.core.exception.user.UserException;
 import com.snail.common.core.utils.R;
+import com.snail.common.redis.utils.RedisUtils;
+import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
 import com.snail.sys.domain.SysDept;
 import com.snail.sys.domain.SysOss;
@@ -33,6 +38,7 @@ import com.snail.sys.constants.SysConfigConstants;
 import com.snail.sys.domain.SysUserPost;
 import com.snail.sys.domain.SysUserRole;
 import com.snail.sys.dto.SysUserPageDTO;
+import com.snail.sys.dto.UserPasswordUpdateDTO;
 import com.snail.sys.dto.UserProfileUpdateDTO;
 import com.snail.sys.dto.excel.SysUserImportExcelDTO;
 import com.snail.sys.service.*;
@@ -461,6 +467,71 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
         fillAvatarForPersist(updateUser, dbUser.getAvatar());
         return this.updateById(updateUser);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateProfilePassword(Long userId, UserPasswordUpdateDTO dto) {
+        SysUser dbUser = super.getById(userId);
+        if (ObjectUtil.isNull(dbUser)) {
+            throw new ServiceException("用户不存在");
+        }
+
+        if (!BCrypt.checkpw(dto.getOldPassword(), dbUser.getPassWord())) {
+            throw new ServiceException("原密码不正确");
+        }
+
+        if (!StrUtil.equals(dto.getNewPassword(), dto.getConfirmPassword())) {
+            throw new ServiceException("两次输入的新密码不一致");
+        }
+
+        if (StrUtil.equals(dto.getOldPassword(), dto.getNewPassword())) {
+            throw new ServiceException("新密码不能与原密码相同");
+        }
+
+        SysUser updateUser = new SysUser();
+        updateUser.setId(userId);
+        updateUser.setPassWord(BCrypt.hashpw(dto.getNewPassword()));
+        boolean updated = this.updateById(updateUser);
+        if (updated) {
+            logoutUserSessions(dbUser);
+        }
+        return updated;
+    }
+
+    private void logoutUserSessions(SysUser user) {
+        if (ObjectUtil.isNull(user) || ObjectUtil.isNull(user.getId())) {
+            return;
+        }
+
+        List<String> keys = StpUtil.searchTokenValue("", 0, -1, false);
+        if (CollUtil.isEmpty(keys)) {
+            return;
+        }
+
+        keys.forEach(key -> {
+            String token = StrUtil.subAfter(key, StrUtil.COLON, true);
+            if (StrUtil.isBlank(token)) {
+                return;
+            }
+
+            LoginUser loginUser = LoginUtils.getLoginUser(token);
+            if (loginUser == null || !ObjectUtil.equal(loginUser.getId(), user.getId())) {
+                return;
+            }
+
+            logoutTokenQuietly(token);
+        });
+    }
+
+    private void logoutTokenQuietly(String token) {
+        try {
+            StpUtil.logoutByTokenValue(token);
+        } catch (NotLoginException e) {
+            log.debug("密码修改清理登录态时，token 已失效，跳过登出: {}", token);
+        } finally {
+            RedisUtils.deleteObject(CacheConstants.ONLINE_TOKEN_KEY + token);
+        }
     }
 
     @Override

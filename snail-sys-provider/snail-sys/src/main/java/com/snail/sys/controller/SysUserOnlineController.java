@@ -1,5 +1,6 @@
 package com.snail.sys.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -10,6 +11,7 @@ import com.snail.common.core.enums.BusinessType;
 import com.snail.common.core.utils.R;
 import com.snail.common.log.annotation.Log;
 import com.snail.common.redis.utils.RedisUtils;
+import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.domain.SysUserOnline;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,23 +43,7 @@ public class SysUserOnlineController {
     @SaCheckPermission("monitor:online:list")
     @GetMapping("/list")
     public R<List<SysUserOnline>> list(String ipaddr, String userName) {
-        // 1. 获取所有 token key
-        List<String> keys = StpUtil.searchTokenValue("", 0, -1, false);
-        if (CollUtil.isEmpty(keys)) {
-            return R.ok(new ArrayList<>());
-        }
-
-        // 2. 批量获取对象（减少 Redis 网络开销），并过滤掉已过期的
-        List<SysUserOnline> userOnlineList = keys.stream()
-                .map(k -> k.replace(CacheConstants.LOGIN_TOKEN_KEY, ""))
-                // 过滤掉已过期的 token
-                .filter(token -> StpUtil.stpLogic.getTokenActiveTimeoutByToken(token) >= -2)
-
-                // 拼接完整缓存键并获取对象
-                .map(token -> (SysUserOnline) RedisUtils.getCacheObject(CacheConstants.ONLINE_TOKEN_KEY + token))
-                // 剔除 Redis 中已不存在的空对象
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        List<SysUserOnline> userOnlineList = getAllOnlineUsers();
 
         // 3. 动态组合过滤条件（解决 if-else 冗余）
         if (StrUtil.isNotBlank(ipaddr) || StrUtil.isNotBlank(userName)) {
@@ -78,6 +64,38 @@ public class SysUserOnlineController {
         return R.ok(userOnlineList);
     }
 
+    @SaCheckLogin
+    @GetMapping("/current-user/devices")
+    public R<List<SysUserOnline>> listCurrentUserDevices() {
+        Long userId = LoginUtils.getUserId();
+        String currentToken = LoginUtils.getTokenValue();
+
+        List<SysUserOnline> devices = getAllOnlineUsers().stream()
+                .filter(user -> Objects.equals(user.getUserId(), userId))
+                .peek(user -> user.setCurrentDevice(StrUtil.equals(user.getTokenId(), currentToken)))
+                .sorted((a, b) -> CompareUtil.compare(b.getLoginTime(), a.getLoginTime()))
+                .collect(Collectors.toList());
+
+        return R.ok(devices);
+    }
+
+    @SaCheckLogin
+    @DeleteMapping("/current-user/devices/{tokenId}")
+    public R<Void> forceLogoutCurrentUserDevice(@PathVariable String tokenId) {
+        Long userId = LoginUtils.getUserId();
+        SysUserOnline targetDevice = findOnlineUserByToken(tokenId);
+        if (targetDevice == null) {
+            return R.fail("设备不存在或已下线");
+        }
+        if (!Objects.equals(targetDevice.getUserId(), userId)) {
+            return R.fail("无权操作该设备");
+        }
+
+        StpUtil.kickoutByTokenValue(tokenId);
+        RedisUtils.deleteObject(CacheConstants.ONLINE_TOKEN_KEY + tokenId);
+        return R.ok();
+    }
+
     /**
      * 强退用户
      */
@@ -92,5 +110,22 @@ public class SysUserOnlineController {
         // 这里的 CacheConstants.ONLINE_TOKEN_KEY 必须和你 list 方法里 get 的 key 完全一致
         RedisUtils.deleteObject(CacheConstants.ONLINE_TOKEN_KEY + tokenId);
         return R.ok();
+    }
+
+    private List<SysUserOnline> getAllOnlineUsers() {
+        List<String> keys = StpUtil.searchTokenValue("", 0, -1, false);
+        if (CollUtil.isEmpty(keys)) {
+            return new ArrayList<>();
+        }
+        return keys.stream()
+                .map(k -> k.replace(CacheConstants.LOGIN_TOKEN_KEY, ""))
+                .filter(token -> StpUtil.stpLogic.getTokenActiveTimeoutByToken(token) >= -2)
+                .map(token -> (SysUserOnline) RedisUtils.getCacheObject(CacheConstants.ONLINE_TOKEN_KEY + token))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private SysUserOnline findOnlineUserByToken(String tokenId) {
+        return (SysUserOnline) RedisUtils.getCacheObject(CacheConstants.ONLINE_TOKEN_KEY + tokenId);
     }
 }

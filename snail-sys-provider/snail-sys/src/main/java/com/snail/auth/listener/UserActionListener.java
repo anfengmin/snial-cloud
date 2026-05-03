@@ -4,11 +4,9 @@ import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.listener.SaTokenListener;
 import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
+import com.snail.auth.model.LoginContextInfo;
+import com.snail.auth.util.LoginContextResolver;
 import com.snail.common.core.constant.CacheConstants;
-import com.snail.common.core.utils.ServletUtils;
-import com.snail.common.core.utils.ip.AddressUtils;
 import com.snail.common.redis.utils.RedisUtils;
 import com.snail.common.satoken.utils.LoginUtils;
 import com.snail.sys.api.domain.LoginUser;
@@ -45,14 +43,17 @@ public class UserActionListener implements SaTokenListener {
     public void doLogin(String loginType, Object loginId, String tokenValue, SaLoginParameter loginParameter) {
         // 注意：loginId 当前实现使用的是 userCode（如 admin），不包含 sys_user/app_user 前缀，
         // 因此不能从 loginId 解析 UserType。应以登录态中的 LoginUser.userType 为准，并提供兜底。
-        UserAgent userAgent = UserAgentUtil.parse(ServletUtils.getRequest().getHeader("User-Agent"));
-        String ip = ServletUtils.getClientIP();
+        LoginContextInfo loginContextInfo = LoginContextResolver.resolveCurrentRequest();
         LoginUser user = LoginUtils.getLoginUser();
         SysUserOnline userOnline = new SysUserOnline();
-        userOnline.setIpaddr(ip);
-        userOnline.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
-        userOnline.setBrowser(userAgent.getBrowser().getName());
-        userOnline.setOs(userAgent.getOs().getName());
+        userOnline.setUserId(user.getId());
+        userOnline.setIpaddr(loginContextInfo.getIp());
+        userOnline.setLoginLocation(loginContextInfo.getLoginLocation());
+        userOnline.setBrowser(loginContextInfo.getBrowser());
+        userOnline.setOs(loginContextInfo.getOs());
+        userOnline.setClientType(loginContextInfo.getClientType());
+        userOnline.setDeviceId(loginContextInfo.getDeviceId());
+        userOnline.setDeviceName(loginContextInfo.getDeviceName());
         userOnline.setLoginTime(System.currentTimeMillis());
         userOnline.setTokenId(tokenValue);
         userOnline.setUserName(user.getUserName());

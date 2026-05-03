@@ -42,6 +42,11 @@ public interface CacheNames {
     String SYS_DEPT = "sys_dept#30d";
 
     /**
+     * 行政区划
+     */
+    String SYS_REGION = "sys_region#30d";
+
+    /**
      * OSS内容
      */
     String SYS_OSS = "sys_oss#30d";
